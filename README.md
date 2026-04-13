@@ -96,6 +96,44 @@ Regarding performance and firmware size optimization: Micropython allows additio
 Upper layer networking **server** libraries (many RPC mechanisms) are **not** easy to implement for unskilled developers and need quite a lot of implementation code. Also many protocols and libraries are bloated with features which increase complexity and resulting firmware size. 
 
 > [!NOTE]
-> Our project modifies the Micropython implementation by replacing the Micropythons control logic with a **very simplifyed** C++ HTTP/1.1 TLS capable webserver (all unneccessary HTTP features removed) which on HTTP POST request with a JSON payload will execute a Micropython script with the given JSON payload. 
+> Our project modifies the Micropython implementation by replacing the Micropythons control logic with a **very simplifyed** C++ HTTP/1.1 TLS capable webserver (all unneccessary HTTP features removed) which on HTTP POST request with a JSON payload will execute a Micropython script with the given JSON payload.
+
+## Arduino IDE
+
+The Arduino IDE is a lightweight development environment which is focused on providing external libraries programmed in the C++ language.
+The developer can decide between two IDE versions, a newer *modern* AppImage (version 2) or a *direct installable* (version 1).
+
+On my hardened Ubuntu 25.10 Desktop the AppImage (version 2) tends to be unusable, also i ask myself how it is possible to efficiently integrate external libraries with such an AppImage approach: **i tested version 1** (which is programmed in Java) and it works fine.
+
+In the first step i had to add only the external git URL to integrate the correct "Additional Boards Manager URL" (https://jihulab.com/esp-mirror/espressif/arduino-esp32.git) into the IDE preferences and afterwards install the `esp32` package from the Board Manager.
+
+In the last step select a) `XIAO_ESP32C3` as board type, b) `/dev/ttyACM0` as serial interface and c) serial baud rate `115200` to communicate with the microcontroller.
+
+With the following simple LED GPIO code you can verify the IDE setup and if the microcontroller executes your compiled binary correctly (note that the ESP32C3 does not include a programmable LED on the board, to see the LED blink a LED including correct resistor must be soldered to the correct boards PIN). Note that also without a soldered LED the program will execute and print the debug output over USB serial when you start the IDEs serial monitor.
+
+```c++
+// define led GPIO
+const int led = D10; // there is no LED_BUILTIN available for the XIAO ESP32C3.
+
+void setup() {
+  // initialize serial output
+  Serial.begin(115200);
+  Serial.println("Setup starting.");
+
+  // initialize digital pin led as an output
+  pinMode(led, OUTPUT);
+}
+
+void loop() {
+  Serial.println("LED switch on.");
+  digitalWrite(led, HIGH);   // turn the LED on 
+  delay(1000);               // wait for a second
+  Serial.println("LED switch off.");
+  digitalWrite(led, LOW);    // turn the LED off
+  delay(1000);               // wait for a second
+}
+```
+
+**Disadvantages**
 
 # Chip Engineering
