@@ -67,7 +67,7 @@ First of all a quick overview of useful features included in all SDK variants:
 - Mbed TLS (Transport Layer Security and X.509 certificate handling)
 - Memory region **partitioning** / minimal virtual filesystem integration
 - Extensive and stable libraries for peripheral handling (I2C, GPIO, UART, PWM, SPI)
-- 
+
 ## Global Disadvantages
 
 There are a quite few global disadvantages, the first is *example networking code* in higher OSI layers and the second one is *extra-orbitant high bloating* in default setups.
