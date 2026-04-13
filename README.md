@@ -67,5 +67,13 @@ First of all a quick overview of useful features included in all SDK variants:
 - Mbed TLS (Transport Layer Security and X.509 certificate handling)
 - Memory region **partitioning** / minimal virtual filesystem integration
 - Extensive and stable libraries for peripheral handling (I2C, GPIO, UART, PWM, SPI)
+- 
+## Global Disadvantages
+
+There are a quite few global disadvantages, the first is *example networking code* in higher OSI layers and the second one is *extra-orbitant high bloating* in default setups.
+
+Many people start developing using the native *Arduino IDE* which is very easy to set up and ready to use in minutes after installing the correct board extensions. When compiling the first lines of simple **sketch** (Arduino project identifier) code the first impression is: compile times are slow and the resulting binary flash image is large.
+
+A simple WiFi access point code including minimalistic tcp server processing resulted in a 1MB flash image. Sufficient for the ESP32-C3 but heavily bloated (details following). 
 
 # Chip Engineering
