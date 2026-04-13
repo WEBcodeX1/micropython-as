@@ -8,7 +8,7 @@ Refer to [./BUILD.md](./BUILD.md) how to compile / build the project.
 
 [Espressive Systems](https://www.espressif.com/) recently developed a masterpiece of hardware: the **ESP32-C3** System on Chip, based on a 32-bit RISC-V (single core) CPU. Ready to use boards are distributed by *Seedstudio* (XIAO ESP32-C3 MINI Board) for an amazing price of apx. 5€ :moneybag::star2:.
 
-**Base Features**
+## Base Features
 
 - IEEE 802.11 b/g/n WiFi
 - Bluetooth 5 (BLE)
@@ -21,6 +21,8 @@ Refer to [./BUILD.md](./BUILD.md) how to compile / build the project.
 - Internal Temperature Sensor
 - Low-Power / Sleep-State Control
 - 400KB SRAM and 4MB on-board flash memory
+
+## Detailed Hardware Specs
 
 To get detailed (hardware) information, you should take a first look at the manufacturers wiki: https://wiki.seeedstudio.com/XIAO_ESP32C3_Getting_Started/.
 
