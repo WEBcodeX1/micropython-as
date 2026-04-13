@@ -11,6 +11,7 @@ This project embeds Micropython into Arduino ESP32 based microcontrollers using 
 - IEEE 802.11 b/g/n WiFi
 - Bluetooth 5 (BLE)
 - 14 external usable PINs
+- Hardware Cryptography (RSA, ECC, AES)
 - Battery connector PINs
 - USB-C **Protected** Battery Loading
 - USB-C Firmware / JTAG port
