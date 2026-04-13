@@ -49,9 +49,12 @@ Following, an overview of usable and working SDKs:
 Before continuing, a very short remark about RTOs (Real Time Operating Systems). In **embedded** multi-core systems it is advisable to use such an entity to seperate e.g. the *WiFi / Network Stack* from *Application Code* into **Layers / Controlable Tasks** to guarantee stability / prevent programming mistakes by the developer.
 
 > [!NOTE]
-> In a single-core system such a design can be contra-productive.
+> In a single-core microcontroller system such a design can be contra-productive.
 
 The Espressif ESP-IDF framework integrates *FreeRTOS* into all boards also for the *ESP32-C3* **single-core**. This comes with a moderate overhead, we will discuss implementation details (advantages / disadvantages) between the different SDK approaches in the next chapters.
+
+> [!NOTE]
+> Using an embedded Linux operating system is only advisable for **much bigger** microcontrollers where much more high-speed peripherals (e.g. PCIe, Multi 100GbE NICs, Multi GPU/Display Port) must be coordinated. 
 
 # Advantages / Disadvantages
 
