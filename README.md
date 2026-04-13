@@ -93,7 +93,7 @@ Depending of the microcontroller used, this enables uploading / running / flashi
 
 Regarding performance and firmware size optimization: Micropython allows additional Python modules to be integrated as *pre-compiled bytecode* (virtual filesystem partition) or even *frozen bytecode* (directly into firmware blob) which makes runtime compilation obsolete and thus improves performance. As practical example: controlling a common I2C OLED 1306 display using the Python `machine` and `ssd1306` library will not make any noticeable difference compared to a C / C++ implementation.
 
-**Disadvantages**
+### Disadvantages
 
 Upper layer networking **server** libraries (many RPC mechanisms) are **not** easy to implement for unskilled developers and need quite a lot of implementation code. Also many protocols and libraries are bloated with features which increase complexity and resulting firmware size. 
 
@@ -136,6 +136,6 @@ void loop() {
 }
 ```
 
-**Disadvantages**
+### Disadvantages
 
 # Chip Engineering
