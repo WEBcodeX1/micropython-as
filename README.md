@@ -2,6 +2,8 @@
 
 This project embeds Micropython into Arduino ESP32 based microcontrollers using the Falcon-AS C++ HTTP/1.1 Web-Server.
 
+Refer to [./BUILD.md](./BUILD.md) how to compile / build the project.
+
 # ESP32-C3 SoC
 
 [Espressive Systems](https://www.espressif.com/) recently developed a masterpiece of hardware: the **ESP32-C3** System on Chip, based on a 32-bit RISC-V (single core) CPU. Ready to use boards are distributed by *Seedstudio* (XIAO ESP32-C3 MINI Board) for an amazing price of apx. 5€ :moneybag::star2:.
