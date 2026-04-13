@@ -25,7 +25,7 @@ To get detailed (hardware) information, you should take a first look at the manu
 
 Also some remarkable variants get manufactured.
 
-## ESP32-C3
+## ESP32-S3
 
 ESP32-S3R8 Xtensa LX7 dual-core 240 MHz system with optional external HAT extension, e.g. camera and microphone / audio.
 
