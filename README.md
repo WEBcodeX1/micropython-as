@@ -55,4 +55,17 @@ The Espressif ESP-IDF framework integrates *FreeRTOS* into all boards also for t
 
 # Advantages / Disadvantages
 
+Each of the following SDK variant has its advantages and disadvantages / is aimed for programmers with different skills.
+
+## Global Advantages
+
+First of all a quick overview of useful features included in all SDK variants:
+
+- lwIP (lightweight IP stack) including IPv6
+- Networking interface abstraction / IP routing between interfaces
+- Berkley networking sockets / abstraction layer for TCP and UDP
+- Mbed TLS (Transport Layer Security and X.509 certificate handling)
+- Memory region **partitioning** / minimal virtual filesystem integration
+- Extensive and stable libraries for peripheral handling (I2C, GPIO, UART, PWM, SPI)
+
 # Chip Engineering
