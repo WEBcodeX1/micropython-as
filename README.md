@@ -39,9 +39,9 @@ With such a masterpiece of hardware including *lots of system memory* developing
 
 Following, an overview of usable and working SDKs:
 
-1. Micropython
-2. Arduino IDE
-3. Native ESP-IDF
+1. Micropython - https://github.com/micropython/micropython
+2. Arduino IDE - https://www.arduino.cc/en/software/
+3. Native ESP-IDF - https://github.com/espressif/esp-idf
 
 # RTO
 
