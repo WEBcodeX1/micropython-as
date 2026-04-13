@@ -60,11 +60,11 @@ The Espressif ESP-IDF framework integrates *FreeRTOS* into all boards also for t
 > [!NOTE]
 > Using an embedded Linux operating system is only advisable for **much bigger** microcontrollers where much more high-speed peripherals (e.g. PCIe, Multi 100GbE NICs, Multi GPU/Display Port) must be coordinated. 
 
-# Advantages / Disadvantages
+# Global Advantages / Disadvantages
 
 Each of the following SDK variant has its advantages and disadvantages / is aimed for programmers with different skills.
 
-## Global Advantages
+## Advantages
 
 First of all a quick overview of useful features included in all SDK variants:
 
@@ -75,7 +75,7 @@ First of all a quick overview of useful features included in all SDK variants:
 - Memory region **partitioning** / minimal virtual filesystem integration
 - Extensive and stable libraries for peripheral handling (I2C, GPIO, UART, PWM, SPI)
 
-## Global Disadvantages
+## Disadvantages
 
 There are a quite few global disadvantages, the first is *example networking code* in higher OSI layers and the second one is *extra-orbitant high bloating* in default setups.
 
