@@ -46,7 +46,7 @@ Following, an overview of usable and working SDKs:
 
 # RTO
 
-Before continuing, a very short remark about RTOs (Real Time Operating Systems). In **embedded** multi-core systems it is advisable to use such an entity to seperate e.g. the *WiFi / Network Stack* from *Application Code* into **Layers / Controlable Tasks** to guarantee stability / prevent programming mistakes by the programmer.
+Before continuing, a very short remark about RTOs (Real Time Operating Systems). In **embedded** multi-core systems it is advisable to use such an entity to seperate e.g. the *WiFi / Network Stack* from *Application Code* into **Layers / Controlable Tasks** to guarantee stability / prevent programming mistakes by the developer.
 
 > [!NOTE]
 > In a single-core system such a design can be contra-productive.
