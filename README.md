@@ -18,7 +18,7 @@ This project embeds Micropython into Arduino ESP32 based microcontrollers using 
 - USB-C Serial Debugging 
 - Internal Temperature Sensor
 - Low-Power / Sleep-State Control
-- 4 Megabyte Memory
+- 400KB SRAM and 4MB on-board flash memory
 
 To get detailed (hardware) information, you should take a first look at the manufacturers wiki: https://wiki.seeedstudio.com/XIAO_ESP32C3_Getting_Started/.
 
