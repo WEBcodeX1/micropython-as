@@ -2,7 +2,7 @@
 
 This project embeds MicroPython in Arduino-based ESP32 microcontrollers using the Falcon-AS C++ HTTP/1.1 web server.
 
-Build instructions are not yet documented in a dedicated file in this repository.
+Refer to [./BUILD.md](./BUILD.md) how to compile / build the project.
 
 # ESP32-C3 SoC
 
