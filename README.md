@@ -15,11 +15,13 @@ Refer to [./BUILD.md](./BUILD.md) how to compile / build the project.
 - 14 external usable PINs
 - Hardware Cryptography (RSA, ECC, AES)
 - Battery connector PINs
-- USB-C **Protected** Battery Loading
+- USB-C Protected Battery Loading
 - USB-C Firmware / JTAG port
 - USB-C Serial Debugging 
 - Internal Temperature Sensor
+- RTC Real Time Clock
 - Low-Power / Sleep-State Control
+- Secure Boot / Firmware Signing
 - 400KB SRAM and 4MB on-board flash memory
 
 ## Detailed Hardware Specs
@@ -83,7 +85,7 @@ Many people start developing using the native *Arduino IDE* which is very easy t
 
 I tested a simple WiFi access point code including minimalistic tcp server processing which resulted in a 1MB flash image. Sufficient for the ESP32-C3 but heavily bloated (details following).
 
-## Micropython
+# Micropython
 
 Micropython is the choice for the least-experienced C / C++ developer. There is no need **at all** using a single line of C / C++ code.
 
@@ -93,14 +95,14 @@ Depending of the microcontroller used, this enables uploading / running / flashi
 
 Regarding performance and firmware size optimization: Micropython allows additional Python modules to be integrated as *pre-compiled bytecode* (virtual filesystem partition) or even *frozen bytecode* (directly into firmware blob) which makes runtime compilation obsolete and thus improves performance. As practical example: controlling a common I2C OLED 1306 display using the Python `machine` and `ssd1306` library will not make any noticeable difference compared to a C / C++ implementation.
 
-### Disadvantages
+## Disadvantages
 
 Upper layer networking **server** libraries (many RPC mechanisms) are **not** easy to implement for unskilled developers and need quite a lot of implementation code. Also many protocols and libraries are bloated with features which increase complexity and resulting firmware size. 
 
 > [!NOTE]
 > Our project modifies the Micropython implementation by replacing the Micropythons control logic with a **very simplifyed** C++ HTTP/1.1 TLS capable webserver (all unneccessary HTTP features removed) which on HTTP POST request with a JSON payload will execute a Micropython script with the given JSON payload.
 
-## Arduino IDE
+# Arduino IDE
 
 The Arduino IDE is a lightweight development environment which is focused on providing external libraries programmed in the C++ language.
 The developer can decide between two IDE versions, a newer *modern* AppImage (version 2) or a *direct installable* (version 1).
@@ -136,6 +138,79 @@ void loop() {
 }
 ```
 
-### Disadvantages
+> [!NOTE]
+> Under **Sketch** menu select **Verify/Compile** to compile the sketch and after compiling select **Upload** to flash **and** run the code afterwards. If no LED is soldered the code nevertheless will run and output the `println()` messages via **Tools/Serial Monitor** (USB serial).
 
-# Chip Engineering
+## Advantages
+
+The Arduino IDE is perfectly suited for small projects with **no need** to integrate external C / C++ libraries.
+
+All provided libraries make a solid impression, the C++ abstraction / interfaces are well defined and follow modern C++ practices. Also it is easy to include external libraries with the library manager (**Tools/Manage Libraries**).
+
+The option to integrate your own libraries exists, i didn't pursue it any further because the Arduino IDE gives the impression about that integrating an own library is non-trivial and also several Internet searches suggest direct use of the ESP-IDF (IoT Development Framework) is much more hardware-oriented.
+
+## Disadvantages
+
+Only including the "WiFi.h" (Arduino IDE native C++ implementation) headers without any further application code will result in a 1MB firmware image. There is **no** *easy* way to configure the libraries to omit features (e.g. disable IPv6 or TLS).
+
+## Repository
+
+The ESP32 Arduino C++ Library is maintained on github at https://github.com/espressif/arduino-esp32 and is usable regardless of the Arduino IDE. You should consider this as a selection criterion for your SDK.
+
+## Library Builder Tool
+
+Espressif provides a **library builder** to customize the libraries functionality at https://github.com/espressif/esp32-arduino-lib-builder, this is a *complex* process compared to the ESP-IDF integration and also should considered carefully as SDK selection criterion.
+
+> [!NOTE]
+> I was able to customize and compile using the library builder, but i was **not** able to integrate it correctly into the Arduino IDE, the compilation process still used the old ones without firmware size improvements.
+
+# ESP-IDF
+
+The IoT Development Framework (ESP-IDF) is more hardware-centric than the Arduino IDE. The integration of the application code a) **setup** and b) **main loop** must be *integrated* as *FreeRTOS* tasks, thus is more complex compared to the Arduino IDE.
+
+Inside the IDF a lot of components are much better designed, using the framework *feels* much nicer from a developer perspective of view. Also the customization process in the current version 6.1 is very good which gives the developer a much better control of included functionality which also can produce much smaller firmware images.
+
+> [!NOTE]
+> We choese ESP-IDF as development environment, project code also demonstrates how to cope with advanced ESP-IDF features.
+
+## Advantages
+
+The ESP-IDF framework is much more flexible compared to the Arduino IDE; including external C / C++ libraries, writing your own libraries follows current development practices / standards.
+
+### Kconfig
+
+The famous *KConfig* framework invented by the Linux Kernel for customizing Kernel builds is used for multiple purposes:
+
+a) customize **global** library functions (e.g. disable IPv6 in the lwIP stack)
+b) customize **own** features (e.g. disable HTTPS)
+
+This is done by mapping compiler preprocessor directives inside a custom `/main/Kconfig.projbuild` definition file.
+
+Through calling `idf.py menuconfig` a classical ncurses based configuration menu will appear where configurations can be selected and customized.
+
+### CMake Integration
+
+To integrate a very flexible component customization system, IDF uses an *enhanced* CMake / build system controlled by an internal `idf.py` command. Also the firmware link and flash process is controlled by the `idf.py` script which makes customized automation possible.
+
+## Disadvantages
+
+In contrast to the *arduino-esp32* C++ libraries, IDF only provides libraries written in pure C. Due to the IDFs CMake integration, you are free to choose between the following development approaches:
+
+1. Exclusively use the IDF C libraries (providing suboptimal programming interfaces)
+2. Link C++ libraries from *arduino-esp32* (often with unneccesary overhead)
+3. Combine IDF C and *arduino-esp32* C++ libraries (bloats firmware image size)
+4. Write own C++ libraries using the IDF C libraries (best choice for keeping firmware images tiny)
+
+> [!NOTE]
+> Because our project embeds micropython, our HTTPS webserver code contains already working C++ classes **and** optionally webserver content must be packed into firmware: option 4 seems to be the right choice.
+
+# System Engineering
+
+I am still learning the ESP32-C3 chip and memory layout, peripheral design and RTOs internals. I am still not sure if the **complete** RTOs code is integrated into the IDF and every firmware compilation will also rebuild the complete RTOs code.
+
+The following projects give a bit more insight into the microcontrollers bootprocess and RISCV assembler instruction set:
+
+- https://github.com/espressif/esp32c3-direct-boot-example
+- https://projectf.io/posts/riscv-cheat-sheet/
+
+# Diagrams
