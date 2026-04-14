@@ -6,7 +6,7 @@ Refer to [./BUILD.md](./BUILD.md) how to compile / build the project.
 
 # ESP32-C3 SoC
 
-[Espressif Systems](https://www.espressif.com/) developed the **ESP32-C3** system-on-chip, based on a 32-bit single-core RISC-V CPU. Ready-to-use boards are distributed by *Seeed Studio* (XIAO ESP32-C3 mini board) at an affordable price point.
+[Espressif Systems](https://www.espressif.com/) developed the **ESP32-C3** system-on-chip, based on a 32-bit single-core RISC-V CPU. Ready-to-use boards are distributed by *Seeed Studio* (XIAO ESP32-C3 mini board) at an affordable price point (5€ :moneybag::star2:).
 
 ## Base Features
 
