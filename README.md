@@ -181,8 +181,8 @@ The ESP-IDF framework is much more flexible than the Arduino IDE. Including exte
 
 The famous *Kconfig* framework, invented by the Linux kernel for customizing kernel builds, is used for multiple purposes:
 
-a) customize **global** library functions (for example disable IPv6 in the lwIP stack)
-b) customize **own** features (for example disable HTTPS)
+1. customize **global** library functions (for example disable IPv6 in the lwIP stack)
+2. customize **own** features (for example disable HTTPS)
 
 This is done by mapping compiler preprocessor directives inside a custom `/main/Kconfig.projbuild` definition file.
 
