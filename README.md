@@ -4,6 +4,9 @@ This project embeds MicroPython in Arduino-based ESP32 microcontrollers using th
 
 Refer to [./BUILD.md](./BUILD.md) how to compile / build the project.
 
+> [!NOTE]
+> You might ask yourself: What exactly is this approach useful for, and how does it differ from the existing MicroPython ESP32 integration? We provide illustrative diagrams in the [10. Diagrams](#10-diagrams) section.
+
 # 1. ESP32-C3 SoC
 
 [Espressif Systems](https://www.espressif.com/) developed the **ESP32-C3** system-on-chip, based on a 32-bit single-core RISC-V CPU. Ready-to-use boards are distributed by *Seeed Studio* (XIAO ESP32-C3 mini board) at an affordable price point (5€ :moneybag::star2:).
@@ -212,3 +215,7 @@ The following projects provide a bit more insight into the microcontroller boot 
 
 - https://github.com/espressif/esp32c3-direct-boot-example
 - https://projectf.io/posts/riscv-cheat-sheet/
+
+# 10. Diagrams
+
+Following as soon as possible.
