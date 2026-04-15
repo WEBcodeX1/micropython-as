@@ -205,7 +205,7 @@ In contrast to the *arduino-esp32* C++ libraries, IDF only provides libraries wr
 4. Write your own C++ libraries using the IDF C libraries (best choice for keeping firmware images small)
 
 > [!NOTE]
-> Because our project embeds MicroPython, our HTTPS web server code already contains working C++ classes, and optional web server content must also be packed into firmware. Option 4 seems to be the right choice.
+> Because our project embeds MicroPython, our HTTPS web server code already contains working C++ classes, and optional web server content must also be packed into firmware: option 4 seems to be the right choice.
 
 # 9. System Engineering
 
