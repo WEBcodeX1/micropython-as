@@ -22,7 +22,7 @@ apt-get install python3 python3-pip cmake
 ```
 
 > [!WARNING]
-> You will also need the falcon-as libraries at a later stage of the project. We will keep you informed and update this documentation.
+> You will also need the falcon-as and the micropython libraries at a later stage of the project. We will keep you informed and update this documentation.
 
 ## 4. ESP IoT Development Framework Features
 
