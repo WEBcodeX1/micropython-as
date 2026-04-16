@@ -2,14 +2,14 @@
 
 This project embeds MicroPython in Arduino-based ESP32 microcontrollers using the **Falcon-AS** C++ HTTP/1.1 web server.
 
-Refer to [./BUILD.md](./BUILD.md) how to compile / build the project.
+Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 
 > [!NOTE]
 > You might ask yourself: What exactly is this approach useful for, and how does it differ from the existing MicroPython ESP32 integration? We provide illustrative diagrams in the [10. Diagrams](#10-diagrams) section.
 
 # 1. ESP32-C3 SoC
 
-[Espressif Systems](https://www.espressif.com/) developed the **ESP32-C3** system-on-chip, based on a 32-bit single-core RISC-V CPU. Ready-to-use boards are distributed by *Seeed Studio* (XIAO ESP32-C3 mini board) at an affordable price point (5€ :moneybag::star2:).
+[Espressif Systems](https://www.espressif.com/) developed the **ESP32-C3** system-on-chip, based on a 32-bit single-core RISC-V CPU. Ready-to-use boards are available from *Seeed Studio* (XIAO ESP32-C3 mini board) at an affordable price point (5€ :moneybag::star2:).
 
 ## 1.1. Base Features
 
@@ -37,10 +37,10 @@ There are also several notable variants.
 
 ## 2.1. ESP32-S3
 
-ESP32-S3R8 Xtensa LX7 dual-core 240 MHz system with optional external HAT extensions, for example a camera or microphone / audio.
+ESP32-S3R8 Xtensa LX7 dual-core 240 MHz system with optional external HAT extensions, for example a camera or audio add-on.
 
 > [!NOTE]
-> The current ESP-IDF integrates a *transparent* C++11 threading implementation for very easy code execution on multiple CPU cores :heart_eyes:.
+> The current ESP-IDF integrates a *transparent* C++11 threading implementation that makes code execution across multiple CPU cores much easier :heart_eyes:.
 
 ## 2.2. ESP32-P4
 
@@ -85,7 +85,7 @@ First, here is a quick overview of useful features included in all SDK variants:
 
 ## 5.2. Disadvantages
 
-There are quite a few global disadvantages. The first is the lack of *example networking code* in higher OSI layers, and the second is *exorbitant bloat* in default setups.
+There are quite a few global disadvantages. The first is the lack of *example networking code* at higher OSI layers, and the second is *exorbitant bloat* in default setups.
 
 Many people start development with the native *Arduino IDE*, which is very easy to set up and can be ready for use within minutes after installing the correct board extensions. When compiling the first lines of a simple **sketch** (Arduino project identifier), the first impression is usually that compile times are slow and the resulting flash image is large.
 
@@ -111,7 +111,7 @@ Upper-layer networking **server** libraries (including many RPC mechanisms) are 
 # 7. Arduino IDE
 
 The Arduino IDE is a lightweight development environment focused on external libraries written in C++.
-The developer can choose between two IDE versions: a newer *modern* AppImage (version 2) or a *directly installable* version (version 1).
+The developer can choose between two IDE versions: a newer *modern* AppImage (version 2) or a *traditional installable* version (version 1).
 
 On my hardened Ubuntu 25.10 desktop, the AppImage (version 2) tends to be unusable. I also found it difficult to see how external libraries could be integrated efficiently with this AppImage-based approach. I tested version 1, which is written in Java, and it works fine.
 
@@ -153,7 +153,7 @@ The Arduino IDE is well suited for small projects with **no need** to integrate 
 
 All provided libraries make a solid impression. The C++ abstractions / interfaces are well defined and follow modern C++ practices. It is also easy to include external libraries with the library manager (**Tools/Manage Libraries**).
 
-The option to integrate your own libraries exists. I did not pursue it further because the Arduino IDE gave the impression that integrating a custom library is non-trivial, and several internet searches suggest that direct use of the ESP-IDF (IoT Development Framework) is much more hardware-oriented.
+The option to integrate your own libraries exists. I did not pursue it further because the Arduino IDE gave the impression that integrating a custom library is non-trivial. Several internet searches also suggest that direct use of the ESP-IDF (IoT Development Framework) is much more hardware-oriented.
 
 ## 7.2. Disadvantages
 
@@ -172,7 +172,7 @@ Espressif provides a **library builder** to customize library functionality at h
 
 # 8. ESP-IDF
 
-The IoT Development Framework (ESP-IDF) is more hardware-centric than the Arduino IDE. The application code a) **setup** and b) **main loop** must be implemented as *FreeRTOS* tasks, so it is more complex than the Arduino IDE.
+The IoT Development Framework (ESP-IDF) is more hardware-centric than the Arduino IDE. The application code—**setup** and **main loop**—must be implemented as *FreeRTOS* tasks, so it is more complex than the Arduino IDE.
 
 Inside the IDF, many components are much better designed, and using the framework *feels* much nicer from a developer's point of view. Also, the customization process in version 6.1 is very good, giving the developer much better control over included functionality and allowing significantly smaller firmware images.
 
@@ -221,13 +221,16 @@ The following projects provide a bit more insight into the microcontroller boot 
 
 # 10. Diagrams
 
-Following as soon as possible.
+Diagrams will be added later.
 
 # 11. Documentation / Examples
 
-The Espressif ESP32 (Sphinx generated) documentation and the examples section under `/examples` provides extensive developing information.
+The Espressif ESP32 (Sphinx-generated) documentation and the examples section under `/examples` provide extensive development information.
 
-Nevertheless we will provide an excerpt of the *ESP32-C3* most important links for you:
+> [!WARNING]
+> Some higher-level networking examples (especially HTTP) are horrible and should be avoided, our web server implementation will use the lwIP Berkeley socket API and provide *clean code* (similar to the ESP-IDF's C++11 threading example, which is written at a high-quality programming level).
+
+Nevertheless, we will provide an excerpt of the most important *ESP32-C3* links for you:
 
 - [Get started](https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/get-started/index.html)
 - [Hardware Reference](https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/hw-reference/index.html#hardware-reference)
