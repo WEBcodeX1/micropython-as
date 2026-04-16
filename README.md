@@ -227,6 +227,9 @@ Diagrams will be added later.
 
 The Espressif ESP32 (Sphinx-generated) documentation and the examples section under `/examples` provide extensive development information.
 
+> [!WARNING]
+> Some higher level networking examples (especially HTTP) are horrible and should be avoided, our web server implementation will use the lwIP berkley socket API and provide *clean code* (similar to the ESP-IDFs C++11 threading example which is written in a high quality prgramming level).
+
 Nevertheless, we will provide an excerpt of the most important *ESP32-C3* links for you:
 
 - [Get started](https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/get-started/index.html)
