@@ -8,7 +8,7 @@ We recommend a standard Linux distribution. I tested compilation on Devuan (Debi
 
 ## 2. Cabling
 
-Make sure that you also have a working USB-C or USB-C-to-USB cable/adapter with power and data lines that enables:
+Make sure that you also have a working USB-C or USB-C-to-USB cable / adapter with power and data lines that enables:
 
 - Battery charging (when soldered to the battery pins on the back side of the board)
 - Serial communication a) firmware flashing b) JTAG / serial debugging over USB
