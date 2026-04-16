@@ -4,7 +4,7 @@ The following document describes the building process and requirements.
 
 ## 1. Operating System
 
-We recommend a standard Linux distribution. I tested compilation on Devuan (Debian-based) and on my current Ubuntu Hardened 25.10 LTS system.
+We recommend a standard Linux distribution. I tested compilation on Devuan (Debian-based) and on my current Ubuntu Hardened 25.10 system.
 
 ## 2. Cabling
 
