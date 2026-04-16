@@ -39,6 +39,9 @@ There are also several notable variants.
 
 ESP32-S3R8 Xtensa LX7 dual-core 240 MHz system with optional external HAT extensions, for example a camera or microphone / audio.
 
+> [!NOTE]
+> The current ESP-IDF integrates a *transparent* C++11 threading implementation for very easy code execution on multiple CPU cores :heart_eyes:.
+
 ## 2.2. ESP32-P4
 
 A high-performance, highly secure board (**without** integrated Wi-Fi or Bluetooth), with attachable MicroSD card and PHY Ethernet (IP101GR).
@@ -219,3 +222,14 @@ The following projects provide a bit more insight into the microcontroller boot 
 # 10. Diagrams
 
 Following as soon as possible.
+
+# 11. Documentation / Examples
+
+The Espressif ESP32 (Sphinx generated) documentation and the examples section under `/examples` provides extensive developing information.
+
+Nevertheless we will provide an excerpt of the *ESP32-C3* most important links for you:
+
+- Get started - https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/get-started/index.html
+- Harware Reference - https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/hw-reference/index.html#hardware-reference
+- Build System - https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/api-guides/build-system.html
+- C++ support - https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/cplusplus.html
