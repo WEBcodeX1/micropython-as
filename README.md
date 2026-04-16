@@ -229,7 +229,7 @@ The Espressif ESP32 (Sphinx generated) documentation and the examples section un
 
 Nevertheless we will provide an excerpt of the *ESP32-C3* most important links for you:
 
-- Get started - https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/get-started/index.html
-- Harware Reference - https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/hw-reference/index.html#hardware-reference
-- Build System - https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/api-guides/build-system.html
-- C++ support - https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/cplusplus.html
+- [Get started](https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/get-started/index.html)
+- [Hardware Reference](https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/hw-reference/index.html#hardware-reference)
+- [Build System](https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32c3/api-guides/build-system.html)
+- [C++ support](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/cplusplus.html)
