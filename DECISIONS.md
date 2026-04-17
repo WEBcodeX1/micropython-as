@@ -1,6 +1,6 @@
 # Decision History
 
-This document should give insights about the WHY we did WHAT and WHEN.
+This document should give insights about the **WHY** we did **WHAT** and **WHEN**.
 
 ## Multiprocessing
 
@@ -12,7 +12,7 @@ To produce clean code we should abstract these two layers for both a) single cor
 - RTOS tasks
 - C++11 threading library
 
-Seperating the web server and the python code could be done using 2 RTOS tasks, on dual-core controllers the micropython task later on can be run on a different CPU core.I think we should start implementing 2 RTOS tasks on the ESP32-C3 first.
+Seperating the web server and the python code could be done using 2 RTOS tasks, on dual-core controllers the micropython task later on can be run on a different CPU core. I think we should start implementing 2 RTOS tasks on the ESP32-C3 first.
 
 ## Project Goal
 
