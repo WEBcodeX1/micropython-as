@@ -223,11 +223,11 @@ The following projects provide a bit more insight into the microcontroller boot 
 
 The following diagrams show a comparison between the native MicroPython design and architecture and our HTTP application server approach.
 
-1. MicroPython Architecture
+## 10.1. MicroPython Architecture
 
 ![MicroPythonArchitecture](/diagram/micropython-architecture.png)
 
-2. MicroPython AS Architecture
+## 10.2. MicroPython AS Architecture
 
 ![MicroPythonASArchitecture](/diagram/micropython-as-architecture.png)
 
