@@ -43,3 +43,15 @@ We will provide ESP32 C++ higher level networking abstraction libraries with the
 3. ServerUDP
 4. ClientHandler
 
+## Firmware Building
+
+The resulting firmware binary should be small in size, include all required functionality and security features.
+
+With the following settings, we achieved to build a firmware image of apx. 500 Kilobyte size:
+
+- Wifi access point (only WPA2 personal, WPA3 and WPA3 enterprise disabled)
+- Include mbedTLS library (for HTTPS server)
+- Disable debug build, optimize for size (-Os compiler flag)
+- Only IPv4 (no IPv6) lwIP stack
+- Disable C++ exceptions and RTTI (real time type information)
+
