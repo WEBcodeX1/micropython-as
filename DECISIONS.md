@@ -25,5 +25,5 @@ The ESP32-C3 has an attached OLED 1306 display which renders the complete game i
 
 To connect the smartphones without using other peripherals, we also will integrate a micro-tiny DNS (UDP-only) server which will only react on a single *static* DNS IPv4 A query to the applications host *pong.game*.
 
-The DNS server also will be *run* on a RTOS task.
+The DNS server also will be *run* as RTOS task.
 
