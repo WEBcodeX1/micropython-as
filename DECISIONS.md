@@ -27,3 +27,19 @@ To connect the smartphones without using other peripherals, we also will integra
 
 The DNS server also will be *run* as RTOS task.
 
+## Libraries / Networking
+
+### Global Assumptions
+
+- Networking sockets (lwIP) **type** is **BSD**
+- Networking sockets (lwIP) **must** be implemented **non-blocking**
+
+### Abstraction
+
+We will provide ESP32 C++ higher level networking abstraction libraries with the following *logical* components:
+
+1. NetworkHelper
+2. ServerTCP
+3. ServerUDP
+4. ClientHandler
+
