@@ -227,6 +227,15 @@ The following diagrams show a comparison between the native MicroPython design a
 
 ![MicroPythonArchitecture](/diagram/micropython-architecture.png)
 
+> [!NOTE]
+> Please note: the diagram probably does **not** reflect how Micro100% , it should be an easy overview   .
+
+**Disadvantages**:
+- Networking implementation must be
+
+**Advantages**:
+- Implementors flexibility
+
 ## 10.2. MicroPython AS Architecture
 
 ![MicroPythonASArchitecture](/diagram/micropython-as-architecture.png)

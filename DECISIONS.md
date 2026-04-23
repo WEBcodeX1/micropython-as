@@ -38,7 +38,7 @@ The DNS server also will be *run* as RTOS task.
 
 We will provide ESP32 C++ higher level networking abstraction libraries with the following *logical* components:
 
-1. NetworkHelper
+1. Networking
 2. ServerTCP
 3. ServerUDP
 4. ClientHandler
@@ -55,3 +55,13 @@ With the following settings, we achieved to build a firmware image of apx. 500 K
 - Only IPv4 (no IPv6) lwIP stack
 - Disable C++ exceptions and RTTI (real time type information)
 
+## HTTP/1.1 Parser Library
+
+To include / link the HTTP/1.1 parsing library as a static (.a file) into a ESP32-C3 IDF *component* it **must** be built with a gcc / g++ *RISC32V* toolchain. To integrate a whole CMake project into an IDF component can be huge amount of work, so it is much better to do it vice versa: tell CMake to use the already installed ESP IDF *RISC32V* toolchain.
+
+> [!WARNING]
+> Somehow using class inheritance in the static source library resulted in unresolved symbols in the IDFs component linking process. Using only the base class works fine, i will further investigate.
+
+## MicroPython
+
+We also will try to integrate MicroPython as a cross-compiled static linked library with the same approach as the HTTP parsing library.
