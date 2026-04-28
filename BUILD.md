@@ -11,9 +11,8 @@ We recommend using a standard Debian-based Linux distribution. I have tested com
 Make sure you also have a working USB-C or USB-C-to-USB cable / adapter with power and data lines that supports:
 
 - Battery charging (when soldered to the battery pins on the back side of the board)
-- Serial communication for:
-  - Firmware flashing
-  - JTAG / serial debugging over USB
+- Serial communication for *firmware flashing*
+- Serial communication for *JTAG / serial debugging over USB*
 
 ## 3. Packages
 
