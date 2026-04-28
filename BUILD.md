@@ -107,7 +107,6 @@ sudo make install
 
 This will install the static library in `/usr/local/lib/esp32c3/libhttpparser.a` and the MicroPython header file in `/usr/local/include/esp32c3/httpparser.hpp`.
 
-
 ## 9. Compiling / Flashing
 
 Change to the micropython-as repository, compile and afterwards flash to the microcontroller:
