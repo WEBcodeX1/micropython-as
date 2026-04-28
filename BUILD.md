@@ -4,7 +4,7 @@ The following document describes the building process and requirements.
 
 ## 1. Operating System
 
-We recommend a standard Linux distribution. I tested compilation on Devuan (Debian-based) and on my current Ubuntu Hardened 25.10 system.
+We recommend a standard Debian based Linux distribution. I tested compilation on Devuan (Debian-based) and on my current Ubuntu Hardened 25.10 system.
 
 ## 2. Cabling
 
@@ -13,7 +13,7 @@ Make sure that you also have a working USB-C or USB-C-to-USB cable / adapter wit
 - Battery charging (when soldered to the battery pins on the back side of the board)
 - Serial communication a) firmware flashing b) JTAG / serial debugging over USB
 
-## 3. Packages / Libraries
+## 3. Packages
 
 Python3, PIP3, and CMake must be installed before proceeding further.
 
@@ -68,7 +68,47 @@ If the installation process went fine, the following text should be displayed:
 Done! You can now compile ESP-IDF projects.
 ```
 
-## 7. Compiling / Flashing
+## 7. MicroPython
+
+The original MicroPython repository does not include building libraries (shared or static) for embedding the interpreter.
+I have requested a pull-request with an example how to do so. Until the PR has been accepted (or declined) static library building can be obtained at my MicroPython fork.
+
+> [!NOTE]
+> Be sure to checkout the correct *v1.26-release* branch.
+
+> [!NOTE]
+> Adjust the cross-compiler settings / paths in `riscv32-cross.cmake`.
+
+```bash
+git clone https://github.com/clauspruefer/micropython
+git checkout v1.26-release
+make -f micropython_embed.mk
+cmake -DCMAKE_TOOLCHAIN_FILE=riscv32-cross.cmake
+make
+sudo make install
+```
+
+This will install the static library in `/usr/local/lib/esp32c3/libmicropython.a` and the MicroPython header file in `/usr/local/include/esp32c3/micropython_embed.h`.
+
+## 8. HTTPParser Library
+
+As HTTP/1.1 parser the parser from the project https://github.com/WEBcodeX1/http-1.2 will be taken. The arduino/esp32c3 port already includes building a static library which can be included into our micropython-as project.
+
+> [!NOTE]
+> Adjust the cross-compiler settings / paths in `riscv32-cross.cmake`.
+
+```bash
+git clone https://github.com/WEBcodeX1/http-1.2
+cd ./http-1.2/ports/arduino/esp32c3/
+cmake -DCMAKE_TOOLCHAIN_FILE=riscv32-cross.cmake
+make
+sudo make install
+```
+
+This will install the static library in `/usr/local/lib/esp32c3/libhttpparser.a` and the MicroPython header file in `/usr/local/include/esp32c3/httpparser.hpp`.
+
+
+## 9. Compiling / Flashing
 
 Change to the micropython-as repository, compile and afterwards flash to the microcontroller:
 

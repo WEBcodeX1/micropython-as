@@ -1,7 +1,7 @@
 #pragma once
 
 extern "C" {
-#include "/usr/local/include/micropython_embed.h"
+#include "/usr/local/include/esp32c3/micropython_embed.h"
 }
 
 using namespace std;
