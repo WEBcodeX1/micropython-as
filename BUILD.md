@@ -12,7 +12,7 @@ Make sure you also have a working USB-C or USB-C-to-USB cable / adapter with pow
 
 - Battery charging (when soldered to the battery pins on the back side of the board)
 - Serial communication for:
-  - firmware flashing
+  - Firmware flashing
   - JTAG / serial debugging over USB
 
 ## 3. Packages
