@@ -64,4 +64,10 @@ To include / link the HTTP/1.1 parsing library as a static (.a file) into a ESP3
 
 ## MicroPython
 
-We also will try to integrate MicroPython as a cross-compiled static linked library with the same approach as the HTTP parsing library.
+MicroPython will be integrated as a cross-compiled static linked library with the same approach as the HTTP parsing library.
+The MicroPython fork with the appropriate CMake static library can be found here:
+
+https://github.com/clauspruefer/micropython/tree/v1.26-release/examples/embedding-staticlib
+
+> [!NOTE]
+> Also the MicroPython "embed" port must be added some slight functionality to call a parametrized AS-application function with JSON input as well as JSON output, this also will be available from this fork ASAP.
