@@ -223,18 +223,12 @@ The following projects provide a bit more insight into the microcontroller boot 
 
 The following diagrams show a comparison between the native MicroPython design and architecture and our HTTP application server approach.
 
+> [!WARNING]
+> Note that the following diagrams *could* not reflect architectures 100% in detail!
+
 ## 10.1. MicroPython Architecture
 
 ![MicroPythonArchitecture](/diagram/micropython-architecture.png)
-
-> [!NOTE]
-> Please note: the diagram probably does **not** reflect how Micro100% , it should be an easy overview   .
-
-**Disadvantages**:
-- Networking implementation must be
-
-**Advantages**:
-- Implementors flexibility
 
 ## 10.2. MicroPython AS Architecture
 
