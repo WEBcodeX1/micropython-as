@@ -12,9 +12,13 @@ extern "C" void app_main(void)
   ClientHandler testhandler;
   testhandler.addClient(fd);
 
-  NetworkWifi net;
-  net.addClient();
+  MicroPython interpreter;
 
-  Micropython interpreter;
-  interpreter.test();
+  string ResultString;
+  string FunctionName("testfunc");
+  string FunctionParam("testparam");
+
+  const bool status = interpreter.callFunction(
+    FunctionName, FunctionParam, ResultString
+  );
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include "constants.h"
+
 extern "C" {
 #include "/usr/local/include/esp32c3/micropython_embed.h"
 }
@@ -7,18 +10,19 @@ extern "C" {
 using namespace std;
 
 
-class Micropython
+class MicroPython
 {
 
 public:
 
-    Micropython();
-    ~Micropython();
+    MicroPython();
+    ~MicroPython();
 
-    void test();
+    bool callFunction(string&, string&, string&);
 
 private:
-    char InterpreterHeap[8*1024];
+
+    char InterpreterHeap[MICROPYTHON_HEAP_SIZE];
     int InterpreterStackTop;
 
 };

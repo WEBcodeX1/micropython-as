@@ -18,5 +18,5 @@ ClientHandler::~ClientHandler()
 
 void ClientHandler::addClient(const ClientFD_t ClientFD)
 {
-    HTTPParser testparser = HTTPParser();
+    HTTPParser testparser = HTTPParser(4096);
 }

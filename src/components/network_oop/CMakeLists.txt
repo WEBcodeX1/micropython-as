@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS Network.cpp NetworkWifi.cpp ClientHandler.cpp
+    SRCS Network.cpp ClientHandler.cpp
     PRIV_REQUIRES main
     INCLUDE_DIRS "."
 )
