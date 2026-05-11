@@ -7,6 +7,23 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 > [!NOTE]
 > You might ask yourself: What exactly is this approach useful for, and how does it differ from the existing MicroPython ESP32 integration? We provide illustrative diagrams in the [10. Diagrams](#10-diagrams) section.
 
+## Project Status
+
+| Feature <img width=450px></img>                     | Status <img width=150px></img>           | Flag                        |
+|-----------------------------------------------------|------------------------------------------|-----------------------------|
+| Cross Compiling External Libraries                  | Stable, tested                           | :white_check_mark:          |
+| HTTP Parser / Static Library                        | Stable, tested                           | :white_check_mark:          |
+| Embedded MicroPython Interpreter / Static Library   | Stable, tested                           | :white_check_mark:          |
+| MicroPython PONG Game                               | Stable, tested                           | :white_check_mark:          |
+| Basic Networking / SoftAP                           | Work in progress                         | :x:                         |
+| BSD-Socket Porting / FalconAS                       | Work in progress                         | :x:                         |
+| Display (SSD1306)                                   | Work in progress                         | :x:                         |
+
+- https://github.com/WEBcodeX1/http-1.2
+- https://github.com/clauspruefer/MicroPythonPong
+- https://github.com/clauspruefer/micropython/tree/v1.26-release/examples/embedding-staticlib
+- https://github.com/clauspruefer/micropython/tree/v1.26-release/examples/embedding-pong
+
 # 1. ESP32-C3 SoC
 
 [Espressif Systems](https://www.espressif.com/) developed the **ESP32-C3** system-on-chip, based on a 32-bit single-core RISC-V CPU. Ready-to-use boards are available from *Seeed Studio* (XIAO ESP32-C3 mini board) at an affordable price point (5€ :moneybag::star2:).
