@@ -1,15 +1,17 @@
 #pragma once
 
+#include "esp_wifi.h"
+
 #include <cstring>
 
-extern "C" {
 #include "constants.h"
-#include "esp_wifi.h"
-#include "esp_event.h"
-#include "esp_netif.h"
+#include "Network.hpp"
+
+
+extern "C" {
 #include "freertos/event_groups.h"
 
-static EventGroupHandle_t InitWifiEventHandle;
+static EventGroupHandle_t WifiEventHandle;
 
 static void WIFIEventHandler(
     void *Arguments,
@@ -18,11 +20,11 @@ static void WIFIEventHandler(
     void *EventData
 ){
     if (EventBase == WIFI_EVENT && EventId == WIFI_EVENT_AP_STACONNECTED) {
-        xEventGroupSetBits(InitWifiEventHandle, WIFI_CONNECTED_BIT);
+        xEventGroupSetBits(WifiEventHandle, WIFI_CONNECTED_BIT);
     } else if (EventBase == WIFI_EVENT && EventId == WIFI_EVENT_AP_STADISCONNECTED) {
-        xEventGroupSetBits(InitWifiEventHandle, WIFI_DISCONNECTED_BIT);
+        xEventGroupSetBits(WifiEventHandle, WIFI_DISCONNECTED_BIT);
     } else if (EventBase == IP_EVENT && EventId == IP_EVENT_ASSIGNED_IP_TO_CLIENT) {
-        xEventGroupSetBits(InitWifiEventHandle, WIFI_STA_IP_ASSIGNED_BIT);
+        xEventGroupSetBits(WifiEventHandle, WIFI_STA_IP_ASSIGNED_BIT);
     }
 }
 }
@@ -36,10 +38,21 @@ private:
 
 public:
 
-    static void initSoftAP(void)
+    static void setupAPInterface()
     {
         APNetInterface = esp_netif_create_default_wifi_ap();
+    }
 
+    static void initDefaultConfig()
+    {
+        wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+        ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+
+        ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
+    }
+
+    static void initSoftAP(Network& NetworkConfig)
+    {
         wifi_config_t APConfig;
         strncpy((char*)APConfig.ap.ssid, WIFI_AP_SSID, strlen(WIFI_AP_SSID));
 
@@ -54,6 +67,35 @@ public:
         APConfig.ap.max_connection = WIFI_MAX_STA_CONN;
         APConfig.ap.authmode = WIFI_AUTH_WPA3_PSK;
 
+        if (NetworkConfig.StaticIP == true) {
+            NetworkConfig.reconfigureDHCP(APNetInterface);
+        }
+
         ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &APConfig));
+    }
+
+    static void registerEventHandler()
+    {
+        WifiEventHandle = xEventGroupCreate();
+
+        ESP_ERROR_CHECK(
+            esp_event_handler_instance_register(
+                WIFI_EVENT,
+                ESP_EVENT_ANY_ID,
+                &WIFIEventHandler,
+                NULL,
+                NULL
+            )
+        );
+
+        ESP_ERROR_CHECK(
+            esp_event_handler_instance_register(
+                IP_EVENT,
+                IP_EVENT_ASSIGNED_IP_TO_CLIENT,
+                &WIFIEventHandler,
+                NULL,
+                NULL
+            )
+        );
     }
 };
