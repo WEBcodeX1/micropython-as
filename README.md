@@ -16,7 +16,7 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 | Embedded MicroPython Interpreter / Static Library   | Stable, tested                           | :white_check_mark:          |
 | MicroPython PONG Game                               | Stable, tested                           | :white_check_mark:          |
 | Basic DNS (UDP) Server / Single A Record            | Work in progress                         | :x:                         |
-| Basic Networking / SoftAP                           | Work in progress                         | :x:                         |
+| Basic Networking / SoftAP                           | Implemented, untested                    | :x:                         |
 | BSD-Socket Porting / FalconAS                       | Work in progress                         | :x:                         |
 | Display (SSD1306)                                   | Work in progress                         | :x:                         |
 
