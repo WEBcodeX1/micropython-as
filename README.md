@@ -18,7 +18,7 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 | Basic DNS (UDP) Server / Single A Record            | Work in progress                         | :x:                         |
 | Basic Networking / SoftAP                           | Implemented, untested                    | :x:                         |
 | BSD-Socket Porting / FalconAS                       | Work in progress                         | :x:                         |
-| Display (SSD1306)                                   | Work in progress                         | :x:                         |
+| Peripherals (SSD1306 Display, 3 Color LED)          | Work in progress                         | :x:                         |
 
 - https://github.com/WEBcodeX1/http-1.2
 - https://github.com/clauspruefer/MicroPythonPong
