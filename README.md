@@ -1,6 +1,6 @@
 # Embedding MicroPython in a C++ HTTP/1.1 Application Server (ESP32-C3)
 
-This project embeds MicroPython in Arduino-based ESP32 microcontrollers using the **Falcon-AS** C++ HTTP/1.1 web server.
+This project embeds MicroPython in Arduino-based ESP32 microcontrollers using the **Falcon-AS** C++ HTTP/1.1 web server parser library.
 
 Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 
