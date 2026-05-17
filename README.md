@@ -1,6 +1,6 @@
 # Embedding MicroPython in a C++ HTTP/1.1 Application Server (ESP32-C3)
 
-This project embeds MicroPython in Arduino-based ESP32 microcontrollers using the **Falcon-AS** C++ HTTP/1.1 web server.
+This project embeds MicroPython in Arduino-based ESP32 microcontrollers using the **Falcon-AS** C++ HTTP/1.1 web server parser library.
 
 Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 
@@ -16,9 +16,9 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 | Embedded MicroPython Interpreter / Static Library   | Stable, tested                           | :white_check_mark:          |
 | MicroPython PONG Game                               | Stable, tested                           | :white_check_mark:          |
 | Basic DNS (UDP) Server / Single A Record            | Work in progress                         | :x:                         |
-| Basic Networking / SoftAP                           | Work in progress                         | :x:                         |
+| Basic Networking / SoftAP                           | Implemented, untested                    | :x:                         |
 | BSD-Socket Porting / FalconAS                       | Work in progress                         | :x:                         |
-| Display (SSD1306)                                   | Work in progress                         | :x:                         |
+| Peripherals (SSD1306 Display, 3 Color LED)          | Work in progress                         | :x:                         |
 
 - https://github.com/WEBcodeX1/http-1.2
 - https://github.com/clauspruefer/MicroPythonPong
