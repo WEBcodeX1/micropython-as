@@ -2,6 +2,9 @@
 
 // Font extracted from image/font-truncated.png (8x8 pixel characters)
 // Column-major encoding: byte[col], bit0=top row, bit7=bottom row
+//
+// This font originates from OpenGamesArt website
+// https://opengameart.org/content/8x8-ascii-bitmap-font-with-c-source (made by user "darkrose")
 
 static uint8_t font8x8_basic_tr[128][8] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },   // U+0000
