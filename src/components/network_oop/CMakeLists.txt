@@ -1,6 +1,6 @@
 idf_component_register(
-    SRCS Server.cpp ClientHandler.cpp
-    PRIV_REQUIRES main
+    SRCS Server.cpp ClientHandler.cpp Client.cpp
+    PRIV_REQUIRES main esp_netif
     INCLUDE_DIRS "."
 )
 

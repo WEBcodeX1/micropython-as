@@ -1,13 +1,17 @@
 #pragma once
 
+#include "Client.hpp"
+#include "Network.hpp"
+
 #include <string>
 #include <memory>
 #include <unordered_map>
 
+
 using namespace std;
 
-typedef unordered_map<uint16_t, const string> ClientMap_t;
-typedef uint16_t ClientFD_t;
+typedef std::shared_ptr<Client> ClientRef_t;
+typedef unordered_map<ClientFD_t, ClientRef_t> ClientMap_t;
 
 class ClientHandler
 {
@@ -18,9 +22,9 @@ public:
     ~ClientHandler();
 
     void addClient(const ClientFD_t);
+    void processClients();
 
 private:
 
     ClientMap_t Clients;
-    int16_t ProcessedClients;
 };

@@ -38,7 +38,7 @@ void ssd1306_show_buffer(SSD1306_t* dev)
 	}
 }
 
-void ssd1306_set_buffer(SSD1306_t* dev, const uint8_t * buffer)
+void ssd1306_set_buffer(SSD1306_t* dev, const uint8_t* buffer)
 {
 	int index = 0;
 	for (int page=0; page<dev->_pages;page++) {
@@ -47,7 +47,7 @@ void ssd1306_set_buffer(SSD1306_t* dev, const uint8_t * buffer)
 	}
 }
 
-void ssd1306_get_buffer(SSD1306_t* dev, uint8_t * buffer)
+void ssd1306_get_buffer(SSD1306_t* dev, uint8_t* buffer)
 {
 	int index = 0;
 	for (int page=0; page<dev->_pages;page++) {
@@ -56,31 +56,33 @@ void ssd1306_get_buffer(SSD1306_t* dev, uint8_t * buffer)
 	}
 }
 
-void ssd1306_set_page(SSD1306_t* dev, int page, const uint8_t * buffer)
+void ssd1306_set_page(SSD1306_t* dev, int page, const uint8_t* buffer)
 {
 	memcpy(&dev->_page[page]._segs, buffer, 128);
 }
 
-void ssd1306_get_page(SSD1306_t* dev, int page, uint8_t * buffer)
+void ssd1306_get_page(SSD1306_t* dev, int page, uint8_t* buffer)
 {
 	memcpy(buffer, &dev->_page[page]._segs, 128);
 }
 
-void ssd1306_display_image(SSD1306_t* dev, int page, int seg, const uint8_t * images, int width)
+void ssd1306_display_image(SSD1306_t* dev, int page, int seg, const uint8_t* images, int width)
 {
 	i2c_display_image(dev, page, seg, images, width);
 	// Set to internal buffer
 	memcpy(&dev->_page[page]._segs[seg], images, width);
 }
 
-void ssd1306_display_text(SSD1306_t* dev, int page, const char * text, int text_len, bool invert)
+void ssd1306_display_text(SSD1306_t* dev, int page, const char* text, int text_len, bool invert)
 {
 	if (page >= dev->_pages) return;
+
 	int _text_len = text_len;
 	if (_text_len > 16) _text_len = 16;
 
 	int seg = 0;
 	uint8_t image[8];
+
 	for (int i = 0; i < _text_len; i++) {
 		memcpy(image, font8x8_basic_tr[(uint8_t)text[i]], 8);
 		if (invert) ssd1306_invert(image, 8);
@@ -111,7 +113,7 @@ void ssd1306_contrast(SSD1306_t* dev, int contrast)
 	i2c_contrast(dev, contrast);
 }
 
-void ssd1306_bitmaps(SSD1306_t* dev, int xpos, int ypos, const uint8_t * bitmap, int width, int height, bool invert)
+void ssd1306_bitmaps(SSD1306_t* dev, int xpos, int ypos, const uint8_t* bitmap, int width, int height, bool invert)
 {
 	_ssd1306_bitmaps(dev, xpos, ypos, bitmap, width, height, invert);
 	
@@ -197,7 +199,7 @@ void _ssd1306_cursor(SSD1306_t* dev, int x0, int y0, int r, bool invert)
 	_ssd1306_line(dev, x0, y0-r, x0, y0+r, invert);
 }
 
-void ssd1306_invert(uint8_t *buf, size_t blen)
+void ssd1306_invert(uint8_t* buf, size_t blen)
 {
 	uint8_t wk;
 	for(int i=0; i<blen; i++){

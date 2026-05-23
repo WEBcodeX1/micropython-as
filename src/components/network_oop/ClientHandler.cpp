@@ -1,12 +1,10 @@
 #include "ClientHandler.hpp"
-#include "/usr/local/include/httpparser.hpp"
 #include "constants.h"
 
 
 using namespace std;
 
-ClientHandler::ClientHandler() :
-    ProcessedClients(0)
+ClientHandler::ClientHandler()
 {
     //- preserve maximum clients
     Clients.reserve(WIFI_MAX_STA_CONN);
@@ -18,5 +16,26 @@ ClientHandler::~ClientHandler()
 
 void ClientHandler::addClient(const ClientFD_t ClientFD)
 {
-    HTTPParser testparser = HTTPParser(4096);
+    //- set client connection non blocking
+    Socket::makeNonblocking(ClientFD);
+
+    ClientRef_t ClientObj = std::make_shared<Client>(
+        ClientFD
+    );
+
+    Clients.emplace(
+        ClientFD, move(ClientObj)
+    );
+}
+
+void ClientHandler::processClients()
+{
+    //- receive data from all client filedescriptors
+    for (auto const& ClientItem : Clients) {
+        auto const ReadFD = ClientItem.first;
+        if (Clients[ReadFD]->receiveData() == true) {
+            Clients.erase(ReadFD);
+            close(ReadFD);
+        }
+    }
 }

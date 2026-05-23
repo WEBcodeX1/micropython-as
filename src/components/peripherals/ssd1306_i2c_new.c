@@ -82,7 +82,7 @@ void i2c_init(SSD1306_t* dev, int width, int height)
 	dev->_height = height;
 	dev->_pages = 8;
 	if (dev->_height == 32) dev->_pages = 4;
-	
+
 	uint8_t out_buf[27];
 	int out_index = 0;
 
@@ -128,7 +128,7 @@ void i2c_init(SSD1306_t* dev, int width, int height)
 	i2c_master_transmit(dev->_i2c_dev_handle, out_buf, out_index, I2C_TICKS_TO_WAIT);
 }
 
-void i2c_display_image(SSD1306_t * dev, int page, int seg, const uint8_t * images, int width)
+void i2c_display_image(SSD1306_t* dev, int page, int seg, const uint8_t * images, int width)
 {
 	if (page >= dev->_pages) return;
 	if (seg >= dev->_width) return;
@@ -168,7 +168,7 @@ void i2c_display_image(SSD1306_t * dev, int page, int seg, const uint8_t * image
 	free(out_buf);
 }
 
-void i2c_contrast(SSD1306_t * dev, int contrast)
+void i2c_contrast(SSD1306_t* dev, int contrast)
 {
 	uint8_t _contrast = contrast;
 

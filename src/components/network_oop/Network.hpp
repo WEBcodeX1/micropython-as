@@ -2,6 +2,7 @@
 
 #include "esp_netif.h"
 #include "esp_event.h"
+#include "fcntl.h"
 
 #include <cstring>
 #include <string>
@@ -50,6 +51,19 @@ public:
 
         // 4. Start DHCP server with the new settings
         esp_netif_dhcps_start(NetInterface);
+    }
+
+};
+
+
+class Socket {
+
+public:
+
+    static void makeNonblocking(int fd)
+    {
+        int flags = fcntl(fd, F_GETFL, 0);
+        fcntl(fd, F_SETFL, flags | O_NONBLOCK );
     }
 
 };
