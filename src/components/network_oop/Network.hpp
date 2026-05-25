@@ -16,8 +16,6 @@ class Network
 
 private:
 
-    static esp_netif_ip_info_t IPAddrStruct;
-
     static string IPAddr;
     static string IPGateway;
     static string IPNetmask;
@@ -34,6 +32,7 @@ public:
 
     static void activateIPAddr(esp_netif_t* NetInterface)
     {
+        esp_netif_ip_info_t IPAddrStruct;
         memset(&IPAddrStruct, 0, sizeof(esp_netif_ip_info_t));
         IPAddrStruct.ip.addr = esp_ip4addr_aton(IPAddr.c_str());
         IPAddrStruct.gw.addr = esp_ip4addr_aton(IPGateway.c_str());
@@ -43,13 +42,13 @@ public:
 
     static void reconfigureDHCP(esp_netif_t* NetInterface)
     {
-        //- stop dhcp server
+        //- stop DHCP server
         esp_netif_dhcps_stop(NetInterface);
 
         //- activate ip address
         activateIPAddr(NetInterface);
 
-        // 4. Start DHCP server with the new settings
+        // re-start DHCP server
         esp_netif_dhcps_start(NetInterface);
     }
 

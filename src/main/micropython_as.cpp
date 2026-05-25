@@ -9,24 +9,28 @@
 
 //- set network config
 bool Network::StaticIP = true;
-std::string IPAddr = "192.168.10.254";
-std::string IPGateway = "192.168.10.254";
-std::string IPNetmask = "255.255.255.0";
+std::string Network::IPAddr = "192.168.10.254";
+std::string Network::IPGateway = "192.168.10.254";
+std::string Network::IPNetmask = "255.255.255.0";
 
 //- main loop
 extern "C" void app_main(void)
 {
-  uint16_t fd = 1;
-  ClientHandler testhandler;
-  testhandler.addClient(fd);
+    Network::init();
+    esp_netif_t* NetworkInterface = NetworkWifi::setupAPInterface();
+    NetworkWifi::registerEventHandler();
 
-  MicroPython interpreter;
+    uint16_t fd = 1;
+    ClientHandler testhandler;
+    testhandler.addClient(fd);
 
-  string ResultString;
-  string FunctionName("testfunc");
-  string FunctionParam("testparam");
+    MicroPython interpreter;
 
-  const bool status = interpreter.callFunction(
-    FunctionName, FunctionParam, ResultString
-  );
+    string ResultString;
+    string FunctionName("testfunc");
+    string FunctionParam("testparam");
+
+    const bool status = interpreter.callFunction(
+        FunctionName, FunctionParam, ResultString
+    );
 }

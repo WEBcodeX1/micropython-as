@@ -34,24 +34,21 @@ class NetworkWifi
 
 private:
 
-    static esp_netif_t* APNetInterface;
-
 public:
 
-    static void setupAPInterface()
+    static esp_netif_t* setupAPInterface()
     {
-        APNetInterface = esp_netif_create_default_wifi_ap();
+        return esp_netif_create_default_wifi_ap();
     }
 
     static void initDefaultConfig()
     {
-        wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-        ESP_ERROR_CHECK(esp_wifi_init(&cfg));
-
+        wifi_init_config_t APDefaultConfig = WIFI_INIT_CONFIG_DEFAULT();
+        ESP_ERROR_CHECK(esp_wifi_init(&APDefaultConfig));
         ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
     }
 
-    static void initSoftAP(Network& NetworkConfig)
+    static void initSoftAP(esp_netif_t* APNetInterface)
     {
         wifi_config_t APConfig;
         strncpy((char*)APConfig.ap.ssid, WIFI_AP_SSID, strlen(WIFI_AP_SSID));
@@ -67,8 +64,8 @@ public:
         APConfig.ap.max_connection = WIFI_MAX_STA_CONN;
         APConfig.ap.authmode = WIFI_AUTH_WPA3_PSK;
 
-        if (NetworkConfig.StaticIP == true) {
-            NetworkConfig.reconfigureDHCP(APNetInterface);
+        if (Network::StaticIP == true) {
+            Network::reconfigureDHCP(APNetInterface);
         }
 
         ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &APConfig));
