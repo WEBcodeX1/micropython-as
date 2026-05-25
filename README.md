@@ -17,7 +17,7 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 | MicroPython PONG Game                               | Stable, tested                           | :white_check_mark:          |
 | Basic DNS (UDP) Server / Single A Record            | Work in progress                         | :x:                         |
 | Basic Networking / SoftAP                           | Implemented, untested                    | :x:                         |
-| BSD-Socket Porting / FalconAS                       | Work in progress                         | :x:                         |
+| BSD-Socket Porting / FalconAS                       | Implemented, untested                    | :x:                         |
 | Peripherals (SSD1306 Display, 3 Color LED)          | Work in progress                         | :x:                         |
 
 - https://github.com/WEBcodeX1/http-1.2
