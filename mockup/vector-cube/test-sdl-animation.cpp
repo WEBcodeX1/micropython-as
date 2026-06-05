@@ -13,6 +13,7 @@ static const int VerticesFrameStart = 60;
 static const int VerticesFrameEnd = 120;
 
 static const int CubeCoordIndexes[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+static const int CubeLineMatrixIndexes[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 
 static int VerticesPointer = (VerticesFrameStart * VerticesOffsetSize);
 
@@ -27,8 +28,27 @@ static int CoordXOffsetEnd = 40;
 static int CoordXOffset = CoordXOffsetStart;
 static int CoordXOffsetDirection = 1; // 1: right, -1: left
 
-int main() {
 
+void drawLines(SDL_Renderer* renderer, vector<VertexScreeenCoordinate> Coordinates)
+{
+    if (Coordinates.size() == 8) {
+        for (int i : CubeLineMatrixIndexes) {
+            int CoordIndexStart = LineDrawMatrix[i].IndexStart;
+            int CoordIndexEnd = LineDrawMatrix[i].IndexEnd;
+
+            SDL_RenderDrawLine(
+                renderer,
+                Coordinates[CoordIndexStart].xPos,
+                Coordinates[CoordIndexStart].yPos,
+                Coordinates[CoordIndexEnd].xPos,
+                Coordinates[CoordIndexEnd].yPos
+            );
+        }
+    }
+}
+
+int main()
+{
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         return 1;
         cout << "Initialization failed" << endl;
@@ -69,6 +89,8 @@ int main() {
 
         SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
 
+        drawLines(renderer, LastCoordinates);
+
         for (auto PixelCoords : LastCoordinates) {
             SDL_RenderDrawPoint(renderer, PixelCoords.xPos, PixelCoords.yPos);
         }
@@ -89,13 +111,13 @@ int main() {
             Coordinates.push_back(PixelCoords);
             CoordsIndex += 3;
 
-            //cout << "Set coords index:" << i << "x:" << PixelCoords.xPos << "y:" << PixelCoords.yPos << endl;
+            cout << "Set coords index:" << i << "x:" << PixelCoords.xPos << "y:" << PixelCoords.yPos << endl;
             SDL_RenderDrawPoint(renderer, PixelCoords.xPos, PixelCoords.yPos);
         }
 
-        LastCoordinates = std::move(Coordinates);
+        drawLines(renderer, Coordinates);
 
-        //c1LineData = LineDrawMatrix[0];
+        LastCoordinates = std::move(Coordinates);
 
         SDL_RenderPresent(renderer);
 
@@ -115,13 +137,13 @@ int main() {
         }
 
         if (CoordXOffsetDirection == 1) {
-            CoordXOffset++;
+            CoordXOffset+=2;
             if (CoordXOffset >= CoordXOffsetEnd) {
                 CoordXOffsetDirection = -1;
             }
         }
         else if (CoordXOffsetDirection == -1) {
-            CoordXOffset--;
+            CoordXOffset-=2;
             if (CoordXOffset <= CoordXOffsetStart) {
                 CoordXOffsetDirection = 1;
             }
