@@ -8,7 +8,9 @@ static const int WindowWidth = 128;
 static const int WindowHeight = 64;
 
 static const int VerticesOffsetSize = 8*3;
-static const int VerticesFrameStart = 1;
+
+static const int VerticesFrameStart = 60;
+static const int VerticesFrameEnd = 120;
 
 static const int CubeCoordIndexes[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 
@@ -16,6 +18,14 @@ static int VerticesPointer = (VerticesFrameStart * VerticesOffsetSize);
 
 static vector<VertexScreeenCoordinate> LastCoordinates;
 
+static int FramePointer = VerticesFrameStart;
+static int FramePointerDirection = 1; // 1: up, -1: down
+
+static int CoordXOffsetStart = -50;
+static int CoordXOffsetEnd = 40;
+
+static int CoordXOffset = CoordXOffsetStart;
+static int CoordXOffsetDirection = 1; // 1: right, -1: left
 
 int main() {
 
@@ -67,17 +77,19 @@ int main() {
 
         vector<VertexScreeenCoordinate> Coordinates;
 
+        int CoordsIndex = VerticesPointer;
+
         for (int i : CubeCoordIndexes) {
             VertexScreeenCoordinate PixelCoords;
 
-            PixelCoords.xPos = CubeCoordinates[VerticesPointer];
-            PixelCoords.yPos = CubeCoordinates[VerticesPointer+1];
-            PixelCoords.visible = CubeCoordinates[VerticesPointer+2];
+            PixelCoords.xPos = CubeCoordinates[CoordsIndex]+CoordXOffset;
+            PixelCoords.yPos = CubeCoordinates[CoordsIndex+1];
+            PixelCoords.visible = CubeCoordinates[CoordsIndex+2];
 
             Coordinates.push_back(PixelCoords);
-            VerticesPointer += 3;
+            CoordsIndex += 3;
 
-            cout << "Set coords x:" << PixelCoords.xPos << "y:" << PixelCoords.yPos << endl;
+            //cout << "Set coords index:" << i << "x:" << PixelCoords.xPos << "y:" << PixelCoords.yPos << endl;
             SDL_RenderDrawPoint(renderer, PixelCoords.xPos, PixelCoords.yPos);
         }
 
@@ -86,6 +98,35 @@ int main() {
         //c1LineData = LineDrawMatrix[0];
 
         SDL_RenderPresent(renderer);
+
+        if (FramePointerDirection == 1) {
+            VerticesPointer += VerticesOffsetSize;
+            FramePointer++;
+            if (FramePointer >= VerticesFrameEnd) {
+                FramePointerDirection = -1;
+            }
+        }
+        else if (FramePointerDirection == -1) {
+            VerticesPointer -= VerticesOffsetSize;
+            FramePointer--;
+            if (FramePointer <= VerticesFrameStart) {
+                FramePointerDirection = 1;
+            }
+        }
+
+        if (CoordXOffsetDirection == 1) {
+            CoordXOffset++;
+            if (CoordXOffset >= CoordXOffsetEnd) {
+                CoordXOffsetDirection = -1;
+            }
+        }
+        else if (CoordXOffsetDirection == -1) {
+            CoordXOffset--;
+            if (CoordXOffset <= CoordXOffsetStart) {
+                CoordXOffsetDirection = 1;
+            }
+        }
+        //cout << "CoordXOffset:" << CoordXOffset << " Direction:" << CoordXOffsetDirection << endl;
 
         SDL_Delay(20);
     }
