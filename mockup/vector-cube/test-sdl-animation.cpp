@@ -7,10 +7,10 @@ using namespace std;
 static const int WindowWidth = 128;
 static const int WindowHeight = 64;
 
-static const int VerticesOffsetSize = 8*3;
+static const int VerticesOffsetSize = 8*2;
 
-static const int VerticesFrameStart = 60;
-static const int VerticesFrameEnd = 120;
+static const int VerticesFrameStart = 0;
+static const int VerticesFrameEnd = 59;
 
 static const int CubeCoordIndexes[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 static const int CubeLineMatrixIndexes[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
@@ -35,7 +35,6 @@ void drawLines(SDL_Renderer* renderer, vector<VertexScreeenCoordinate> Coordinat
         for (int i : CubeLineMatrixIndexes) {
             int CoordIndexStart = LineDrawMatrix[i].IndexStart;
             int CoordIndexEnd = LineDrawMatrix[i].IndexEnd;
-
             SDL_RenderDrawLine(
                 renderer,
                 Coordinates[CoordIndexStart].xPos,
@@ -91,9 +90,11 @@ int main()
 
         drawLines(renderer, LastCoordinates);
 
+        /*
         for (auto PixelCoords : LastCoordinates) {
             SDL_RenderDrawPoint(renderer, PixelCoords.xPos, PixelCoords.yPos);
         }
+        */
 
         SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
@@ -106,13 +107,12 @@ int main()
 
             PixelCoords.xPos = CubeCoordinates[CoordsIndex]+CoordXOffset;
             PixelCoords.yPos = CubeCoordinates[CoordsIndex+1];
-            PixelCoords.visible = CubeCoordinates[CoordsIndex+2];
 
             Coordinates.push_back(PixelCoords);
-            CoordsIndex += 3;
+            CoordsIndex += 2;
 
-            cout << "Set coords index:" << i << "x:" << PixelCoords.xPos << "y:" << PixelCoords.yPos << endl;
-            SDL_RenderDrawPoint(renderer, PixelCoords.xPos, PixelCoords.yPos);
+            //cout << "Set coords index:" << i << "x:" << PixelCoords.xPos << "y:" << PixelCoords.yPos << endl;
+            //SDL_RenderDrawPoint(renderer, PixelCoords.xPos, PixelCoords.yPos);
         }
 
         drawLines(renderer, Coordinates);
