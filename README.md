@@ -15,10 +15,13 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 | HTTP Parser / Static Library                       | Stable, tested                 | :white_check_mark: |
 | Embedded MicroPython Interpreter / Static Library  | Stable, tested                 | :white_check_mark: |
 | MicroPython PONG Game                              | Stable, tested                 | :white_check_mark: |
+| Realtime Game Rendering / Title Cube Animation     | Stable, tested                 | :white_check_mark: |
+| Peripherals (SSD1306 Display, 3 Color LED)         | Stable, tested                 | :white_check_mark: |
+| Basic Networking / SoftAP                          | Stable, tested                 | :white_check_mark: |
+| Posix Threads to RTOS Tasks Wrapper                | Stable, tested                 | :white_check_mark: |
 | Basic DNS (UDP) Server / Single A Record           | Work in progress               | :x:                |
 | BSD-Socket Porting / FalconAS                      | Implemented, untested          | :x:                |
-| Peripherals (SSD1306 Display, 3 Color LED)         | Stable, tested                 | :x:                |
-| Basic Networking / SoftAP                          | Stable, tested                 | :x:                |
+| x0 Browser App / FalconAS MicroPython Interfaces   | Work in progress               | :x:                |
 
 - https://github.com/WEBcodeX1/http-1.2
 - https://github.com/clauspruefer/MicroPythonPong
