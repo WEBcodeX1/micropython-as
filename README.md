@@ -9,16 +9,16 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 
 ## Project Status
 
-| Feature <img width=450px></img>                     | Status <img width=150px></img>           | Flag                        |
-|-----------------------------------------------------|------------------------------------------|-----------------------------|
-| Cross Compiling External Libraries                  | Stable, tested                           | :white_check_mark:          |
-| HTTP Parser / Static Library                        | Stable, tested                           | :white_check_mark:          |
-| Embedded MicroPython Interpreter / Static Library   | Stable, tested                           | :white_check_mark:          |
-| MicroPython PONG Game                               | Stable, tested                           | :white_check_mark:          |
-| Basic DNS (UDP) Server / Single A Record            | Work in progress                         | :x:                         |
-| Basic Networking / SoftAP                           | Implemented, untested                    | :x:                         |
-| BSD-Socket Porting / FalconAS                       | Implemented, untested                    | :x:                         |
-| Peripherals (SSD1306 Display, 3 Color LED)          | Work in progress                         | :x:                         |
+| Feature <img width=450px></img>                    | Status <img width=150px></img> | Flag               |
+|----------------------------------------------------|--------------------------------|--------------------|
+| Cross Compiling External Libraries                 | Stable, tested                 | :white_check_mark: |
+| HTTP Parser / Static Library                       | Stable, tested                 | :white_check_mark: |
+| Embedded MicroPython Interpreter / Static Library  | Stable, tested                 | :white_check_mark: |
+| MicroPython PONG Game                              | Stable, tested                 | :white_check_mark: |
+| Basic DNS (UDP) Server / Single A Record           | Work in progress               | :x:                |
+| BSD-Socket Porting / FalconAS                      | Implemented, untested          | :x:                |
+| Peripherals (SSD1306 Display, 3 Color LED)         | Stable, tested                 | :x:                |
+| Basic Networking / SoftAP                          | Stable, tested                 | :x:                |
 
 - https://github.com/WEBcodeX1/http-1.2
 - https://github.com/clauspruefer/MicroPythonPong
