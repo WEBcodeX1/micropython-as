@@ -8,7 +8,7 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 > You might ask yourself: What exactly is this approach useful for, and how does it differ from the existing MicroPython ESP32 integration? We provide illustrative diagrams in the [10. Diagrams](#10-diagrams) section.
 
 > [!WARNING]
-> Due to a MicroPython floating point handling bug (crash) on ESP32-C3 i am currently using an ESP32-S3 (2 core) board where MicroPython runs fine. The boards architecture needs some MicroPyton compiler flag adjustments (longjump) to compile correctly: see instructions in `./libs/` dir.
+> Due to a MicroPython floating point handling bug (crash) on ESP32-C3 i am currently using the ESP32-S3 (2 core) board where MicroPython runs fine. The boards architecture needs some MicroPyton compiler flag adjustments (longjump) to compile correctly: see instructions in `./libs/` dir.
 
 ## Project Status
 
