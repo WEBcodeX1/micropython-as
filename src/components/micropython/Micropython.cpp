@@ -2,9 +2,10 @@
 
 using namespace std;
 
-MicroPython::MicroPython()
+
+MicroPython::MicroPython(char* InterpreterHeap, int InterpreterHeapSize, int* InterpreterStackTop)
 {
-    mp_embed_init(&InterpreterHeap[0], sizeof(InterpreterHeap), &InterpreterStackTop);
+    mp_embed_init(InterpreterHeap, InterpreterHeapSize, InterpreterStackTop);
 }
 
 MicroPython::~MicroPython()
