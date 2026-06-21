@@ -13,3 +13,14 @@
 
 // MicroPython
 #define MICROPYTHON_HEAP_SIZE                       CONFIG_MICROPYTHON_HEAP_SIZE
+
+// LED flash types
+#define LED_FLASH_WIFI_CONNECT                      (1)
+#define LED_FLASH_WIFI_DISCONNECT                   (2)
+#define LED_FLASH_PLAYER_SCORE                      (3)
+
+//- game screen types
+enum ScreenType {
+    MAIN = 1,
+    GAME = 2
+};
