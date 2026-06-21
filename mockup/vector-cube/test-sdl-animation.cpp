@@ -1,6 +1,6 @@
 #include <iostream>
 #include <SDL2/SDL.h>
-#include "../../src/components/peripherals/metadata/cube-animation.h"
+#include "../../src/components/peripherals/cube-animation.hpp"
 
 using namespace std;
 
