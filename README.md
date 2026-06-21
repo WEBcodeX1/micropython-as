@@ -1,6 +1,6 @@
 # Embedding MicroPython in a C++ HTTP/1.1 Application Server (ESP32-C3, ESP32-S3)
 
-This project embeds MicroPython in Arduino-based ESP32 microcontrollers using the **Falcon-AS** C++ HTTP/1.1 web server parser library.
+This project embeds MicroPython in Arduino-based ESP32 microcontrollers using the **Falcon-AS** C++ HTTP/1.1 web server parser library and modified application server code adapted to the microcontroller architecture.
 
 Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 
@@ -8,7 +8,7 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 > You might ask yourself: What exactly is this approach useful for, and how does it differ from the existing MicroPython ESP32 integration? We provide illustrative diagrams in the [10. Diagrams](#10-diagrams) section.
 
 > [!WARNING]
-> Due to a MicroPython floating point handling bug (crash) on ESP32-C3 i am currently using the ESP32-S3 (2 core) board where MicroPython runs fine. The boards architecture needs some MicroPyton compiler flag adjustments (longjump) to compile correctly: see instructions in `./libs/` dir.
+> The project currently runs exclusively on the ESP32-S3 architecture. The ESP32-C3 lacks a hardware FPU (floating-point unit), causing MicroPython to crash when processing `float` types. While the dual-core ESP32-S3 includes a hardware FPU and runs MicroPython smoothly, its architecture requires specific compiler flag adjustments (such as `-mlongcalls`) to compile correctly; refer to the instructions in the ./libs/ directory. The fix for the ESP32-C3 will be added as soon as possible.
 
 ## Project Status
 
@@ -30,6 +30,9 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 - https://github.com/clauspruefer/MicroPythonPong
 - https://github.com/clauspruefer/micropython/tree/v1.26-release/examples/embedding-staticlib
 - https://github.com/clauspruefer/micropython/tree/v1.26-release/examples/embedding-pong
+
+> [!NOTE]
+> Version `0.1` is nearly complete, requiring only the final application server and the *x0 browser control app*. To start the PONG game from the title vector cube animation, connect 2 Wi-Fi clients. The game defaults to Player 1 AI mode; fine controls via the browser app are added as soon as poosible.
 
 # 1. ESP32-C3 SoC
 
