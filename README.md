@@ -8,7 +8,7 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 > You might ask yourself: What exactly is this approach useful for, and how does it differ from the existing MicroPython ESP32 integration? We provide illustrative diagrams in the [10. Diagrams](#10-diagrams) section.
 
 > [!WARNING]
-> The project currently runs exclusively on the ESP32-S3 architecture. The ESP32-C3 lacks a hardware FPU (floating-point unit), causing MicroPython to crash when processing `float` types. While the dual-core ESP32-S3 includes a hardware FPU and runs MicroPython smoothly, its architecture requires specific compiler flag adjustments (such as `-mlongcalls`) to compile correctly; refer to the instructions in the ./libs/ directory. The fix for the ESP32-C3 will be added as soon as possible.
+> The project currently runs exclusively on the ESP32-S3 architecture. The ESP32-C3 lacks a hardware FPU (floating-point unit), causing MicroPython to crash when processing `float` types. While the dual-core ESP32-S3 includes a hardware FPU and runs MicroPython smoothly, its architecture requires specific compiler flag adjustments (such as `-mlongcalls`) to compile correctly; refer to the instructions in the `./libs/` directory. The fix for the ESP32-C3 will be added as soon as possible.
 
 ## Project Status
 
