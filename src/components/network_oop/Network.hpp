@@ -26,8 +26,8 @@ public:
 
     static void init()
     {
-        esp_netif_init();
-        esp_event_loop_create_default();
+        ESP_ERROR_CHECK(esp_netif_init());
+        ESP_ERROR_CHECK(esp_event_loop_create_default());
     }
 
     static void activateIPAddr(esp_netif_t* NetInterface)
@@ -51,7 +51,6 @@ public:
         // re-start DHCP server
         esp_netif_dhcps_start(NetInterface);
     }
-
 };
 
 
