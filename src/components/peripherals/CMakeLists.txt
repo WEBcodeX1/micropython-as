@@ -1,9 +1,10 @@
-set(component_srcs "ssd1306.c" "ssd1306_i2c_new.c" "Display.cpp")
-set(component_requires "main driver esp_driver_i2c esp_driver_gpio")
+set(component_srcs "Display.cpp" "TitleScreen.cpp" "GameScreen.cpp" "LEDPwm.cpp" "LEDGpio.cpp" "LED3Color.cpp")
+set(component_requires "main" "esp_driver_ledc")
 
 idf_component_register(
     SRCS "${component_srcs}"
     PRIV_REQUIRES "${component_requires}"
+    REQUIRES "ssd1306"
     INCLUDE_DIRS "."
 )
 
