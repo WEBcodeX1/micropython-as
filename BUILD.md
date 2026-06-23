@@ -82,7 +82,7 @@ Additionally, note that the ESP32-C3 (RISCV32) and ESP32-S3 (Xtensa) are complet
 > The ESP-IDF framework including crosscompilers for ESP32-C3 and ESP32-S3 (installed to your $HOME dir) is required to produce working binaries.
 
 > [!NOTE]
-> Be sure to check out the correct MicroPython `v1.26-release` branch.
+> Be sure to a) clone the repository to ~/repos/micropython (default in `micropython_embed.mk`) **and** b) check out the correct MicroPython `v1.26-release` branch.
 
 > [!NOTE]
 > Cross-compiler settings for the relevant architecture are provided in `./lib/micropython/` (ESP32-C3 or ESP32-S3).
