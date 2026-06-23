@@ -15,7 +15,7 @@ Make sure you also have a working USB-C or USB-C-to-USB cable / adapter with pow
 
 ## 3. Requirements
 
-The ESP32-IDF Development Framework (see [point 5](#5--install-esp-idf)), Python 3, pip3, and CMake must be installed before proceeding.
+The ESP32-IDF Development Framework (see [point 5](#5-install-esp-idf)), Python 3, pip3, and CMake must be installed before proceeding.
 
 ```bash
 apt-get install python3 python3-pip cmake
@@ -27,9 +27,9 @@ The following external static libraries and C++ header files—including a *patc
 
 The list below provides an overview of exactly what these libraries are used for. Detailed instructions can be found inside the `./lib/` folder and later in this document:
 
-1. A **patched** MicroPython to execute MicroPython functions directly from C++ code (see [point 7](#7--micropython))
-2. A HTTP parsing library from the FalconAS project to parse HTTP/1.1 messages (see [point 8](#8--http-libraries))
-3. A HTTP message generator from the FalconAS project to generate HTTP/1.1 messages (see [point 8](#8--http-libraries))
+1. A **patched** MicroPython to execute MicroPython functions directly from C++ code (see [point 7](#7-micropython))
+2. A HTTP parsing library from the FalconAS project to parse HTTP/1.1 messages (see [point 8](#8-http-libraries))
+3. A HTTP message generator from the FalconAS project to generate HTTP/1.1 messages (see [point 8](#8-http-libraries))
 
 ## 4. ESP IoT Development Framework Features
 
