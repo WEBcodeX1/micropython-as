@@ -112,4 +112,4 @@ idf.py flash
 ```
 
 > [!NOTE]
-> RAM (heap and stack) settings are already adusted for **ESP32-S3**, settings might be adjusted for **ESP32-C3**.
+> RAM (heap and stack) settings are already adjusted for **ESP32-S3**, it may be necessary to adjust these for **ESP32-C3**.
