@@ -91,9 +91,9 @@ After executing the relevant architecture installer script, the static library w
 
 ## 8. HTTP Libraries
 
-For the HTTP/1.1 parser and application server, the parser and the message generator from the project https://github.com/WEBcodeX1/http-1.2 will be used.
+For the HTTP/1.1 parser and application server, the parser and the message generator library from the project https://github.com/WEBcodeX1/http-1.2 will be used.
 
-Under `/ports/arduino/` installation instructions for board types ESP32-C3 and ESP32-S3 can be found.
+Under `/ports/arduino/` installation instructions for board types **ESP32-C3** and **ESP32-S3** can be found.
 
 This installs the static libraries to `/usr/local/lib/$architecture/` and the header files to `/usr/local/include/$architecture/`.
 
