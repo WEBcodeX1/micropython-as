@@ -10,20 +10,26 @@ We recommend using a standard Debian-based Linux distribution. I have tested com
 
 Make sure you also have a working USB-C or USB-C-to-USB cable / adapter with power and data lines that supports:
 
-- Battery charging (when soldered to the battery pins on the back side of the board)
 - Serial communication for *firmware flashing*
 - Serial communication for *JTAG / serial debugging over USB*
 
-## 3. Packages
+## 3. Requirements
 
-Python 3, pip3, and CMake must be installed before proceeding.
+The ESP32-IDF Development Framework (see [point 5.](#5.-install-esp-idf)), Python 3, pip3, and CMake must be installed before proceeding.
 
 ```bash
 apt-get install python3 python3-pip cmake
 ```
 
-> [!WARNING]
-> You will also need the `falcon-as` and `micropython` libraries at a later stage of the project. We will keep you informed and update this documentation.
+### 3.1. External Includes
+
+The following external static libraries and C++ header files—including a *patched* MicroPython—must be cross-compiled for the matching destination architecture. Proper instructions for the **ESP32-C3** and **ESP32-S3** boards are included.
+
+The list below provides an overview of exactly what these libraries are used for. Detailed instructions can be found inside the `./lib/` folder and later in this document:
+
+1. A **patched** MicroPython to execute MicroPython functions directly from C++ code (see [point 7.](#7.-micropython))
+2. A HTTP parsing library from the FalconAS project to parse HTTP/1.1 messages (see [point 8.](#8.-http-libraries))
+3. A HTTP message generator from the FalconAS project to generate HTTP/1.1 messages (see [point 8.](#8.-http-libraries))
 
 ## 4. ESP IoT Development Framework Features
 
@@ -35,14 +41,9 @@ A short overview of the framework features before continuing with the installati
 - Automated ELF-to-firmware image conversion / linking
 - Command-line firmware flashing
 
-## 5. Install the ESP IoT Development Framework
+## 5. Install ESP-IDF
 
 The installation process is one of the easiest I have ever encountered. Programming, compiling, and external component integration are also very straightforward **without** losing any flexibility.
-
-```bash
-# install packages as root user
-sudo apt-get install python3 python3-pip cmake
-```
 
 Clone and install ESP-IDF as a development user (non-root).
 
@@ -71,52 +72,44 @@ Done! You can now compile ESP-IDF projects.
 
 ## 7. MicroPython
 
-The original MicroPython repository does not include support for building libraries (shared or static) for embedding the interpreter.
-I have submitted a pull request with an example showing how to do this. Until the PR has been accepted (or declined), static library building can be obtained from my MicroPython fork.
+The original MicroPython repository lacks direct, out-of-the-box support for cross-compiling libraries (shared or static) to embed the interpreter into external projects. Until my pending pull request is resolved, a static library building example using CMake with an external cross-compiler is available from my MicroPython GitHub Fork at https://github.com/clauspruefer/micropython/examples/embedding-staticlib.
+
+It is *more important*: my fork also adds the `mp_embed_exec_string_function(char* function_name, char* function_param_value)` function. This enables direct C/C++ calls to MicroPython functions with a single string (JSON) parameter, which is used internally to pass JSON messages from the C++ application server layer to the running MicroPython interpreter / PONG structures.
+
+Additionally, note that the ESP32-C3 (RISCV32) and ESP32-S3 (Xtensa) are completely different architectures and require specific *compiler adjustments* and `mpconfigport.h` settings. The `./lib/micropython/$architecture` directory includes settings and compile instructions for both architectures.
+
+> [!WARNING]
+> The ESP-IDF framework including crosscompilers for ESP32-C3 and ESP32-S3 (installed to your $HOME dir) is required to produce working binaries.
 
 > [!NOTE]
-> Be sure to check out the correct `v1.26-release` branch.
+> Be sure to check out the correct MicroPython `v1.26-release` branch.
 
 > [!NOTE]
-> Adjust the cross-compiler settings / paths in `riscv32-cross.cmake`.
+> Cross-compiler settings for the relevant architecture are provided in `./lib/micropython/` (ESP32-C3 or ESP32-S3).
 
-```bash
-git clone https://github.com/clauspruefer/micropython
-git checkout v1.26-release
-make -f micropython_embed.mk
-cmake -DCMAKE_TOOLCHAIN_FILE=riscv32-cross.cmake
-make
-sudo make install
-```
+After executing the relevant architecture installer script, the static library will be installed to `/usr/local/lib/$architecture/libmicropython.a` and the MicroPython header file to `/usr/local/include/$architecture/micropython_embed.h`.
 
-This installs the static library to `/usr/local/lib/esp32c3/libmicropython.a` and the MicroPython header file to `/usr/local/include/esp32c3/micropython_embed.h`.
+## 8. HTTP Libraries
 
-## 8. HTTPParser Library
+For the HTTP/1.1 parser and application server, the parser and the message generator from the project https://github.com/WEBcodeX1/http-1.2 will be used.
 
-For the HTTP/1.1 parser, the parser from the project https://github.com/WEBcodeX1/http-1.2 will be used. The `arduino/esp32c3` port already includes support for building a static library, which can be included in our `micropython-as` project.
+Under `/ports/arduino/` installation instructions for board types ESP32-C3 and ESP32-S3 can be found.
 
-> [!NOTE]
-> Adjust the cross-compiler settings / paths in `riscv32-cross.cmake`.
-
-```bash
-git clone https://github.com/WEBcodeX1/http-1.2
-cd ./http-1.2/ports/arduino/esp32c3/
-cmake -DCMAKE_TOOLCHAIN_FILE=riscv32-cross.cmake
-make
-sudo make install
-```
-
-This installs the static library to `/usr/local/lib/esp32c3/libhttpparser.a` and the HTTPParser header file to `/usr/local/include/esp32c3/httpparser.hpp`.
+This installs the static libraries to `/usr/local/lib/$architecture/` and the header files to `/usr/local/include/$architecture/`.
 
 ## 9. Compiling / Flashing
 
-Change to the `micropython-as` repository, compile it, and then flash it to the microcontroller:
+Change to the `micropython-as` repository, select your board type, compile it, and then flash it to the microcontroller.
+
+> [!WARNING]
+> The current default board, including settings, is **ESP32-S3**, not **ESP32-C3**. There are also **hardcoded** *GPIO* settings inside the C++ header files that you currently must change manually. Also note that the **ESP32-C3** MicroPython interpreter currently crashes on floating-point arithmetic.
 
 ```bash
 cd ~/src/micropython-as/src
+idf.py set-target esp32s3
 idf.py build
 idf.py flash
 ```
 
 > [!NOTE]
-> The flash and board RAM settings will probably need to be adjusted either through `idf.py menuconfig` or by using `esptool` with modified command-line parameters.
+> RAM (heap and stack) settings are already adusted for **ESP32-S3**, settings might be adjusted for **ESP32-C3**.
