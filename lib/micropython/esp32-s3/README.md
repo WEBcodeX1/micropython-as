@@ -18,10 +18,14 @@ Clone the *patched* MicroPython library from GitHub which adds code / functional
 ```bash
 mkdir -p ~/repos && cd ~/repos
 git clone https://github.com/clauspruefer/micropython.git
+git checkout v1.26-release
 ```
 
 > [!WARNING]
 > The repository **must** be cloned into `~/repos/micropython`, otherwise you must adjust the path in `micropython_embed.mk`.
+
+> [!WARNING]
+> The branch **must** be switched to `v1.26-release`, otherwise the MicroPython code will not run correctly.
 
 ## 2. Generate Embed Port
 
