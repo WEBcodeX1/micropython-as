@@ -38,20 +38,6 @@ void LED3Color::init(gpio_num_t GpioPIN1, gpio_num_t GpioPIN2, gpio_num_t GpioPI
     LED3->setConfig();
 }
 
-/*
-void LED3Color::initGpio(uint8_t GpioPIN1, uint8_t GpioPIN2, uint8_t GpioPIN3)
-{
-    LEDGpio* led1 = new LEDGpio();
-
-    led1->GpioPIN = GPIO_NUM_1;
-    led1->GpioBitmask = (1ULL<<GPIO_NUM_1);
-    led1->setConfig();
-
-    led1->Value = 1;
-    led1->updateValue();
-}
-*/
-
 void LED3Color::setColor(uint16_t Color1, uint16_t Color2, uint16_t Color3)
 {
     LED1->Value = Color1;
