@@ -23,13 +23,14 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 | Basic Networking / SoftAP                          | Stable, tested                 | :white_check_mark: |
 | Posix Threads to RTOS Tasks Wrapper                | Stable, tested                 | :white_check_mark: |
 | Basic DNS (UDP) Server / Single A Record           | Work in progress               | :x:                |
-| BSD-Socket Porting / FalconAS                      | Implemented, untested          | :x:                |
-| x0 Browser App / FalconAS MicroPython Interfaces   | Work in progress               | :x:                |
+| BSD-Socket Porting / FalconAS                      | Stable, tested                 | :white_check_mark: |
+| Static Filesystem / FalconAS HTTP/1.1 GET          | Stable, tested                 | :white_check_mark: |
+| FalconAS HTTP/1.1 POST to MicroPython Interface    | Nearly finished                | :x:                |
+| x0 Browser Application                             | Work in progress               | :x:                |
 
 - https://github.com/WEBcodeX1/http-1.2
+- https://github.com/WEBcodeX1/x0
 - https://github.com/clauspruefer/MicroPythonPong
-- https://github.com/clauspruefer/micropython/tree/v1.26-release/examples/embedding-staticlib
-- https://github.com/clauspruefer/micropython/tree/v1.26-release/examples/embedding-pong
 
 > [!NOTE]
 > Version `0.1` is nearly complete, requiring only the final application server and the *x0 browser control app*. To start the PONG game from the title vector cube animation, connect 2 Wi-Fi clients. The game defaults to Player 1 AI mode; fine controls via the browser app are added as soon as poosible.
