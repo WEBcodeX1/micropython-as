@@ -12,7 +12,10 @@ To produce clean code we should abstract these two layers for both a) single cor
 - RTOS tasks
 - C++11 threading library
 
-Seperating the web server and the python code could be done using 2 RTOS tasks, on dual-core controllers the micropython task later on can be run on a different CPU core. I think we should start implementing 2 RTOS tasks on the ESP32-C3 first.
+Seperating the web server and the python code could be done using 2 RTOS tasks, on dual-core controllers the micropython task later on can be run on a different CPU core.
+
+> [!NOTE]
+> The C++ POSIX Thread Wrapper Library runs perfectly on the ESP-IDF platform. The LED fading control has been implemented using the POSIX thread API. Additionally, because RISC-V 32-bit and Xtensa 32-bit chipsets execute atomic reads and writes of 32-bit variables, using a thread::lock is unnecessary for simple, unprotected read / write mechanisms.
 
 ## Project Goal
 
@@ -54,20 +57,3 @@ With the following settings, we achieved to build a firmware image of apx. 500 K
 - Disable debug build, optimize for size (-Os compiler flag)
 - Only IPv4 (no IPv6) lwIP stack
 - Disable C++ exceptions and RTTI (real time type information)
-
-## HTTP/1.1 Parser Library
-
-To include / link the HTTP/1.1 parsing library as a static (.a file) into a ESP32-C3 IDF *component* it **must** be built with a gcc / g++ *RISC32V* toolchain. To integrate a whole CMake project into an IDF component can be huge amount of work, so it is much better to do it vice versa: tell CMake to use the already installed ESP IDF *RISC32V* toolchain.
-
-> [!WARNING]
-> Somehow using class inheritance in the static source library resulted in unresolved symbols in the IDFs component linking process. Using only the base class works fine, i will further investigate.
-
-## MicroPython
-
-MicroPython will be integrated as a cross-compiled static linked library with the same approach as the HTTP parsing library.
-The MicroPython fork with the appropriate CMake static library can be found here:
-
-https://github.com/clauspruefer/micropython/tree/v1.26-release/examples/embedding-staticlib
-
-> [!NOTE]
-> Also the MicroPython "embed" port must be added some slight functionality to call a parametrized AS-application function with JSON input as well as JSON output, this also will be available from this fork ASAP.
