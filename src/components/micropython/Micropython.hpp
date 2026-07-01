@@ -4,7 +4,7 @@
 #include "constants.h"
 
 extern "C" {
-#include "/usr/local/include/esp32s3/micropython_embed.h"
+#include "/usr/local/include/esp32c3/micropython_embed.h"
 }
 
 
