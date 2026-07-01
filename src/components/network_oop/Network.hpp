@@ -51,6 +51,12 @@ public:
         // re-start DHCP server
         esp_netif_dhcps_start(NetInterface);
     }
+
+    static string getIPAddr()
+    {
+        return IPAddr;
+    }
+
 };
 
 

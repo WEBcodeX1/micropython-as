@@ -5,12 +5,13 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 #include <unordered_map>
 
 
 using namespace std;
 
-typedef std::shared_ptr<Client> ClientRef_t;
+typedef Client* ClientRef_t;
 typedef unordered_map<ClientFD_t, ClientRef_t> ClientMap_t;
 
 class ClientHandler
@@ -22,9 +23,10 @@ public:
     ~ClientHandler();
 
     void addClient(const ClientFD_t);
-    void processClients();
+    uint8_t processClients();
 
 private:
 
     ClientMap_t Clients;
+    char receiveBuffer[1024];
 };

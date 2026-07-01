@@ -1,6 +1,7 @@
 #pragma once
 
 #include "/usr/local/include/esp32s3/httpparser.hpp"
+#include "/usr/local/include/esp32s3/httpgenerator.hpp"
 
 #include <cstdint>
 #include <string>
@@ -10,7 +11,7 @@
 
 typedef int ClientFD_t;
 
-class Client : public HTTPParser
+class Client : public HTTPParser, public HTTPGenerator
 {
 
 public:
@@ -18,14 +19,13 @@ public:
     Client(ClientFD_t);
     ~Client();
 
-    bool receiveData();
+    bool receiveData(char*);
+    ClientFD_t getClientFD();
 
 protected:
 
     ClientFD_t _ClientFD;
 
 private:
-
-    char* _ReceiveBuffer;
 
 };

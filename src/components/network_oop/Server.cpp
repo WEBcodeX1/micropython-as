@@ -1,7 +1,10 @@
 #include "Server.hpp"
 #include "Network.hpp"
 
+#include "esp_log.h"
+
 using namespace std;
+
 
 Server::Server()
 {
@@ -14,7 +17,7 @@ Server::~Server()
 void Server::init()
 {
     //- set listen address / port
-    SocketListenAddress = "192.168.100.100";
+    SocketListenAddress = Network::getIPAddr();
     SocketListenPort = 80;
 
     //- setup server socket
@@ -31,6 +34,8 @@ void Server::setupSocket()
 {
     //- setup socket, parameter
     ServerSocketFD = socket(AF_INET, SOCK_STREAM, 0);
+
+    ESP_LOGI("HTTPServer", "SocketFD:%d", ServerSocketFD);
 
     memset((char*)&SocketAddr, 0, sizeof(SocketAddr));
 
@@ -70,6 +75,8 @@ void Server::ServerLoop()
 
         //- poll server fd for incoming connections
         if (poll(ServerConnFD, 1, 0) > 0) {
+            ESP_LOGI("HTTPServer", "accept()");
+
             //- check for incoming connection
             if (ServerConnFD[0].revents & POLLIN) {
                 acceptClient();
@@ -77,8 +84,15 @@ void Server::ServerLoop()
         }
 
         //- process clients
-        processClients();
+        auto sumMessages = processClients();
 
+        //- idle wakeup delay
+        if (sumMessages == 0) {
+            vTaskDelay(10);
+        }
+        else if (sumMessages >= 0) {
+            vTaskDelay(1);
+        }
     }
 }
 
@@ -92,6 +106,8 @@ void Server::acceptClient()
         reinterpret_cast<struct sockaddr*>(&ClientSocketAddr),
         &ClientSocketLen
     );
+
+    ESP_LOGI("HTTPServer", "ClientFD:%d", ClientFD);
 
     if (ClientFD > 0) {
         addClient(ClientFD);

@@ -1,9 +1,12 @@
 #include "Client.hpp"
 
+#include "esp_log.h"
+
 using namespace std;
 
+
 Client::Client(ClientFD_t ClientFD) :
-    HTTPParser(4096),
+    HTTPParser(1024),
     _ClientFD(ClientFD)
 {
 }
@@ -12,17 +15,18 @@ Client::~Client()
 {
 }
 
-bool Client::receiveData()
+bool Client::receiveData(char* BufferRef)
 {
     bool DataInKernelBuffer = true;
 
     while (DataInKernelBuffer == true) {
 
-        //ssize_t RcvBytes = read(_ClientFD, _ReceiveBuffer, SOCKET_RECEIVE_BUFFER_SIZE);
-        ssize_t RcvBytes = read(_ClientFD, _ReceiveBuffer, 1024);
+        ssize_t RcvBytes = read(_ClientFD, &BufferRef[0], 1024);
 
         if (RcvBytes > 0) {
-            appendBuffer(_ReceiveBuffer, RcvBytes);
+            ESP_LOGI("HTTPServer", "Client received bytes:%d", RcvBytes);
+            //ESP_LOG_BUFFER_HEX_LEVEL("HTTPServer", &BufferRef[0], RcvBytes, ESP_LOG_INFO);
+            appendBuffer(&BufferRef[0], RcvBytes);
         }
         else if (RcvBytes == 0) {
             DataInKernelBuffer = false;
@@ -30,10 +34,16 @@ bool Client::receiveData()
         else if (RcvBytes < 0) {
             const int RecvErrno = errno;
             DataInKernelBuffer = false;
+            //ESP_LOGI("HTTPServer", "Errno:%d", RecvErrno);
             if (RecvErrno == EAGAIN || RecvErrno == EWOULDBLOCK || RecvErrno == EINTR) {
                 return false;
             }
         }
     }
     return true;
+}
+
+ClientFD_t Client::getClientFD()
+{
+        return _ClientFD;
 }
