@@ -1,24 +1,19 @@
 # Architecture
 
-This project requires 2 external static libraries and C/C++ header files.
+This project contains the following sub-modules / components:
 
-## 1. HTTPParser Library
+1. Embedded MicroPython Interpreter
+2. OOP based Networking Library (WiFi SoftAP)
+3. Peripherals (Display and LED control)
+4. Filesystem Control (Fast Static Access)
+5. SSD1306 GPIO Base "Driver"
 
-https://github.com/WEBcodeX1/http-1.2/tree/v0.2-release/ports/arduino/esp32c3
+## 1. Embedded MicroPython
 
-> [!WARNING]
-> You must use `v0.2-release` branch (tested).
+## 2. OOP Based Network Library
 
-## 2. Embedding MicroPython
+## 3. OOP Based Network Library
 
-https://github.com/clauspruefer/micropython/tree/v1.26-release/examples/embedding-staticlib
+## 4.Filesystem Integration
 
-Until my proposed source changes are production ready (merged to official MicroPython), you must use my MicroPython fork.
-
-It includes the following:
-
-- Installable static cross-compiled MicroPython library (and C header file) for use in external CMake projects
-- Extended embedded port, providing the possibility to call MicroPython functions `mp_embed_exec_string_function()` with 1 parameter and string return type
-
-> [!WARNING]
-> You must use `v1.26-release` branch (modified, extended branch), the `main` branch is currently broken.
+## 5.SSD Base Driver
