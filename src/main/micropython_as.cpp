@@ -1,10 +1,11 @@
 // main include headers
+#include "Server.hpp"
 #include "Network.hpp"
+#include "Filesystem.hpp"
 #include "TitleScreen.hpp"
 #include "GameScreen.hpp"
 #include "NetworkWifi.hpp"
 #include "Micropython.hpp"
-#include "ClientHandler.hpp"
 
 // LED control
 #include "LED3Color.hpp"
@@ -24,8 +25,8 @@
 #include "freertos/task.h"
 
 // thread function prototypes
-static void* led_flashing_thread(void * arg);
-static void* http_server_thread(void * arg);
+static void* led_flashing_thread(void* arg);
+static void* http_server_thread(void* arg);
 
 // set network config
 bool Network::StaticIP = true;
@@ -36,8 +37,9 @@ std::string Network::IPNetmask = "255.255.255.0";
 // global shared LED flash indicator
 static unsigned int LEDFlashTrigger = 0;
 
-// global shared http application server "lock"
-static unsigned int HTTPAppServerMsgReady = 0;
+// global shared http application server "locks"
+static unsigned int HTTPAppServerMsgInReady = 0;
+static unsigned int HTTPAppServerMsgOutReady = 0;
 
 
 // main loop
@@ -47,7 +49,6 @@ extern "C" void app_main(void)
     static char InterpreterHeap[MICROPYTHON_HEAP_SIZE];
 
     //- LED processing "RTOS task" setup
-    pthread_attr_t ThreadAttributes;
     pthread_t LEDThread;
 
     pthread_create(&LEDThread, NULL, led_flashing_thread, NULL);
@@ -57,6 +58,17 @@ extern "C" void app_main(void)
     NetworkWifi::registerEventHandler();
     NetworkWifi::initDefaultConfig();
     NetworkWifi::initSoftAP();
+
+    //- HTTP processing "RTOS task" setup
+    pthread_t HTTPThread;
+    pthread_attr_t HTTPThreadAttributes;
+
+    pthread_attr_init(&HTTPThreadAttributes);
+    pthread_attr_setstacksize(&HTTPThreadAttributes, 32768);
+
+    pthread_create(&HTTPThread, &HTTPThreadAttributes, http_server_thread, NULL);
+
+    //- init / load MicroPython PONG code
 
     int InterpreterStackTop;
     MicroPython interpreter(&InterpreterHeap[0], MICROPYTHON_HEAP_SIZE, &InterpreterStackTop);
@@ -72,7 +84,6 @@ extern "C" void app_main(void)
     string FunctionParamMove("{ \"player2\": \"up\" }");
 
     string FunctionName("render_frame_no_dt");
-
 
     TitleScreen TitleScreenRef;
 
@@ -191,15 +202,15 @@ static void* led_flashing_thread(void * arg)
             vTaskDelay(10);
         }
 
-        ESP_LOGI("LEDControl", "LEDFlashTrigger:%d", LEDFlashTrigger);
+        //ESP_LOGI("LEDControl", "LEDFlashTrigger:%d", LEDFlashTrigger);
     }
 }
 
 static void* http_server_thread(void * arg)
 {
-    /*
-    uint16_t fd = 1;
-    ClientHandler testhandler;
-    testhandler.addClient(fd);
-    */
+    const ServerFile TestMetadata = Filesystem::getFileMetadata("/index.html");
+    ESP_LOGI("HTTPServer", "Test Server File:%s FirstChar:%d", TestMetadata.ContentPath.c_str(), TestMetadata.ContentPointer[0]);
+
+    Server ServerRef;
+    ServerRef.init();
 }
