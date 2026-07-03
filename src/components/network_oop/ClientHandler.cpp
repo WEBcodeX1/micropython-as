@@ -108,7 +108,7 @@ uint8_t ClientHandler::processClients()
                 const ssize_t BytesWritten = write(ClientObj->getClientFD(), SendMetadata.BufferRef, SendMetadata.BufferSize);
 
                 //ESP_LOGI("HTTPServer", "Bytes written:%d Buffer size:%d BufferAddress:0%x", BytesWritten, SendMetadata.BufferSize, SendMetadata.BufferRef);
-                //ESP_LOG_BUBytesWritten = 0;FFER_HEX_LEVEL("HTTPServer", SendMetadata.BufferRef, SendMetadata.BufferSize, ESP_LOG_INFO);
+                //ESP_LOG_BUFFER_HEX_LEVEL("HTTPServer", SendMetadata.BufferRef, SendMetadata.BufferSize, ESP_LOG_INFO);
 
                 //- on error, remove and close connection
                 if (BytesWritten < 0) {

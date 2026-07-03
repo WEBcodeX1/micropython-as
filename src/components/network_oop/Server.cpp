@@ -14,7 +14,7 @@ Server::~Server()
 {
 }
 
-void Server::init()
+void Server::start()
 {
     //- set listen address / port
     SocketListenAddress = Network::getIPAddr();

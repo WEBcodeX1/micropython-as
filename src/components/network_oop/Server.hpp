@@ -16,7 +16,7 @@ public:
     Server();
     ~Server();
 
-    void init();
+    void start();
     void setupSocket();
     void setupPoll();
     void ServerLoop();

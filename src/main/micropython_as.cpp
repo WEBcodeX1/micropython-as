@@ -1,6 +1,7 @@
 // main include headers
 #include "Server.hpp"
 #include "Network.hpp"
+#include "DNSServer.hpp"
 #include "Filesystem.hpp"
 #include "TitleScreen.hpp"
 #include "GameScreen.hpp"
@@ -27,6 +28,7 @@
 // thread function prototypes
 static void* led_flashing_thread(void* arg);
 static void* http_server_thread(void* arg);
+static void* dns_server_thread(void* arg);
 
 // set network config
 bool Network::StaticIP = true;
@@ -59,17 +61,20 @@ extern "C" void app_main(void)
     NetworkWifi::initDefaultConfig();
     NetworkWifi::initSoftAP();
 
+    //- DNS Server processing "RTOS task" setup
+    pthread_t DNSServerThread;
+    pthread_create(&DNSServerThread, NULL, dns_server_thread, NULL);
+
     //- HTTP processing "RTOS task" setup
     pthread_t HTTPThread;
     pthread_attr_t HTTPThreadAttributes;
 
     pthread_attr_init(&HTTPThreadAttributes);
-    pthread_attr_setstacksize(&HTTPThreadAttributes, 32768);
+    pthread_attr_setstacksize(&HTTPThreadAttributes, 16384);
 
     pthread_create(&HTTPThread, &HTTPThreadAttributes, http_server_thread, NULL);
 
     //- init / load MicroPython PONG code
-
     int InterpreterStackTop;
     MicroPython interpreter(&InterpreterHeap[0], MICROPYTHON_HEAP_SIZE, &InterpreterStackTop);
 
@@ -208,9 +213,12 @@ static void* led_flashing_thread(void * arg)
 
 static void* http_server_thread(void * arg)
 {
-    const ServerFile TestMetadata = Filesystem::getFileMetadata("/index.html");
-    ESP_LOGI("HTTPServer", "Test Server File:%s FirstChar:%d", TestMetadata.ContentPath.c_str(), TestMetadata.ContentPointer[0]);
-
     Server ServerRef;
-    ServerRef.init();
+    ServerRef.start();
+}
+
+static void* dns_server_thread(void * arg)
+{
+    DNSServer DNSServerRef;
+    DNSServerRef.start();
 }
