@@ -75,6 +75,7 @@ extern "C" void app_main(void)
     pthread_attr_setstacksize(&HTTPThreadAttributes, 16384);
 
     pthread_create(&HTTPThread, &HTTPThreadAttributes, http_server_thread, NULL);
+    pthread_attr_destroy(&HTTPThreadAttributes);
     pthread_detach(HTTPThread);
 
     //- init / load MicroPython PONG code
