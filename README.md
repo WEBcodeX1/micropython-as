@@ -22,7 +22,7 @@ Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 | Peripherals (SSD1306 Display, 3 Color LED)         | Stable, tested                 | :white_check_mark: |
 | Basic Networking / SoftAP                          | Stable, tested                 | :white_check_mark: |
 | Posix Threads to RTOS Tasks Wrapper                | Stable, tested                 | :white_check_mark: |
-| Basic DNS (UDP) Server / Single A Record           | Work in progress               | :x:                |
+| Basic DNS (UDP) Server / Single A Record           | Stable, tested                 | :white_check_mark: |
 | BSD-Socket Porting / FalconAS                      | Stable, tested                 | :white_check_mark: |
 | Static Filesystem / FalconAS HTTP/1.1 GET          | Stable, tested                 | :white_check_mark: |
 | FalconAS HTTP/1.1 POST to MicroPython Interface    | Nearly finished                | :x:                |
