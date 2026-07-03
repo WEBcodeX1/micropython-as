@@ -53,14 +53,14 @@ void DNSServer::ServerLoop()
             //ESP_LOG_BUFFER_CHAR_LEVEL("DNSServer", &RecvBuffer[12], ReceivedBytes-4, ESP_LOG_INFO);
 
             // Locate QTYPE/QCLASS for the first question (QNAME is variable-length; may be compressed).
-            size_t off = 12;
-            while (off < static_cast<size_t>(ReceivedBytes)) {
-                const uint8_t len = RecvBuffer[off];
-                if (len == 0) { off++; break; }
-                if ((len & 0xC0) == 0xC0) { off += 2; break; }
-                off += static_cast<size_t>(len) + 1;
+            uint8_t Offset = 12;
+            while (Offset < ReceivedBytes) {
+                const uint8_t NameLen = RecvBuffer[Offset];
+                if (NameLen == 0) { Offset++; break; }
+                if ((NameLen & 0xC0) == 0xC0) { Offset += 2; break; }
+                Offset += NameLen + 1;
             }
-            if (off + 4 > static_cast<size_t>(ReceivedBytes)) {
+            if (Offset + 4 > ReceivedBytes) {
                 continue;
             }
 
