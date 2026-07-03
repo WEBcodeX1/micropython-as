@@ -54,6 +54,7 @@ extern "C" void app_main(void)
     pthread_t LEDThread;
 
     pthread_create(&LEDThread, NULL, led_flashing_thread, NULL);
+    pthread_detach(LEDThread);
 
     //- WiFi setup
     Network::init();
@@ -64,6 +65,7 @@ extern "C" void app_main(void)
     //- DNS Server processing "RTOS task" setup
     pthread_t DNSServerThread;
     pthread_create(&DNSServerThread, NULL, dns_server_thread, NULL);
+    pthread_detach(DNSServerThread);
 
     //- HTTP processing "RTOS task" setup
     pthread_t HTTPThread;
@@ -73,6 +75,7 @@ extern "C" void app_main(void)
     pthread_attr_setstacksize(&HTTPThreadAttributes, 16384);
 
     pthread_create(&HTTPThread, &HTTPThreadAttributes, http_server_thread, NULL);
+    pthread_detach(HTTPThread);
 
     //- init / load MicroPython PONG code
     int InterpreterStackTop;
@@ -209,16 +212,19 @@ static void* led_flashing_thread(void * arg)
 
         //ESP_LOGI("LEDControl", "LEDFlashTrigger:%d", LEDFlashTrigger);
     }
+    return nullptr;
 }
 
 static void* http_server_thread(void * arg)
 {
     Server ServerRef;
     ServerRef.start();
+    return nullptr;
 }
 
 static void* dns_server_thread(void * arg)
 {
     DNSServer DNSServerRef;
     DNSServerRef.start();
+    return nullptr;
 }

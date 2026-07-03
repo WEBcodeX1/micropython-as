@@ -1,4 +1,6 @@
 #include "DNSServer.hpp"
+#include "Network.hpp"
+#include "Helper.hpp"
 
 #include "esp_log.h"
 
@@ -36,14 +38,19 @@ void DNSServer::start()
 
 void DNSServer::ServerLoop()
 {
+    string IPAddress = Network::getIPAddr();
+
+    vector<string> IPAddressSplit;
+    StringHelper::split(IPAddress, ".", IPAddressSplit);
+
     while(1)
     {
         const int ReceivedBytes = recvfrom(ServerSocketFD, &RecvBuffer[0], 128, MSG_WAITALL, (struct sockaddr*)&ClientSocketAddr, &ClientSocketLen);
 
-        if (ReceivedBytes > 0) {
-
-            ESP_LOG_BUFFER_HEX_LEVEL("DNSServer", &RecvBuffer[0], ReceivedBytes, ESP_LOG_INFO);
-            ESP_LOG_BUFFER_CHAR_LEVEL("DNSServer", &RecvBuffer[12], ReceivedBytes-4, ESP_LOG_INFO);
+        if (ReceivedBytes >= 24 && ReceivedBytes < 100)
+        {
+            //ESP_LOG_BUFFER_HEX_LEVEL("DNSServer", &RecvBuffer[0], ReceivedBytes, ESP_LOG_INFO);
+            //ESP_LOG_BUFFER_CHAR_LEVEL("DNSServer", &RecvBuffer[12], ReceivedBytes-4, ESP_LOG_INFO);
 
             const unsigned char QTypeByte1 = RecvBuffer[ReceivedBytes-4];
             const unsigned char QTypeByte2 = RecvBuffer[ReceivedBytes-3];
@@ -58,13 +65,13 @@ void DNSServer::ServerLoop()
                 // respond to all A record queries with HTTP servers IP address
 
                 //- construct answer packets
-                RecvBuffer[2] = 0x81; //- response type byte1
-                RecvBuffer[3] = 0x80; //- response type byte2
+                RecvBuffer[2] = 0x81;  //- response type byte1
+                RecvBuffer[3] = 0x80;  //- response type byte2
 
-                RecvBuffer[7] = 0x01; //- 1 answer RRs byte2
+                RecvBuffer[7] = 0x01;  //- 1 answer RRs byte2
 
-                RecvBuffer[8] = 0x00; //- 0 authority RRs byte1
-                RecvBuffer[9] = 0x00; //- 0 authority RRs byte2
+                RecvBuffer[8] = 0x00;  //- 0 authority RRs byte1
+                RecvBuffer[9] = 0x00;  //- 0 authority RRs byte2
 
                 RecvBuffer[10] = 0x00; //- 0 additional RRs byte1
                 RecvBuffer[11] = 0x00; //- 0 additional RRs byte2
@@ -85,12 +92,12 @@ void DNSServer::ServerLoop()
                 RecvBuffer[ReceivedBytes+10] = 0x00; //- RD length (IPv4) byte1
                 RecvBuffer[ReceivedBytes+11] = 0x04; //- RD length (IPv4) byte2
 
-                RecvBuffer[ReceivedBytes+12] = 0xc0; //- IPv4 byte1 (192)
-                RecvBuffer[ReceivedBytes+13] = 0xa8; //- IPv4 byte2 (168)
-                RecvBuffer[ReceivedBytes+14] = 0x0a; //- IPv4 byte3 (10)
-                RecvBuffer[ReceivedBytes+15] = 0xfe; //- IPv4 byte4 (254)
+                RecvBuffer[ReceivedBytes+12] = stoi(IPAddressSplit[0]); //- IPv4 byte1
+                RecvBuffer[ReceivedBytes+13] = stoi(IPAddressSplit[1]); //- IPv4 byte2
+                RecvBuffer[ReceivedBytes+14] = stoi(IPAddressSplit[2]); //- IPv4 byte3
+                RecvBuffer[ReceivedBytes+15] = stoi(IPAddressSplit[3]); //- IPv4 byte4
 
-                ESP_LOG_BUFFER_HEX_LEVEL("DNSServer", &RecvBuffer[0], ReceivedBytes+16, ESP_LOG_INFO);
+                //ESP_LOG_BUFFER_HEX_LEVEL("DNSServer", &RecvBuffer[0], ReceivedBytes+16, ESP_LOG_INFO);
 
                 sendto(ServerSocketFD, &RecvBuffer[0], ReceivedBytes+16, 0, (const struct sockaddr*) &ClientSocketAddr, ClientSocketLen);
             }

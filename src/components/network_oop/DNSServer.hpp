@@ -1,9 +1,15 @@
 #pragma once
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+
+#include <vector>
+#include <string>
 
 
 class DNSServer {
