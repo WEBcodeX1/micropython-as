@@ -52,26 +52,17 @@ void DNSServer::ServerLoop()
             //ESP_LOG_BUFFER_HEX_LEVEL("DNSServer", &RecvBuffer[0], ReceivedBytes, ESP_LOG_INFO);
             //ESP_LOG_BUFFER_CHAR_LEVEL("DNSServer", &RecvBuffer[12], ReceivedBytes-4, ESP_LOG_INFO);
 
-            // Locate QTYPE/QCLASS for the first question (QNAME is variable-length; may be compressed).
-            uint8_t Offset = 12;
-            while (Offset < ReceivedBytes) {
-                const uint8_t NameLen = RecvBuffer[Offset];
-                if (NameLen == 0) { Offset++; break; }
-                if ((NameLen & 0xC0) == 0xC0) { Offset += 2; break; }
-                Offset += NameLen + 1;
-            }
-            if (Offset + 4 > ReceivedBytes) {
-                continue;
-            }
+            const unsigned char QTypeByte1 = RecvBuffer[ReceivedBytes-4];
+            const unsigned char QTypeByte2 = RecvBuffer[ReceivedBytes-3];
+            const unsigned char QTypeByte3 = RecvBuffer[ReceivedBytes-2];
+            const unsigned char QTypeByte4 = RecvBuffer[ReceivedBytes-1];
 
-            const uint16_t qtype = (static_cast<uint16_t>(RecvBuffer[off]) << 8) | RecvBuffer[off + 1];
-            const uint16_t qclass = (static_cast<uint16_t>(RecvBuffer[off + 2]) << 8) | RecvBuffer[off + 3];
-
-            ESP_LOGI("DNSServer", "QueryType:%u QueryClass:%u", qtype, qclass);
+            ESP_LOGI("DNSServer", "QueryType b1:%d b2:%d b3:%d b4:%d", QTypeByte1, QTypeByte2, QTypeByte3, QTypeByte4);
 
             //- answer QCLASS=IN, QTYPE=A queries only
-            if (qtype == 1 && qclass == 1) {
-                // respond to all A record queries with HTTP servers IP address
+            if (QTypeByte1 == 0x00 && QTypeByte2 == 0x01 && QTypeByte3 == 0x00 && QTypeByte4 == 0x01) {
+
+                // respond to all (*) A record queries with HTTP servers IP address
 
                 //- construct answer packets
                 RecvBuffer[2] = 0x81;  //- response type byte1
