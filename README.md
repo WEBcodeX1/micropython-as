@@ -4,6 +4,8 @@ This project embeds MicroPython in Arduino-based ESP32 microcontrollers using th
 
 Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 
+I have added some videos showing the current project status / progress in [./video/](./video/) (gameplay and browser integration).
+
 > [!NOTE]
 > You might ask yourself: What exactly is this approach useful for, and how does it differ from the existing MicroPython ESP32 integration? We provide illustrative diagrams in the [10. Diagrams](#10-diagrams) section.
 
