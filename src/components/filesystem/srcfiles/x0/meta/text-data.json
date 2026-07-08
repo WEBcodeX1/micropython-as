@@ -1,0 +1,41 @@
+{
+    "0": {
+        "SysName": "ObjectLoaderRequestID",
+        "SysID": "Text"
+    },
+    "TXT.TABCONTAINER.TAB1": {
+        "id": "TXT.TABCONTAINER.TAB1",
+        "group": "tabulator",
+        "value_de": "Tabulator 1",
+        "value_en": "Tabulator 1",
+        "orderby": 1
+    },
+    "TXT.TABCONTAINER.TAB2": {
+        "id": "TXT.TABCONTAINER.TAB2",
+        "group": "formfield",
+        "value_de": "Tabulator 2",
+        "value_en": "Tabulator 2",
+        "orderby": 1
+    },
+    "TXT.MENU.MAINSCREEN": {
+        "id": "TXT.MENU.MAINSCREEN",
+        "group": "formfield",
+        "value_de": "Menu Button1",
+        "value_en": "Menu Button1",
+        "orderby": 1
+    },
+    "TXT.TEST1": {
+        "id": "TXT.TEST1",
+        "group": "formfield",
+        "value_en": "Display Text 1",
+        "value_de": "Anzeige Text 1",
+        "orderby": 1
+    },
+    "TXT.TEST2": {
+        "id": "TXT.TEST2",
+        "group": "formfield",
+        "value_en": "Display Text 2",
+        "value_de": "Anzeige Text 2",
+        "orderby": 1
+    }
+}
