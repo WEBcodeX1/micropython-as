@@ -1,0 +1,43 @@
+{
+	"MainScreen":
+	[
+		{
+			"PONGSpacerTop":
+			{
+				"RefID": "MainScreen"
+			}
+		},
+		{
+			"PONGLogo":
+			{
+				"RefID": "MainScreen"
+			}
+		},
+		{
+			"PONGSpacerAfter":
+			{
+				"RefID": "MainScreen"
+			}
+		},
+		{
+			"TabContainer1":
+			{
+				"RefID": "MainScreen"
+			}
+		},
+		{
+			"SQLText1":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "Tab1Content"
+			}
+		},
+		{
+			"SQLText2":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "Tab2Content"
+			}
+		}
+	]
+}

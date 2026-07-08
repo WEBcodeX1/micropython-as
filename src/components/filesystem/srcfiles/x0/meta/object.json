@@ -1,0 +1,80 @@
+{
+	"PONGLogo":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Value": "<img src=\"/esp32-pong-logo.png\">"
+		}
+	},
+
+	"PONGSpacerTop":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-3"
+		}
+	},
+
+	"PONGSpacerAfter":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-2"
+		}
+	},
+
+	"TabContainer1":
+	{
+		"Type": "TabContainer",
+		"Attributes":
+		{
+			"Tabs": [
+				{
+					"ID": "Tab1",
+					"Attributes":
+						{
+							"Default": true,
+							"TextID": "TXT.TABCONTAINER.TAB1",
+							"Style": "col-md-4"
+						}
+				},
+				{
+					"ID": "Tab2",
+					"Attributes":
+						{
+							"TextID": "TXT.TABCONTAINER.TAB2",
+							"Style": "col-md-8"
+						}
+				}
+			]
+		}
+	},
+
+	"Link1":
+	{
+		"Type": "Link",
+		"Attributes": {
+			"Style": "btn btn-secondary d-none",
+			"TextID": "TXT.MENU.MAINSCREEN",
+			"ScreenID": "MainScreen"
+		}
+	},
+
+	"SQLText1":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "md-4 text-warning",
+			"TextID": "TXT.TEST1"
+		}
+	},
+
+	"SQLText2":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "md-4 text-warning",
+			"TextID": "TXT.TEST2"
+		}
+	}
+}

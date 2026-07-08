@@ -27,15 +27,16 @@ I have added some videos showing the current project status / progress in [./vid
 | Basic DNS (UDP) Server / Single A Record           | Stable, tested                 | :white_check_mark: |
 | BSD-Socket Porting / FalconAS                      | Stable, tested                 | :white_check_mark: |
 | Static Filesystem / FalconAS HTTP/1.1 GET          | Stable, tested                 | :white_check_mark: |
+| Modified, working x0 Browser Framework             | Stable, tested                 | :white_check_mark: |
 | FalconAS HTTP/1.1 POST to MicroPython Interface    | Nearly finished                | :x:                |
-| x0 Browser Application                             | Work in progress               | :x:                |
+| Complete x0 Browser Application                    | Nearly finished                | :x:                |
 
 - https://github.com/WEBcodeX1/http-1.2
 - https://github.com/WEBcodeX1/x0
 - https://github.com/clauspruefer/MicroPythonPong
 
 > [!NOTE]
-> Version `0.1` is nearly complete, requiring only the final application server and the *x0 browser control app*. To start the PONG game from the title vector cube animation, connect 2 Wi-Fi clients. The game defaults to Player 1 AI mode; fine controls via the browser app are added as soon as poosible.
+> The **x0 framework** has been adapted to work databaselessly with the FalconAS HTTP/1.1 ESP32 component. Finishing the project is just a matter of days.
 
 # 1. ESP32-C3 SoC
 
