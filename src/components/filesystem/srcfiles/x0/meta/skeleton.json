@@ -26,17 +26,174 @@
 			}
 		},
 		{
-			"SQLText1":
+			"GameControlSpacerTop":
 			{
 				"RefID": "TabContainer1",
-				"ElementID": "Tab1Content"
+				"ElementID": "TabGameContent"
 			}
 		},
 		{
-			"SQLText2":
+			"GameStartCardContainer":
 			{
 				"RefID": "TabContainer1",
-				"ElementID": "Tab2Content"
+				"ElementID": "TabGameContent"
+			}
+		},
+		{
+			"GameStartCardHeader":
+			{
+				"RefID": "GameStartCardContainer"
+			}
+		},
+		{
+			"GameStartCardBodyContainer":
+			{
+				"RefID": "GameStartCardContainer"
+			}
+		},
+		{
+			"GameStartCardBodyTitle":
+			{
+				"RefID": "GameStartCardBodyContainer"
+			}
+		},
+		{
+			"GameStartCardBodyText":
+			{
+				"RefID": "GameStartCardBodyContainer"
+			}
+		},
+		{
+			"GameButtonStart":
+			{
+				"RefID": "GameStartCardBodyContainer"
+			}
+		},
+		{
+			"GameButtonStop":
+			{
+				"RefID": "GameStartCardBodyContainer"
+			}
+		},
+		{
+			"GameControlSpacerMiddle":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabGameContent"
+			}
+		},
+		{
+			"GameMovementCardContainer":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabGameContent"
+			}
+		},
+		{
+			"GameMovementCardHeader":
+			{
+				"RefID": "GameMovementCardContainer"
+			}
+		},
+		{
+			"GameMovementCardBodyContainer":
+			{
+				"RefID": "GameMovementCardContainer"
+			}
+		},
+		{
+			"GameMovementCardBodyTitle":
+			{
+				"RefID": "GameMovementCardBodyContainer"
+			}
+		},
+		{
+			"GameMovementCardBodyText":
+			{
+				"RefID": "GameMovementCardBodyContainer"
+			}
+		},
+		{
+			"GameButtonPaddleUp":
+			{
+				"RefID": "GameMovementCardBodyContainer"
+			}
+		},
+		{
+			"GameButtonPaddleDown":
+			{
+				"RefID": "GameMovementCardBodyContainer"
+			}
+		},
+		{
+			"PlayerScoreSpacerTop":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabScoreContent"
+			}
+		},
+		{
+			"PlayerScoreCardContainer":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabScoreContent"
+			}
+		},
+		{
+			"PlayerScoreCardHeader":
+			{
+				"RefID": "PlayerScoreCardContainer"
+			}
+		},
+		{
+			"PlayerScoreCardBodyContainer":
+			{
+				"RefID": "PlayerScoreCardContainer"
+			}
+		},
+		{
+			"PlayerScoreCardBodyTitle":
+			{
+				"RefID": "PlayerScoreCardBodyContainer"
+			}
+		},
+		{
+			"PlayerScoreCardBodyText":
+			{
+				"RefID": "PlayerScoreCardBodyContainer"
+			}
+		},
+		{
+			"PlayerScoreFormlist":
+			{
+				"RefID": "PlayerScoreCardBodyContainer"
+			}
+		},
+		{
+			"PlayerScoreButtonGetScoreData":
+			{
+				"RefID": "PlayerScoreCardBodyContainer"
+			}
+		},
+		{
+			"PlayerScoreButtonAppendScoreData":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabScoreContent"
+			}
+		},
+		{
+			"PlayerScoreSpacerDown":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabScoreContent"
+			}
+		},
+		{
+			"PlayerScoreHistoryList":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabScoreContent"
 			}
 		}
 	]

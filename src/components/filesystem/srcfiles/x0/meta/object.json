@@ -1,4 +1,14 @@
 {
+	"Link1":
+	{
+		"Type": "Link",
+		"Attributes": {
+			"Style": "btn btn-secondary d-none",
+			"TextID": "TXT.MENU.MAINSCREEN",
+			"ScreenID": "MainScreen"
+		}
+	},
+
 	"PONGLogo":
 	{
 		"Type": "Div",
@@ -19,7 +29,7 @@
 	{
 		"Type": "Div",
 		"Attributes": {
-			"Style": "container p-2"
+			"Style": "container p-4"
 		}
 	},
 
@@ -30,51 +40,443 @@
 		{
 			"Tabs": [
 				{
-					"ID": "Tab1",
+					"ID": "TabGame",
 					"Attributes":
 						{
 							"Default": true,
-							"TextID": "TXT.TABCONTAINER.TAB1",
-							"Style": "col-md-4"
+							"TextID": "TXT.TABCONTAINER.TAB.GAME",
+							"Style": "col-md-3"
 						}
 				},
 				{
-					"ID": "Tab2",
+					"ID": "TabScore",
 					"Attributes":
 						{
-							"TextID": "TXT.TABCONTAINER.TAB2",
-							"Style": "col-md-8"
+							"TextID": "TXT.TABCONTAINER.TAB.SCORE",
+							"Style": "col-md-3"
+						}
+				},
+				{
+					"ID": "TabSystem",
+					"Attributes":
+						{
+							"TextID": "TXT.TABCONTAINER.TAB.SYSTEM",
+							"Style": "col-md-3"
+						}
+				},
+				{
+					"ID": "TabDemo",
+					"Attributes":
+						{
+							"TextID": "TXT.TABCONTAINER.TAB.DEMO",
+							"Style": "col-md-3"
 						}
 				}
 			]
 		}
 	},
 
-	"Link1":
+	"GameControlSpacerTop":
 	{
-		"Type": "Link",
+		"Type": "Div",
 		"Attributes": {
-			"Style": "btn btn-secondary d-none",
-			"TextID": "TXT.MENU.MAINSCREEN",
-			"ScreenID": "MainScreen"
+			"Style": "container p-3"
 		}
 	},
 
-	"SQLText1":
+	"GameStartCardContainer":
 	{
-		"Type": "SQLText",
+		"Type": "Div",
 		"Attributes": {
-			"Style": "md-4 text-warning",
-			"TextID": "TXT.TEST1"
+			"Style": "card text-bg-light mb-3"
 		}
 	},
 
-	"SQLText2":
+	"GameStartCardHeader":
 	{
 		"Type": "SQLText",
 		"Attributes": {
-			"Style": "md-4 text-warning",
-			"TextID": "TXT.TEST2"
+			"Style": "card-header",
+			"TextID": "TXT.CARD.GAME-START.HEADER"
+		}
+	},
+
+	"GameStartCardBodyContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card-body"
+		}
+	},
+
+	"GameStartCardBodyTitle":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-title h1 display-6",
+			"IconStyle": "fa-solid fa-play",
+			"TextID": "TXT.CARD.GAME-START.TITLE"
+		}
+	},
+
+	"GameStartCardBodyText":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-text",
+			"TextID": "TXT.CARD.GAME-START.TEXT"
+		}
+	},
+
+	"GameButtonStart": {
+		"Type": "Button",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.GAME.START",
+			"Style": "btn btn-primary btn-lg w-100 mt-3 display-6",
+			"IconStyle": "fa-solid fa-play",
+			"OnClick": "/python/startgame",
+			"Notify": {
+				"ID": "GameStart",
+				"DisplayHeaderID": "TXT.GAMESTART.NOTIFYMSG"
+			}
+		}
+	},
+
+	"GameButtonStop": {
+		"Type": "Button",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.GAME.STOP",
+			"Style": "btn btn-primary btn-lg w-100 mt-3 display-6",
+			"IconStyle": "fa-solid fa-stop",
+			"OnClick": "/python/stopgame",
+			"Notify": {
+				"ID": "GameStop",
+				"DisplayHeaderID": "TXT.GAMESTOP.NOTIFYMSG"
+			}
+		}
+	},
+
+	"GameControlSpacerMiddle":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-3"
+		}
+	},
+
+	"GameMovementCardContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card text-bg-light mb-3"
+		}
+	},
+
+	"GameMovementCardHeader":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-header",
+			"TextID": "TXT.CARD.GAME-MOVEMENT.HEADER"
+		}
+	},
+
+	"GameMovementCardBodyContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card-body"
+		}
+	},
+
+	"GameMovementCardBodyTitle":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-title h1 display-6",
+			"IconStyle": "fa-solid fa-gamepad",
+			"TextID": "TXT.CARD.GAME-MOVEMENT.TITLE"
+		}
+	},
+
+	"GameMovementCardBodyText":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-text",
+			"TextID": "TXT.CARD.GAME-MOVEMENT.TEXT"
+		}
+	},
+
+	"GameButtonPaddleUp": {
+		"Type": "Button",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.GAME.PADDLE-UP",
+			"Style": "btn btn-primary btn-lg w-100 mt-3",
+			"IconStyle": "fa-solid fa-chevron-up",
+			"OnClick": "/python/paddleup"
+		}
+	},
+
+	"GameButtonPaddleDown": {
+		"Type": "Button",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.GAME.PADDLE-DOWN",
+			"Style": "btn btn-primary btn-lg w-100 mt-3",
+			"IconStyle": "fa-solid fa-chevron-down",
+			"OnClick": "/python/paddledown"
+		}
+	},
+
+	"PlayerScoreSpacerTop":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-3"
+		}
+	},
+
+	"PlayerScoreCardContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card text-bg-light mb-3"
+		}
+	},
+
+	"PlayerScoreCardHeader":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-header",
+			"TextID": "TXT.CARD.PLAYER-SCORE.HEADER"
+		}
+	},
+
+	"PlayerScoreCardBodyContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card-body"
+		}
+	},
+
+	"PlayerScoreCardBodyTitle":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-title h1 display-6",
+			"IconStyle": "fa-solid fa-trophy",
+			"TextID": "TXT.CARD.PLAYER-SCORE.TITLE"
+		}
+	},
+
+	"PlayerScoreCardBodyText":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-text",
+			"TextID": "TXT.CARD.PLAYER-SCORE.TEXT"
+		}
+	},
+
+	"PlayerScoreFormlist": {
+		"Type": "FormfieldList",
+		"Attributes": {
+			"Sections": [
+				{
+					"ID": "PlayerGetScoreForm",
+					"Object": "FormSectionHeader",
+					"ObjectAttributes": {
+						"Style": "card card-line bg-body-tertiary border border border-dark-subtle border-2 mb-3",
+						"SubStyle": "card-body mt-n6",
+						"HeaderIcon": "fa-solid fa-ranking-star",
+						"HeaderTextID": "TXT.FORMLIST.PLAYER-SCORE.HEADER",
+						"SubHeaderTextID": "TXT.FORMLIST.PLAYER-SCORE.SUBHEADER"
+					},
+					"Formfields": [
+						"ScoreTypeDescr",
+						"ScoreType",
+						"ScorePlayer1Descr",
+						"ScorePlayer1",
+						"ScorePlayer2Descr",
+						"ScorePlayer2",
+						"ScoreChampionDescr",
+						"ScoreChampion"
+					],
+					"RowStyle": "row",
+					"RowAfterElements": 4,
+					"ColStyle": "col-md-6",
+					"ColAfterElements": 2
+				}
+			]
+		}
+	},
+
+	"ScoreTypeDescr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.PLAYER-SCORE.TYPE"
+		}
+	},
+
+	"ScoreType": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "text",
+			"Value": "AI",
+			"Disabled": true,
+			"Style": "form-control mb-1 p-1 w-100"
+		}
+	},
+
+	"ScorePlayer1Descr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.PLAYER-SCORE.PLAYER1"
+		}
+	},
+
+	"ScorePlayer1": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "text",
+			"Value": "0",
+			"Disabled": true,
+			"Style": "form-control mb-1 p-1 w-100"
+		}
+	},
+
+	"ScorePlayer2Descr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.PLAYER-SCORE.PLAYER2"
+		}
+	},
+
+	"ScorePlayer2": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "text",
+			"Value": "0",
+			"Disabled": true,
+			"Style": "form-control mb-1 p-1 w-100"
+		}
+	},
+
+	"ScoreChampionDescr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.PLAYER-SCORE.CHAMPION"
+		}
+	},
+
+	"ScoreChampion": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "checkbox",
+			"Value": true,
+			"Style": "form-control form-check-input"
+		}
+	},
+
+	"PlayerScoreButtonGetScoreData": {
+		"Type": "Button",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.PLAYER-SCORE.GET-DATA",
+			"Style": "btn btn-primary btn-lg w-100 mt-3",
+			"IconStyle": "fa-solid fa-download",
+			"OnClick": "/python/get-player-score"
+		}
+	},
+
+	"PlayerScoreButtonAppendScoreData": {
+		"Type": "ButtonInternal",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.PLAYER-SCORE.APPEND-DATA",
+			"Style": "btn btn-primary btn-lg w-100 mt-3",
+			"IconStyle": "fa-solid fa-turn-down",
+			"Action": "append",
+			"SrcDataObject": "PlayerScoreFormlist",
+			"DstDataObject": "PlayerScoreHistoryList"
+		}
+	},
+
+	"PlayerScoreSpacerDown":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-3"
+		}
+	},
+
+	"PlayerScoreHistoryList":
+	{
+		"Type": "List",
+		"Attributes":
+		{
+			"Style": "border rounded-top rounded-bottom",
+			"HeaderRowStyle": "row fw-bold fs-0 m-0 border-bottom",
+			"RowCount": 5,
+			"RowsSelectable": true,
+			"Navigation": true,
+			"SrcDataObjects":
+			{
+			},
+			"Columns": [
+				{
+					"ID": "ScoreType",
+					"HeaderTextID": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-TYPE",
+					"HeaderStyle": "col-md-3 p-3 bg-light border-end"
+				},
+				{
+					"ID": "ScorePlayer1",
+					"HeaderTextID": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-P1",
+					"HeaderStyle": "col-md-3 p-3 bg-light border-end"
+				},
+				{
+					"ID": "ScorePlayer2",
+					"HeaderTextID": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-P2",
+					"HeaderStyle": "col-md-3 p-3 bg-light border-end"
+				},
+				{
+					"ID": "ScoreChampion",
+					"HeaderTextID": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-CHAMPION",
+					"HeaderStyle": "col-md-3 p-3 bg-light"
+				}
+			],
+			"ContextMenuItems": [
+				{
+					"ID": "GetData",
+					"TextID": "TXT.CONTEXTMENU.GET-DATA",
+					"IconStyle": "fa-solid fa-copy",
+					"InternalFunction": "get-data"
+				},
+				{
+					"ID": "RemoveSingle",
+					"TextID": "TXT.CONTEXTMENU.REMOVE-ITEM-SINGLE",
+					"IconStyle": "fa-regular fa-trash-can",
+					"InternalFunction": "remove"
+				},
+				{
+					"ID": "RemoveSelected",
+					"TextID": "TXT.CONTEXTMENU.REMOVE-ITEM-SELECTED",
+					"IconStyle": "fa-regular fa-trash-can",
+					"InternalFunction": "remove-selected"
+				}
+			],
+			"RowStyle": "row m-0 border-bottom border-right",
+			"RowAfterElements": 4,
+			"ColStyle": [
+				"col-md-3 p-3 border-end",
+				"col-md-3 p-3 border-end",
+				"col-md-3 p-3 border-end",
+				"col-md-3 p-3"
+			]
 		}
 	}
 }
