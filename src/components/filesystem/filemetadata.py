@@ -2,8 +2,10 @@ data = {
     "./srcfiles/index.html": ( "/index.html", "text/html" ),
     "./srcfiles/404.html": ( "/404.html", "text/html" ),
     "./srcfiles/image/favicon.ico": ( "/favicon.ico", "img/png" ),
+
     "./srcfiles/image/falcon-robotics.jpg": ( "/falcon-robotics.jpg", "img/jpg" ),
     "./srcfiles/image/esp32-pong-logo.png": ( "/esp32-pong-logo.png", "img/png" ),
+    "./srcfiles/image/background-fill.png": ( "/background-fill.png", "img/png" ),
 
     "./srcfiles/css/bootstrap.css": ( "/css/bootstrap.css", "text/css" ),
     "./srcfiles/css/globalstyles.css": ( "/css/globalstyles.css", "text/css" ),

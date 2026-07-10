@@ -3,39 +3,281 @@
         "SysName": "ObjectLoaderRequestID",
         "SysID": "Text"
     },
-    "TXT.TABCONTAINER.TAB1": {
-        "id": "TXT.TABCONTAINER.TAB1",
-        "group": "tabulator",
-        "value_de": "Tabulator 1",
-        "value_en": "Tabulator 1",
+    "TXT.SYS.LOADING-INDICATOR-SEND-SERVER": {
+        "id": "TXT.SYS.LOADING-INDICATOR-SEND-SERVER",
+        "group": "loading-indicator",
+        "value_de": "Daten werden zum Server gesendet.",
+        "value_en": "Data is currently transmitted to the server.",
         "orderby": 1
     },
-    "TXT.TABCONTAINER.TAB2": {
-        "id": "TXT.TABCONTAINER.TAB2",
-        "group": "formfield",
-        "value_de": "Tabulator 2",
-        "value_en": "Tabulator 2",
+    "TXT.SYS.CONTEXTMENU.DISPLAY": {
+        "id": "TXT.SYS.CONTEXTMENU.DISPLAY",
+        "group": "context-menu-header",
+        "value_de": "Kontextmenü",
+
+        "value_en": "Context Menu",
+        "orderby": 1
+    }
+
+    },
+    "TXT.BUTTON.LEFT": {
+        "id": "TXT.BUTTON.LEFT",
+        "group": "nav-button",
+        "value_de": "Vorherige Seite",
+        "value_en": "Previous Page",
+        "orderby": 1
+    },
+    "TXT.BUTTON.RIGHT": {
+        "id": "TXT.BUTTON.RIGHT",
+        "group": "nav-button",
+        "value_de": "Nächste Seite",
+        "value_en": "Next Page",
+        "orderby": 1
+    },
+    "TXT.GAMESTART.NOTIFYMSG": {
+        "id": "TXT.GAMESTART.NOTIFYMSG",
+        "group": "notify-msg",
+        "value_de": "Das Spiel wird gestartet.",
+        "value_en": "The game will be started.",
+        "orderby": 1
+    },
+    "TXT.GAMESTOP.NOTIFYMSG": {
+        "id": "TXT.GAMESTOP.NOTIFYMSG",
+        "group": "notify-msg",
+        "value_de": "Das Spiel wird beendet.",
+        "value_en": "The game will be stopped.",
         "orderby": 1
     },
     "TXT.MENU.MAINSCREEN": {
         "id": "TXT.MENU.MAINSCREEN",
-        "group": "formfield",
-        "value_de": "Menu Button1",
-        "value_en": "Menu Button1",
+        "group": "menu-button",
+        "value_de": "Haupt Screen",
+        "value_en": "Main Screen",
         "orderby": 1
     },
-    "TXT.TEST1": {
-        "id": "TXT.TEST1",
-        "group": "formfield",
-        "value_en": "Display Text 1",
-        "value_de": "Anzeige Text 1",
+    "TXT.TABCONTAINER.TAB.GAME": {
+        "id": "TXT.TABCONTAINER.TAB.GAME",
+        "group": "tabulator",
+        "value_de": "Spielsteuerung",
+        "value_en": "Game Control",
         "orderby": 1
     },
-    "TXT.TEST2": {
-        "id": "TXT.TEST2",
-        "group": "formfield",
-        "value_en": "Display Text 2",
-        "value_de": "Anzeige Text 2",
+    "TXT.TABCONTAINER.TAB.SCORE": {
+        "id": "TXT.TABCONTAINER.TAB.SCORE",
+        "group": "tabulator",
+        "value_de": "Spielstand",
+        "value_en": "Player Score",
+        "orderby": 1
+    },
+    "TXT.TABCONTAINER.TAB.SYSTEM": {
+        "id": "TXT.TABCONTAINER.TAB.SYSTEM",
+        "group": "tabulator",
+        "value_de": "Systemdaten",
+        "value_en": "System Control",
+        "orderby": 1
+    },
+    "TXT.TABCONTAINER.TAB.DEMO": {
+        "id": "TXT.TABCONTAINER.TAB.DEMO",
+        "group": "tabulator",
+        "value_de": "x0 Demonstration",
+        "value_en": "x0 Demonstration",
+        "orderby": 1
+    },
+    "TXT.CARD.GAME-START.HEADER": {
+        "id": "TXT.CARD.GAME-START.HEADER",
+        "group": "card-header",
+        "value_de": "Spiel Steuerung",
+        "value_en": "Game Control",
+        "orderby": 1
+    },
+    "TXT.CARD.GAME-START.TITLE": {
+        "id": "TXT.CARD.GAME-START.TITLE",
+        "group": "card-title",
+        "value_de": "Spiel Start / Stop",
+        "value_en": "Game Start / Stop",
+        "orderby": 1
+    },
+    "TXT.CARD.GAME-START.TEXT": {
+        "id": "TXT.CARD.GAME-START.TEXT",
+        "group": "card-text",
+        "value_de": "Über den Button „Spiel starten“ wird das Pong-Spiel auf dem ESP32 gestartet. Es kommt hierbei auf die per WLAN angemeldete Benutzeranzahl an (siehe Pong-Titelscreen „P1:“ und „P2:“). Bei einem (1) angemeldeten WLAN-Client wird das Spiel im KI-Modus gestartet, ansonsten spielt man gegeneinander.",
+        "value_en": "Clicking the 'Start Game' button launches the Pong game on the ESP32. The mode depends on the number of users connected via Wi-Fi (see the Pong title screen 'P1:' and 'P2:'). If only one (1) Wi-Fi client is connected, the game starts in AI mode; otherwise, players compete against each other.",
+        "orderby": 1
+    },
+    "TXT.BUTTON.GAME.START": {
+        "id": "TXT.BUTTON.GAME.START",
+        "group": "button",
+        "value_de": "Spiel Start",
+        "value_en": "Game Start",
+        "orderby": 1
+    },
+    "TXT.BUTTON.GAME.STOP": {
+        "id": "TXT.BUTTON.GAME.STOP",
+        "group": "button",
+        "value_de": "Spiel Stop",
+        "value_en": "Game Stop",
+        "orderby": 1
+    },
+    "TXT.CARD.GAME-MOVEMENT.HEADER": {
+        "id": "TXT.CARD.GAME-MOVEMENT.HEADER",
+        "group": "card-header",
+        "value_de": "Schläger Steuerung",
+        "value_en": "Paddle Control",
+        "orderby": 1
+    },
+    "TXT.CARD.GAME-MOVEMENT.TITLE": {
+        "id": "TXT.CARD.GAME-MOVEMENT.TITLE",
+        "group": "card-title",
+        "value_de": "Schläger Bewegung",
+        "value_en": "Paddle Movement",
+        "orderby": 1
+    },
+    "TXT.CARD.GAME-MOVEMENT.TEXT": {
+        "id": "TXT.CARD.GAME-MOVEMENT.TEXT",
+        "group": "card-text",
+        "value_de": "Die folgenden zwei Buttons steuern die Schlägerbewegung, sobald das Spiel gestartet ist. Der Schläger von Spieler 1 (KI oder Mensch) befindet sich auf der linken Seite, der Schläger von Spieler 2 auf der rechten Seite. Das Drücken der „Hoch“- oder „Runter“-Taste bewegt den Schläger in die gewählte Richtung, bis die entgegengesetzte Richtungstaste gedrückt wird.",
+        "value_en": "The following two buttons control your paddle's movement once the game starts. Player 1's paddle (AI or human) is on the left, and Player 2's paddle is on the right. Pressing either the 'Up' or 'Down' button moves the paddle in that direction until you press the opposite direction button.",
+        "orderby": 1
+    },
+    "TXT.BUTTON.GAME.PADDLE-UP": {
+        "id": "TXT.BUTTON.GAME.PADDLE-UP",
+        "group": "button",
+        "value_de": "Schläger nach oben bewegen",
+        "value_en": "Paddle Move Up",
+        "orderby": 1
+    },
+    "TXT.BUTTON.GAME.PADDLE-DOWN": {
+        "id": "TXT.BUTTON.GAME.PADDLE-DOWN",
+        "group": "button",
+        "value_de": "Schläger nach unten bewegen",
+        "value_en": "Paddle Move Down",
+        "orderby": 1
+    },
+
+    "TXT.CARD.PLAYER-SCORE.HEADER": {
+        "id": "TXT.CARD.PLAYER-SCORE.HEADER",
+        "group": "card-header",
+        "value_de": "Spielstände",
+        "value_en": "Player Scores",
+        "orderby": 1
+    },
+    "TXT.CARD.PLAYER-SCORE.TITLE": {
+        "id": "TXT.CARD.PLAYER-SCORE.TITLE",
+        "group": "card-title",
+        "value_de": "Aktuellen Spielstand abrufen",
+        "value_en": "Get Current Player Scores",
+        "orderby": 1
+    },
+    "TXT.CARD.PLAYER-SCORE.TEXT": {
+        "id": "TXT.CARD.PLAYER-SCORE.TEXT",
+        "group": "card-text",
+        "value_de": "Das Klicken auf den Button „Aktuellen Spielstand abrufen“ ruft die aktuellen Spielstände vom ESP32-Gerät ab und zeigt sie in den folgenden Formularfeldern an. Sie können das Kontrollkästchen „Champion Score“ aktivieren oder deaktivieren und die Punktedaten anschließend durch Klicken auf den Button „Spielstand hinzufügen“ der unten stehenden Liste hinzufügen. Ein Rechtsklick auf einen Eintrag in der Liste öffnet ein Kontextmenü, über das Sie den Eintrag entweder löschen oder in die Zwischenablage kopieren können. Anschließend können Sie zum Reiter „Systemdaten“ navigieren, die Daten in den Bereich „Spielstand übermitteln“ einfügen und – sobald das Spiel gestoppt ist – diesen Spielstand auf den ESP32-Titelscreen übertragen und dort anzeigen.",
+        "value_en": "Clicking the „Get Current Player Scores“ button retrieves the current scores from the ESP32 device and displays them in the form fields below. You can check or uncheck the „Champion Score“ checkbox, then add the score data to the list below by clicking the „Append Scores To List“ button. Right-clicking an entry in the list opens a context menu, allowing you to either delete the entry or copy it to the clipboard. You can then navigate to the „System Control“ tab, paste the data into the „Transfer Score Data“ area, and—once the game has stopped—transfer and display this score on the ESP32 title screen.",
+        "orderby": 1
+    },
+    "TXT.FORMLIST.PLAYER-SCORE.HEADER": {
+        "id": "TXT.FORMLIST.PLAYER-SCORE.HEADER",
+        "group": "form-header",
+        "value_de": "Aktueller Spielstand",
+        "value_en": "Current Player Scores",
+        "orderby": 1
+    },
+    "TXT.FORMLIST.PLAYER-SCORE.SUBHEADER": {
+        "id": "TXT.FORMLIST.PLAYER-SCORE.SUBHEADER",
+        "group": "form-subheader",
+        "value_de": "",
+        "value_en": "",
+        "orderby": 1
+    },
+    "TXT.FORMFIELD.PLAYER-SCORE.TYPE": {
+        "id": "TXT.FORMFIELD.PLAYER-SCORE.TYPE",
+        "group": "form-item",
+        "value_de": "Typ (Mensch|KI)",
+        "value_en": "Type (Human|AI)",
+        "orderby": 1
+    },
+    "TXT.FORMFIELD.PLAYER-SCORE.PLAYER1": {
+        "id": "TXT.FORMFIELD.PLAYER-SCORE.PLAYER1",
+        "group": "form-item",
+        "value_de": "Spielstand Player1",
+        "value_en": "Score Player1",
+        "orderby": 1
+    },
+    "TXT.FORMFIELD.PLAYER-SCORE.PLAYER2": {
+        "id": "TXT.FORMFIELD.PLAYER-SCORE.PLAYER2",
+        "group": "form-item",
+        "value_de": "Spielstand Player2",
+        "value_en": "Score Player2",
+        "orderby": 1
+    },
+    "TXT.FORMFIELD.PLAYER-SCORE.CHAMPION": {
+        "id": "TXT.FORMFIELD.PLAYER-SCORE.CHAMPION",
+        "group": "form-item",
+        "value_de": "Champion Spielstand",
+        "value_en": "Champion Score",
+        "orderby": 1
+    },
+    "TXT.BUTTON.PLAYER-SCORE.GET-DATA": {
+        "value_de": "Aktuellen Spielstand abrufen",
+        "group": "button",
+        "value_de": "Champion Spielstand",
+    }
+        "orderby": 1
+    },
+    "TXT.BUTTON.PLAYER-SCORE.APPEND-DATA": {
+        "id": "TXT.BUTTON.PLAYER-SCORE.APPEND-DATA",
+        "group": "button",
+        "value_de": "Aktuellen Spielstand hinzufügen",
+        "value_en": "Append Current Player Scores",
+        "orderby": 1
+    },
+    "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-TYPE": {
+        "id": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-TYPE",
+        "group": "table-header-col",
+        "value_de": "Art der Punktzahl",
+        "value_en": "Score Type",
+        "orderby": 1
+    },
+    "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-P1": {
+        "id": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-P1",
+        "group": "table-header-col",
+        "value_de": "Player 1",
+        "value_en": "Player 1",
+        "orderby": 1
+    },
+    "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-P2": {
+        "id": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-P2",
+        "group": "table-header-col",
+        "value_de": "Player 2",
+        "value_en": "Player 2",
+        "orderby": 1
+    },
+    "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-CHAMPION": {
+        "id": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-CHAMPION",
+        "group": "table-header-col",
+        "value_de": "Champion Punktzahl",
+        "value_en": "Champion Score",
+        "orderby": 1
+    },
+    "TXT.CONTEXTMENU.GET-DATA": {
+        "id": "TXT.CONTEXTMENU.GET-DATA",
+        "group": "context-menu-item",
+        "value_de": "Datensatz kopieren",
+        "value_en": "Copy Row Data",
+        "orderby": 1
+    },
+    "TXT.CONTEXTMENU.REMOVE-ITEM-SINGLE": {
+        "id": "TXT.CONTEXTMENU.REMOVE-ITEM-SINGLE",
+        "group": "context-menu-item",
+        "value_de": "Datensatz löschen",
+        "value_en": "Delete Row",
+        "orderby": 1
+    },
+    "TXT.CONTEXTMENU.REMOVE-ITEM-SELECTED": {
+        "id": "TXT.CONTEXTMENU.REMOVE-ITEM-SELECTED",
+        "group": "context-menu-item",
+        "value_de": "Ausgewählte Datensätze löschen",
+        "value_en": "Delete Selected Rows",
         "orderby": 1
     }
 }

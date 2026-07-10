@@ -5,9 +5,12 @@ Initially, utilizing SPIFFS or LittleFS on a dedicated partition seemed like a v
 
 ## 1. Custom Implementation
 
-However, a custom, streamlined solution combined with the *falcon-as* HTTP/1.1 *httpparser* and *httpgenerator* libraries proved to be significantly faster and more lightweight. This approach eliminates the need for a dedicated partition. File contents are automatically linked into FlashROM **without** requiring custom linker attributes or additional linker scripts.
+However, a custom, streamlined solution combined with the *falcon-as* HTTP/1.1 *httpparser* and *httpgenerator* libraries proved to be significantly faster and more lightweight.
+This approach eliminates the need for a dedicated partition. File contents are automatically linked into FlashROM **without** requiring custom linker attributes or additional linker scripts.
 
-Furthermore, this layout enables direct access to the existing **static file buffer** (generated at compile time) *without* **copying a single byte**—a feature fully leveraged by the *httpgenerator*. By bypassing dynamic buffer allocation and underlying file read() operations, all files are instantly available upon microcontroller startup.
+Furthermore, this layout enables direct access to the existing **static file buffer** (generated at compile time) *without* **copying a single byte**—a feature fully leveraged by the *httpgenerator*.
+
+By bypassing dynamic buffer allocation and underlying file read() operations, all files are instantly available upon microcontroller startup.
 
 ## 2. Implementation Details
 
