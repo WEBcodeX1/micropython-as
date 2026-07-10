@@ -13,9 +13,10 @@
     "TXT.SYS.CONTEXTMENU.DISPLAY": {
         "id": "TXT.SYS.CONTEXTMENU.DISPLAY",
         "group": "context-menu-header",
-        "value_de": "Context Menü",
+        "value_de": "Kontextmenü",
         "value_en": "Context Menu",
         "orderby": 1
+    }
     },
     "TXT.BUTTON.LEFT": {
         "id": "TXT.BUTTON.LEFT",
