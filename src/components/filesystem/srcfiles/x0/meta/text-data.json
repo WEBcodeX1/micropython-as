@@ -13,9 +13,12 @@
     "TXT.SYS.CONTEXTMENU.DISPLAY": {
         "id": "TXT.SYS.CONTEXTMENU.DISPLAY",
         "group": "context-menu-header",
-        "value_de": "Context Menü",
+        "value_de": "Kontextmenü",
+
         "value_en": "Context Menu",
         "orderby": 1
+    }
+
     },
     "TXT.BUTTON.LEFT": {
         "id": "TXT.BUTTON.LEFT",
@@ -215,10 +218,10 @@
         "orderby": 1
     },
     "TXT.BUTTON.PLAYER-SCORE.GET-DATA": {
-        "id": "TXT.BUTTON.PLAYER-SCORE.GET-DATA",
+        "value_de": "Aktuellen Spielstand abrufen",
         "group": "button",
         "value_de": "Champion Spielstand",
-        "value_en": "Get Current Player Scores",
+    }
         "orderby": 1
     },
     "TXT.BUTTON.PLAYER-SCORE.APPEND-DATA": {
