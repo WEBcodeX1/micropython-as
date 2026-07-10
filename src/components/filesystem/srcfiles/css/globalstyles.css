@@ -1,7 +1,8 @@
 body {
     font-family: Georgia, serif;
     font-size: 150%;
-    background-color: #9c2238;
+    background-color: #ffffff;
+    background-image: url("/background-fill.png");
 }
 
 .required::before {
@@ -33,7 +34,7 @@ body {
 
 .sysContextMenuTable {
     position: absolute;
-    width: 200px;
+    width: 400px;
 }
 
 .sysTreeNodeRoot {
