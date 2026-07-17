@@ -68,6 +68,9 @@ extern "C" void app_main(void)
     pthread_detach(DNSServerThread);
 
     //- HTTP processing "RTOS task" setup
+    esp_pthread_cfg_t esp_pthread_cfg = esp_pthread_get_default_config();
+    esp_pthread_cfg.pin_to_core = 1;
+
     pthread_t HTTPThread;
     pthread_attr_t HTTPThreadAttributes;
 
