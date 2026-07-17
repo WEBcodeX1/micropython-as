@@ -84,13 +84,13 @@ void Server::ServerLoop()
         }
 
         //- process clients
-        auto sumMessages = processClients();
+        uint8_t sumMessages = processClients();
 
         //- idle wakeup delay
         if (sumMessages == 0) {
             vTaskDelay(10);
         }
-        else if (sumMessages >= 0) {
+        else if (sumMessages > 0) {
             vTaskDelay(1);
         }
     }

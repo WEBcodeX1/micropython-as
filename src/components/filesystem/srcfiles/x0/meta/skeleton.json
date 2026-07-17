@@ -164,6 +164,12 @@
 			}
 		},
 		{
+			"PlayerScoreSpacerForm":
+			{
+				"RefID": "PlayerScoreCardBodyContainer"
+			}
+		},
+		{
 			"PlayerScoreFormlist":
 			{
 				"RefID": "PlayerScoreCardBodyContainer"
@@ -195,6 +201,468 @@
 				"RefID": "TabContainer1",
 				"ElementID": "TabScoreContent"
 			}
+		},
+		{
+			"SystemDateTimeSpacerTop":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabSystemContent"
+			}
+		},
+		{
+			"SystemDateTimeCardContainer":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabSystemContent"
+			}
+		},
+		{
+			"SystemDateTimeCardHeader":
+			{
+				"RefID": "SystemDateTimeCardContainer"
+			}
+		},
+		{
+			"SystemDateTimeCardBodyContainer":
+			{
+				"RefID": "SystemDateTimeCardContainer"
+			}
+		},
+		{
+			"SystemDateTimeCardBodyTitle":
+			{
+				"RefID": "SystemDateTimeCardBodyContainer"
+			}
+		},
+		{
+			"SystemDateTimeCardBodyText":
+			{
+				"RefID": "SystemDateTimeCardBodyContainer"
+			}
+		},
+		{
+			"SystemDateTimeSpacerForm":
+			{
+				"RefID": "SystemDateTimeCardBodyContainer"
+			}
+		},
+		{
+			"SystemDateTimeFormlist":
+			{
+				"RefID": "SystemDateTimeCardBodyContainer"
+			}
+		},
+		{
+			"SystemDateTimeErrorContainer":
+			{
+				"RefID": "SystemDateTimeCardBodyContainer"
+			}
+		},
+		{
+			"SystemDateTimeButtonSetDeviceDateTime":
+			{
+				"RefID": "SystemDateTimeCardBodyContainer"
+			}
+		},
+		{
+			"SystemDateTimeButtonToggleDeviceDateTimeDisplay":
+			{
+				"RefID": "SystemDateTimeCardBodyContainer"
+			}
+		},
+		{
+			"SystemScoreSpacerTop":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabSystemContent"
+			}
+		},
+		{
+			"SystemScoreCardContainer":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabSystemContent"
+			}
+		},
+		{
+			"SystemScoreCardHeader":
+			{
+				"RefID": "SystemScoreCardContainer"
+			}
+		},
+		{
+			"SystemScoreCardBodyContainer":
+			{
+				"RefID": "SystemScoreCardContainer"
+			}
+		},
+		{
+			"SystemScoreCardBodyTitle":
+			{
+				"RefID": "SystemScoreCardBodyContainer"
+			}
+		},
+		{
+			"SystemScoreCardBodyText":
+			{
+				"RefID": "SystemScoreCardBodyContainer"
+			}
+		},
+		{
+			"SystemScoreSpacerForm":
+			{
+				"RefID": "SystemScoreCardBodyContainer"
+			}
+		},
+		{
+			"SystemScoreFormlist":
+			{
+				"RefID": "SystemScoreCardBodyContainer"
+			}
+		},
+		{
+			"SystemScoreButtonDisplayScore":
+			{
+				"RefID": "SystemScoreCardBodyContainer"
+			}
+		},
+
+		{
+			"x0DemoSpacerTop":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabDemoContent"
+			}
+		},
+		{
+			"x0DemoStartCardContainer":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabDemoContent"
+			}
+		},
+		{
+			"x0DemoStartCardHeader":
+			{
+				"RefID": "x0DemoStartCardContainer"
+			}
+		},
+		{
+			"x0DemoStartCardBodyContainer":
+			{
+				"RefID": "x0DemoStartCardContainer"
+			}
+		},
+		{
+			"x0DemoStartCardNoteContainer":
+			{
+				"RefID": "x0DemoStartCardBodyContainer"
+			}
+		},
+		{
+			"x0DemoStartNoteHeader":
+			{
+				"RefID": "x0DemoStartCardNoteContainer"
+			}
+		},
+		{
+			"x0DemoStartNoteContent":
+			{
+				"RefID": "x0DemoStartCardNoteContainer"
+			}
+		},
+		{
+			"x0DemoSpacerMiddle":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabDemoContent"
+			}
+		},
+		{
+			"x0DemoExampleContainer":
+			{
+				"RefID": "TabContainer1",
+				"ElementID": "TabDemoContent"
+			}
+		},
+		{
+			"x0DemoTreeOpenCloseContainer":
+			{
+				"RefID": "x0DemoExampleContainer"
+			}
+		},
+		{
+			"x0DemoSliderOpenCloseContainer":
+			{
+				"RefID": "x0DemoExampleContainer"
+			}
+		},
+		{
+			"x0DemoTreeCardContainer":
+			{
+				"RefID": "x0DemoTreeOpenCloseContainer"
+			}
+		},
+		{
+			"x0DemoTreeElement":
+			{
+				"RefID": "x0DemoTreeCardContainer"
+			}
+		},
+		{
+			"TreeNodeAddButton":
+			{
+				"RefID": "x0DemoTreeCardContainer"
+			}
+		},
+		{
+			"x0DemoTreeFormContainer":
+			{
+				"RefID": "x0DemoTreeCardContainer"
+			}
+		},
+		{
+			"x0DemoTreeFormCol1":
+			{
+				"RefID": "x0DemoTreeFormContainer"
+			}
+		},
+		{
+			"x0DemoTreeFormCol2":
+			{
+				"RefID": "x0DemoTreeFormContainer"
+			}
+		},
+		{
+			"x0DemoTreeFormCol3":
+			{
+				"RefID": "x0DemoTreeFormContainer"
+			}
+		},
+		{
+			"TreeNodeDescr":
+			{
+				"RefID": "x0DemoTreeFormCol1"
+			}
+		},
+		{
+			"TreeNode":
+			{
+				"RefID": "x0DemoTreeFormCol1"
+			}
+		},
+		{
+			"TreeItemNameDescr":
+			{
+				"RefID": "x0DemoTreeFormCol2"
+			}
+		},
+		{
+			"TreeItemName":
+			{
+				"RefID": "x0DemoTreeFormCol2"
+			}
+		},
+		{
+			"TreeItemStyleDescr":
+			{
+				"RefID": "x0DemoTreeFormCol3"
+			}
+		},
+		{
+			"TreeItemStyle":
+			{
+				"RefID": "x0DemoTreeFormCol3"
+			}
+		},
+		{
+			"x0ExampleSlidersContainer":
+			{
+				"RefID": "x0DemoSliderOpenCloseContainer"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar1Row1":
+			{
+				"RefID": "x0ExampleSlidersContainer"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar1Row1Col1":
+			{
+				"RefID": "x0ExampleSlidersProgressBar1Row1"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar1Row1Col2":
+			{
+				"RefID": "x0ExampleSlidersProgressBar1Row1"
+			}
+		},
+
+		{
+			"x0ExampleSlidersP1FormSetValDescr":
+			{
+				"RefID": "x0ExampleSlidersProgressBar1Row1Col1"
+			}
+		},
+		{
+			"x0ExampleSlidersP1FormSetVal":
+			{
+				"RefID": "x0ExampleSlidersProgressBar1Row1Col1"
+			}
+		},
+		{
+			"x0ExampleSlidersP1FormButtonSetPercentage":
+			{
+				"RefID": "x0ExampleSlidersProgressBar1Row1Col1"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar1":
+			{
+				"RefID": "x0ExampleSlidersProgressBar1Row1Col2"
+			}
+		},
+		{
+			"x0ExampleSlidersP1FormButtonSetVal":
+			{
+				"RefID": "x0ExampleSlidersProgressBar1Row1Col2"
+			}
+		},
+		{
+			"x0ExampleSlidersRangeSlider1":
+			{
+				"RefID": "x0ExampleSlidersProgressBar1Row1Col2"
+			}
+		},
+		{
+			"x0ExampleSlidersHorizontalDivider1":
+			{
+				"RefID": "x0ExampleSlidersContainer"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar2Row1":
+			{
+				"RefID": "x0ExampleSlidersContainer"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar2Row1Col1":
+			{
+				"RefID": "x0ExampleSlidersProgressBar2Row1"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar2Row1Col2":
+			{
+				"RefID": "x0ExampleSlidersProgressBar2Row1"
+			}
+		},
+
+		{
+			"x0ExampleSlidersP2FormSetValDescr":
+			{
+				"RefID": "x0ExampleSlidersProgressBar2Row1Col1"
+			}
+		},
+		{
+			"x0ExampleSlidersP2FormSetVal":
+			{
+				"RefID": "x0ExampleSlidersProgressBar2Row1Col1"
+			}
+		},
+		{
+			"x0ExampleSlidersP2FormButtonSetPercentage":
+			{
+				"RefID": "x0ExampleSlidersProgressBar2Row1Col1"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar2":
+			{
+				"RefID": "x0ExampleSlidersProgressBar2Row1Col2"
+			}
+		},
+		{
+			"x0ExampleSlidersP2FormButtonSetVal":
+			{
+				"RefID": "x0ExampleSlidersProgressBar2Row1Col2"
+			}
+		},
+		{
+			"x0ExampleSlidersRangeSlider2":
+			{
+				"RefID": "x0ExampleSlidersProgressBar2Row1Col2"
+			}
+		},
+		{
+			"x0ExampleSlidersHorizontalDivider2":
+			{
+				"RefID": "x0ExampleSlidersContainer"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar3Row1":
+			{
+				"RefID": "x0ExampleSlidersContainer"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar3Row1Col1":
+			{
+				"RefID": "x0ExampleSlidersProgressBar3Row1"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar3Row1Col2":
+			{
+				"RefID": "x0ExampleSlidersProgressBar3Row1"
+			}
+		},
+
+		{
+			"x0ExampleSlidersP3FormSetValDescr":
+			{
+				"RefID": "x0ExampleSlidersProgressBar3Row1Col1"
+			}
+		},
+		{
+			"x0ExampleSlidersP3FormSetVal":
+			{
+				"RefID": "x0ExampleSlidersProgressBar3Row1Col1"
+			}
+		},
+		{
+			"x0ExampleSlidersP3FormButtonSetPercentage":
+			{
+				"RefID": "x0ExampleSlidersProgressBar3Row1Col1"
+			}
+		},
+		{
+			"x0ExampleSlidersProgressBar3":
+			{
+				"RefID": "x0ExampleSlidersProgressBar3Row1Col2"
+			}
+		},
+		{
+			"x0ExampleSlidersP3FormButtonSetVal":
+			{
+				"RefID": "x0ExampleSlidersProgressBar3Row1Col2"
+			}
+		},
+		{
+			"x0ExampleSlidersRangeSlider3":
+			{
+				"RefID": "x0ExampleSlidersProgressBar3Row1Col2"
+			}
 		}
+
+
+
+
+
+
 	]
 }
