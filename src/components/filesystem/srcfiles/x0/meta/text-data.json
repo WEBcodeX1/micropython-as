@@ -10,15 +10,68 @@
         "value_en": "Data is currently transmitted to the server.",
         "orderby": 1
     },
+    "TXT.SYS.LOADING-INDICATOR-TITLE-CLOSE": {
+        "id": "TXT.SYS.LOADING-INDICATOR-TITLE-CLOSE",
+        "group": "loading-indicator",
+        "value_de": "Mitteilung schliessen.",
+        "value_en": "Close message.",
+        "orderby": 1
+    },
+    "TXT.SYS.LOADING-INDICATOR-SUCCESS": {
+        "id": "TXT.SYS.LOADING-INDICATOR-SUCCESS",
+        "group": "loading-indicator",
+        "value_de": "Daten erfolgreich an den Server übermittelt.",
+        "value_en": "Data has been sent to the server successfuly.",
+        "orderby": 1
+    },
+    "TXT.SYS.LOADING-INDICATOR-ERROR": {
+        "id": "TXT.SYS.LOADING-INDICATOR-ERROR",
+        "group": "loading-indicator",
+        "value_de": "Fehler bei der Datenübermittlung an den Server.",
+        "value_en": "An error occured while sending data to the server.",
+        "orderby": 1
+    },
+    "TXT.SYS.LOADING-INDICATOR-SYSTEMERROR": {
+        "id": "TXT.SYS.LOADING-INDICATOR-SYSTEMERROR",
+        "group": "loading-indicator",
+        "value_de": "Ein Systemfehler ist aufgetreten.",
+        "value_en": "A system error has occured.",
+        "orderby": 1
+    },
     "TXT.SYS.CONTEXTMENU.DISPLAY": {
         "id": "TXT.SYS.CONTEXTMENU.DISPLAY",
         "group": "context-menu-header",
-        "value_de": "Kontextmenü",
-
+        "value_de": "Context Menü",
         "value_en": "Context Menu",
         "orderby": 1
-    }
-
+    },
+    "TXT.SYS.ERROR.FORMVALIDATE.DEFAULT": {
+        "id": "TXT.SYS.ERROR.FORMVALIDATE.DEFAULT",
+        "group": "form-validate",
+        "value_de": "Während der Formularvalidierung ist ein Fehler aufgetreten.",
+        "value_en": "An error occurred during form validation.",
+        "orderby": 1
+    },
+    "TXT.SYS.ERROR.FORMVALIDATE.DATE-INTERNATIONAL-FORMAT": {
+        "id": "TXT.SYS.ERROR.FORMVALIDATE.DATE-INTERNATIONAL-FORMAT",
+        "group": "form-validate",
+        "value_de": "Ungültiges Datum-Format",
+        "value_en": "Invalid date format",
+        "orderby": 1
+    },
+    "TXT.SYS.ERROR.FORMVALIDATE.DATE-GLOBAL-INVALIDDATE": {
+        "id": "TXT.SYS.ERROR.FORMVALIDATE.DATE-GLOBAL-INVALIDDATE",
+        "group": "form-validate",
+        "value_de": "Ungültiges Datum",
+        "value_en": "Invalid Date",
+        "orderby": 1
+    },
+    "TXT.NOTE.GLOBAL": {
+        "id": "TXT.NOTE.GLOBAL",
+        "group": "context-menu",
+        "value_de": "Anmerkung:",
+        "value_en": "Note:",
+        "orderby": 1
     },
     "TXT.BUTTON.LEFT": {
         "id": "TXT.BUTTON.LEFT",
@@ -100,8 +153,8 @@
     "TXT.CARD.GAME-START.TEXT": {
         "id": "TXT.CARD.GAME-START.TEXT",
         "group": "card-text",
-        "value_de": "Über den Button „Spiel starten“ wird das Pong-Spiel auf dem ESP32 gestartet. Es kommt hierbei auf die per WLAN angemeldete Benutzeranzahl an (siehe Pong-Titelscreen „P1:“ und „P2:“). Bei einem (1) angemeldeten WLAN-Client wird das Spiel im KI-Modus gestartet, ansonsten spielt man gegeneinander.",
-        "value_en": "Clicking the 'Start Game' button launches the Pong game on the ESP32. The mode depends on the number of users connected via Wi-Fi (see the Pong title screen 'P1:' and 'P2:'). If only one (1) Wi-Fi client is connected, the game starts in AI mode; otherwise, players compete against each other.",
+        "value_de": "Über den Button „Spiel starten“ wird das PONG-Spiel auf dem ESP32 gestartet. Es kommt hierbei auf die per WLAN angemeldete Benutzeranzahl an (siehe PONG-Titelscreen „P1:“ und „P2:“). Bei einem (1) angemeldeten WLAN-Client wird das Spiel im KI-Modus gestartet, ansonsten spielt man gegeneinander.",
+        "value_en": "Clicking the 'Start Game' button launches the PONG game on the ESP32. The mode depends on the number of users connected via Wi-Fi (see the PONG title screen 'P1:' and 'P2:'). If only one (1) Wi-Fi client is connected, the game starts in AI mode; otherwise, players compete against each other.",
         "orderby": 1
     },
     "TXT.BUTTON.GAME.START": {
@@ -218,10 +271,10 @@
         "orderby": 1
     },
     "TXT.BUTTON.PLAYER-SCORE.GET-DATA": {
-        "value_de": "Aktuellen Spielstand abrufen",
+        "id": "TXT.BUTTON.PLAYER-SCORE.GET-DATA",
         "group": "button",
         "value_de": "Champion Spielstand",
-    }
+        "value_en": "Get Current Player Scores",
         "orderby": 1
     },
     "TXT.BUTTON.PLAYER-SCORE.APPEND-DATA": {
@@ -279,5 +332,321 @@
         "value_de": "Ausgewählte Datensätze löschen",
         "value_en": "Delete Selected Rows",
         "orderby": 1
+    },
+    "TXT.CARD.SYSTEM-DATE.HEADER": {
+        "id": "TXT.CARD.SYSTEM-DATE.HEADER",
+        "group": "card-header",
+        "value_de": "System Datum/Zeit einstellen",
+        "value_en": "Set System Date/Time",
+        "orderby": 1
+    },
+    "TXT.CARD.SYSTEM-DATE.TITLE": {
+        "id": "TXT.CARD.SYSTEM-DATE.TITLE",
+        "group": "card-title",
+        "value_de": "Datum/Zeit",
+        "value_en": "Date/Time",
+        "orderby": 1
+    },
+    "TXT.CARD.SYSTEM-DATE.TEXT": {
+        "id": "TXT.CARD.SYSTEM-DATE.TEXT",
+        "group": "card-text",
+        "value_de": "In diesem Bereich kann das Datum und die Uhrzeit auf dem ESP32-Gerät gesetzt werden. Mit dem Button „ESP32 Datum/Zeit setzen“ wird die Zeit auf das Gerät übertragen und die RTC (Real Time Clock) temporär auf diese Werte eingestellt. Beim Drücken des Buttons „ESP32 Datum/Zeit Anzeige an/aus“ wird die Datumsanzeige auf dem PONG-Titelscreen je nach Status ein- oder ausgeblendet.",
+        "value_en": "This section allows you to set the date and time on the ESP32 device. The „Set ESP32 Date/Time“ button transfers the time to the device and temporarily updates the RTC (Real-Time Clock). Pressing the „Toggle Device Date/Time Display“ button toggles the date display on the PONG title screen on or off, depending on its status.",
+        "orderby": 1
+    },
+    "TXT.FORMLIST.SYSTEM-DATE.HEADER": {
+        "id": "TXT.FORMLIST.SYSTEM-DATE.HEADER",
+        "group": "form-header",
+        "value_de": "Datum/Zeit einstellen",
+        "value_en": "Edit Date/Time",
+        "orderby": 1
+    },
+    "TXT.FORMLIST.SYSTEM-DATE.SUBHEADER": {
+        "id": "TXT.FORMLIST.SYSTEM-DATE.SUBHEADER",
+        "group": "form-subheader",
+        "value_de": "",
+        "value_en": "",
+        "orderby": 1
+    },
+    "TXT.FORMLIST.SYSTEM-DATE.DATE": {
+        "id": "TXT.FORMLIST.SYSTEM-DATE.DATE",
+        "group": "form-item",
+        "value_de": "Datum",
+        "value_en": "Date",
+        "orderby": 1
+    },
+    "TXT.FORMLIST.SYSTEM-DATE.TIME-HOUR": {
+        "id": "TXT.FORMLIST.SYSTEM-DATE.TIME-HOUR",
+        "group": "form-item",
+        "value_de": "Stunde",
+        "value_en": "Hour",
+        "orderby": 1
+    },
+    "TXT.FORMLIST.SYSTEM-DATE.TIME-MINUTE": {
+        "id": "TXT.FORMLIST.SYSTEM-DATE.TIME-MINUTE",
+        "group": "form-item",
+        "value_de": "Minute",
+        "value_en": "Minute",
+        "orderby": 1
+    },
+    "TXT.FORMLIST.SYSTEM-DATE.TIME-SECOND": {
+        "id": "TXT.FORMLIST.SYSTEM-DATE.TIME-SECOND",
+        "group": "form-item",
+        "value_de": "Sekunde",
+        "value_en": "Second",
+        "orderby": 1
+    },
+    "TXT.BUTTON.SYSTEM-DATE.SET-DEVICE-DATE": {
+        "id": "TXT.BUTTON.SYSTEM-DATE.SET-DEVICE-DATE",
+        "group": "button",
+        "value_de": "ESP32 Datum/Zeit setzen",
+        "value_en": "Set ESP32 Date/Time",
+        "orderby": 1
+    },
+    "TXT.BUTTON.SYSTEM-DATE.TOGGLE-DISPLAY-DATE": {
+        "id": "TXT.BUTTON.SYSTEM-DATE.TOGGLE-DISPLAY-DATE",
+        "group": "button",
+        "value_de": "ESP32 Datum/Zeit Anzeige an/aus",
+        "value_en": "Toggle Device Date/Time Display",
+        "orderby": 1
+    },
+    "TXT.CARD.SYSTEM-SCORE.TITLE": {
+        "id": "TXT.CARD.SYSTEM-SCORE.TITLE",
+        "group": "card-title",
+        "value_de": "Spielstand auf ESP32 Gerät anzeigen",
+        "value_en": "Show Scores on ESP32 Device",
+        "orderby": 1
+    },
+    "TXT.CARD.SYSTEM-SCORE.TEXT": {
+        "id": "TXT.CARD.SYSTEM-SCORE.TEXT",
+        "group": "card-text",
+        "value_de": "Spielstand auf dem ESP32-Titel-Screen anzeigen: Per Rechtsklick in diesen Bereich den Wert aus der Player-Score-Tabelle über „Daten einfügen“ einfügen. Daten mit dem unteren Button „Spielstand anzeigen“ bestätigen.",
+        "value_en": "To display the score on the ESP32 title screen: Right-click in this area and insert the value from the player score table using the „Paste Data“ menu item. Verify the data and click the bottom „Display Score“ button to confirm.",
+        "orderby": 1
+    },
+    "TXT.FORMLIST.SYSTEM-SCORE.HEADER": {
+        "id": "TXT.FORMLIST.SYSTEM-SCORE.HEADER",
+        "group": "formlist-header",
+        "value_de": "Spielstände einfügen",
+        "value_en": "Paste Player Scores",
+        "orderby": 1
+    },
+    "TXT.BUTTON.SYSTEM-SCORE.DISPLAY-SCORE": {
+        "id": "TXT.BUTTON.SYSTEM-SCORE.DISPLAY-SCORE",
+        "group": "button",
+        "value_de": "Spielstand auf ESP32 Gerät anzeigen",
+        "value_en": "Display Score on ESP32",
+        "orderby": 1
+    },
+    "TXT.CONTEXTMENU.PASTE-DATA": {
+        "id": "TXT.CONTEXTMENU.PASTE-DATA",
+        "group": "context-menu",
+        "value_de": "Daten einfügen",
+        "value_en": "Paste data",
+        "orderby": 1
+    },
+    "TXT.CARD.X0DEMO-START.HEADER": {
+        "id": "TXT.CARD.X0DEMO-START.HEADER",
+        "group": "card-header",
+        "value_de": "Globale Information",
+        "value_en": "Global Information",
+        "orderby": 1
+    },
+    "TXT.NOTE.X0DEMO-START.CONTENT": {
+        "id": "TXT.NOTE.X0DEMO-START.CONTENT",
+        "group": "card-header",
+        "value_de": "Diese x0-Framework-Demonstration ist darauf ausgelegt zu zeigen, dass auf einem ESP32-Arduino-Mikrocontroller komplexe Web-Interfaces (Rechtsklick-Menü, komplexe Tabellen, Formularfelder und Kontrolllogik) möglich sind. Die Verwaltung der Spieler-Scores wäre für ein Real-World-Szenario viel zu komplex; hier soll lediglich die Copy-Paste-Funktionalität zur Veranschaulichung herangezogen werden. Weiterhin folgen ausgewählte Beispiele ohne Backend-Funktionalität.",
+        "value_en": "This x0 framework demonstration is designed to show that complex web interfaces (right-click menu, complex tables, form fields, and control logic) are possible on an ESP32 Arduino microcontroller. The player score management (how it is implemented here) would be far too complex for a real-world scenario; the copy-paste functionality is only used for illustration purposes. Furthermore, selected examples without backend functionality follow.",
+        "orderby": 1
+    },
+    "TXT.X0-DEMO.OPENCLOSE-CONTAINER.TREE-EXAMPLE": {
+        "id": "TXT.X0-DEMO.OPENCLOSE-CONTAINER.TREE-EXAMPLE",
+        "group": "openclose-container",
+        "value_de": "Beispiel „Rekursive Baumstruktur“",
+        "value_en": "Example „Recursive Tree“",
+        "orderby": 1
+    },
+    "TXT.X0-DEMO.OPENCLOSE-CONTAINER.SLIDERS-EXAMPLE": {
+        "id": "TXT.X0-DEMO.OPENCLOSE-CONTAINER.SLIDERS-EXAMPLE",
+        "group": "openclose-container",
+        "value_de": "Beispiel „Schieberegler“",
+        "value_en": "Example „Sliders“",
+        "orderby": 1
+    },
+    "TXT.TREE.NODE1": {
+        "id": "TXT.TREE.NODE1",
+        "group": "tree-node",
+        "value_de": "Knoten 1",
+        "value_en": "Node 1",
+        "orderby": 1
+    },
+    "TXT.TREE.NODE2": {
+        "id": "TXT.TREE.NODE2",
+        "group": "tree-node",
+        "value_de": "Knoten 2",
+        "value_en": "Node 2",
+        "orderby": 1
+    },
+    "TXT.TREE.NODE3": {
+        "id": "TXT.TREE.NODE3",
+        "group": "tree-node",
+        "value_de": "Knoten 3",
+        "value_en": "Node 3",
+        "orderby": 1
+    },
+    "TXT.TREE.ITEM1": {
+        "id": "TXT.TREE.ITEM1",
+        "group": "tree-item",
+        "value_de": "Item 1",
+        "value_en": "Item 1",
+        "orderby": 1
+    },
+    "TXT.TREE.ITEM2": {
+        "id": "TXT.TREE.ITEM2",
+        "group": "tree-item",
+        "value_de": "Item 2",
+        "value_en": "Item 2",
+        "orderby": 1
+    },
+    "TXT.TREE.ITEM3": {
+        "id": "TXT.TREE.ITEM3",
+        "group": "tree-item",
+        "value_de": "Item 3",
+        "value_en": "Item 3",
+        "orderby": 1
+    },
+    "TXT.TREE.ITEM4": {
+        "id": "TXT.TREE.ITEM4",
+        "group": "tree-item",
+        "value_de": "Item 4",
+        "value_en": "Item 4",
+        "orderby": 1
+    },
+    "TXT.TREE.ITEM5": {
+        "id": "TXT.TREE.ITEM5",
+        "group": "tree-item",
+        "value_de": "Item 5",
+        "value_en": "Item 5",
+        "orderby": 1
+    },
+    "TXT.FORMLIST.X0-DEMO-TREE.HEADER": {
+        "id": "TXT.FORMLIST.X0-DEMO-TREE.HEADER",
+        "group": "form-header",
+        "value_de": "Baum Element einfügen",
+        "value_en": "Insert Tree Item",
+        "orderby": 1
+    },
+    "TXT.FORMLIST.X0-DEMO-TREE.SUBHEADER": {
+        "id": "TXT.FORMLIST.X0-DEMO-TREE.SUBHEADER",
+        "group": "form-subheader",
+        "value_de": "",
+        "value_en": "",
+        "orderby": 1
+    },
+    "TXT.FORMFIELD.X0-DEMO-TREE.PULLDOWN.NODELIST": {
+        "id": "TXT.FORMFIELD.X0-DEMO-TREE.PULLDOWN.NODELIST",
+        "group": "form-item",
+        "value_de": "Position",
+        "value_en": "Position",
+        "orderby": 1
+    },
+    "TXT.FORMFIELD.PULLDOWN-OPTION.TREE-NODE.1": {
+        "id": "TXT.FORMFIELD.PULLDOWN-OPTION.TREE-NODE.1",
+        "group": "pulldown-item",
+        "value_de": "Knoten 1",
+        "value_en": "Node 1",
+        "orderby": 1
+    },
+    "TXT.FORMFIELD.PULLDOWN-OPTION.TREE-NODE.2": {
+        "id": "TXT.FORMFIELD.PULLDOWN-OPTION.TREE-NODE.2",
+        "group": "pulldown-item",
+        "value_de": "Knoten 2",
+        "value_en": "Node 2",
+        "orderby": 1
+    },
+    "TXT.FORMFIELD.PULLDOWN-OPTION.TREE-NODE.3": {
+        "id": "TXT.FORMFIELD.PULLDOWN-OPTION.TREE-NODE.3",
+        "group": "pulldown-item",
+        "value_de": "Knoten 3",
+        "value_en": "Node 3",
+        "orderby": 1
+    },
+    "TXT.FORMFIELD.X0-DEMO-TREE.PULLDOWN.ITEM-NAME": {
+        "id": "TXT.FORMFIELD.X0-DEMO-TREE.PULLDOWN.ITEM-NAME",
+        "group": "tree-item",
+        "value_de": "Item",
+        "value_en": "Item",
+        "orderby": 1
+    },
+    "TXT.FORMFIELD.X0-DEMO-TREE.PULLDOWN.ICON-STYLE": {
+        "id": "TXT.FORMFIELD.X0-DEMO-TREE.PULLDOWN.ICON-STYLE",
+        "group": "tree-item",
+        "value_de": "Style",
+        "value_en": "Style",
+        "orderby": 1
+    },
+    "TXT.BUTTON.X0-DEMO-TREE.ADD-NODE": {
+        "id": "TXT.BUTTON.X0-DEMO-TREE.ADD-NODE",
+        "group": "button",
+        "value_de": "Item hinzufügen",
+        "value_en": "Add Tree Item",
+        "orderby": 1
+    },
+    "TXT.FORMFIELD.X0-DEMO-SLIDERS.SLIDER1.SETVAL-DESCR": {
+        "id": "TXT.FORMFIELD.X0-DEMO-SLIDERS.SLIDER1.SETVAL-DESCR",
+        "group": "form-label",
+        "value_de": "%",
+        "value_en": "%",
+        "orderby": 1
+    },
+    "TXT.BUTTON.X0-DEMO-SLIDERS.SLIDER1.SETVAL": {
+        "id": "TXT.BUTTON.X0-DEMO-SLIDERS.SLIDER1.SETVAL",
+        "group": "button",
+        "value_de": "2. Update",
+        "value_en": "2. Update",
+        "orderby": 1
+    },
+    "TXT.BUTTON.X0-DEMO-SLIDERS.SLIDER1.SETPERCENTAGE": {
+        "id": "TXT.BUTTON.X0-DEMO-SLIDERS.SLIDER1.SETPERCENTAGE",
+        "group": "button",
+        "value_de": "1. Setzen",
+        "value_en": "1. Set",
+        "orderby": 1
+    },
+    "TXT.VALIDATE.ERROR.DATE": {
+        "id": "TXT.VALIDATE.ERROR.DATE",
+        "group": "form-validate",
+        "value_de": "Das angegebene Datum entspricht nicht dem erforderlichen Format („MM-TT-JJJJ“).",
+        "value_en": "The date provided is in the wrong format. The correct format is „MM-DD-YYYY“.",
+        "orderby": 1
+    },
+    "TXT.VALIDATE.ERROR.TIME": {
+        "id": "TXT.VALIDATE.ERROR.TIME",
+        "group": "form-validate",
+        "value_de": "Die angegebene Uhrzeit entspricht nicht dem erforderlichen Format. Erlaubt sind Stunden von „00–23“, Minuten von „00–59“ und Sekunden von „00–59“.",
+        "value_en": "The specified time does not match the required format. Allowed values are hours from „00–23“, minutes from „00–59“, and seconds from „00–59“.",
+        "orderby": 1
+    },
+    "TXT.VALIDATE.ERROR.TIME-HOUR": {
+        "id": "TXT.VALIDATE.ERROR.TIME-HOUR",
+        "group": "form-validate",
+        "value_de": "Fehlerhafte Stunde",
+        "value_en": "Wrong Hour Format",
+        "orderby": 1
+    },
+    "TXT.VALIDATE.ERROR.TIME-MINUTE": {
+        "id": "TXT.VALIDATE.ERROR.TIME-MINUTE",
+        "group": "form-validate",
+        "value_de": "Fehlerhafte Minute",
+        "value_en": "Wrong Minute Format",
+        "orderby": 1
+    },
+    "TXT.VALIDATE.ERROR.TIME-SECOND": {
+        "id": "TXT.VALIDATE.ERROR.TIME-SECOND",
+        "group": "form-validate",
+        "value_de": "Fehlerhafte Sekunde",
+        "value_en": "Wrong Second Format",
+        "orderby": 1
     }
+
 }

@@ -280,6 +280,14 @@
 		}
 	},
 
+	"PlayerScoreSpacerForm":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-2"
+		}
+	},
+
 	"PlayerScoreFormlist": {
 		"Type": "FormfieldList",
 		"Attributes": {
@@ -431,22 +439,26 @@
 				{
 					"ID": "ScoreType",
 					"HeaderTextID": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-TYPE",
-					"HeaderStyle": "col-md-3 p-3 bg-light border-end"
+					"HeaderStyle": "col-md-3 p-3 bg-light border-end",
+					"HeaderIconStyle": "fa-solid fa-robot"
 				},
 				{
 					"ID": "ScorePlayer1",
 					"HeaderTextID": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-P1",
-					"HeaderStyle": "col-md-3 p-3 bg-light border-end"
+					"HeaderStyle": "col-md-3 p-3 bg-light border-end",
+					"HeaderIconStyle": "fa-solid fa-person"
 				},
 				{
 					"ID": "ScorePlayer2",
 					"HeaderTextID": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-P2",
-					"HeaderStyle": "col-md-3 p-3 bg-light border-end"
+					"HeaderStyle": "col-md-3 p-3 bg-light border-end",
+					"HeaderIconStyle": "fa-solid fa-users"
 				},
 				{
 					"ID": "ScoreChampion",
 					"HeaderTextID": "TXT.TABLE.SCORE-HISTORY.HEADER.SCORE-CHAMPION",
-					"HeaderStyle": "col-md-3 p-3 bg-light"
+					"HeaderStyle": "col-md-3 p-3 bg-light",
+					"HeaderIconStyle": "fa-solid fa-chess-king"
 				}
 			],
 			"ContextMenuItems": [
@@ -478,5 +490,896 @@
 				"col-md-3 p-3"
 			]
 		}
+	},
+
+	"SystemDateTimeSpacerTop":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-3"
+		}
+	},
+
+	"SystemDateTimeCardContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card text-bg-light mb-3"
+		}
+	},
+
+	"SystemDateTimeCardHeader":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-header",
+			"TextID": "TXT.CARD.SYSTEM-DATE.HEADER"
+		}
+	},
+
+	"SystemDateTimeCardBodyContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card-body"
+		}
+	},
+
+	"SystemDateTimeCardBodyTitle":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-title h1 display-6",
+			"IconStyle": "fa-solid fa-clock",
+			"TextID": "TXT.CARD.SYSTEM-DATE.TITLE"
+		}
+	},
+
+	"SystemDateTimeCardBodyText":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-text",
+			"TextID": "TXT.CARD.SYSTEM-DATE.TEXT"
+		}
+	},
+
+	"SystemDateTimeSpacerForm":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-2"
+		}
+	},
+
+	"SystemDateTimeFormlist": {
+		"Type": "FormfieldList",
+		"Attributes": {
+			"Sections": [
+				{
+					"ID": "SystemDateTimeForm",
+					"Object": "FormSectionHeader",
+					"ObjectAttributes": {
+						"Style": "card card-line bg-body-tertiary border border border-dark-subtle border-2 mb-3",
+						"SubStyle": "card-body mt-n6",
+						"HeaderIcon": "fa-solid fa-calendar-days",
+						"HeaderTextID": "TXT.FORMLIST.SYSTEM-DATE.HEADER",
+						"SubHeaderTextID": "TXT.FORMLIST.SYSTEM-DATE.SUBHEADER"
+					},
+					"Formfields": [
+						"DateTimeDateDescr",
+						"DateTimeDate",
+						"DateTimeHourDescr",
+						"DateTimeHour",
+						"DateTimeMinuteDescr",
+						"DateTimeMinute",
+						"DateTimeSecondDescr",
+						"DateTimeSecond"
+					],
+					"RowStyle": "row",
+					"RowAfterElements": 8,
+					"ColStyle": "col-md-3",
+					"ColAfterElements": 2
+				}
+			],
+			"GroupValidate": [
+				{
+					"ValidateErrorTextID": "TXT.VALIDATE.ERROR.TIME",
+					"FunctionRef": "UserTimeHourMinuteSecond",
+					"ObjectIDs": [
+						"DateTimeHour",
+						"DateTimeMinute",
+						"DateTimeSecond"
+					]
+				}
+			],
+			"ErrorContainer": "SystemDateTimeErrorContainer"
+		}
+	},
+
+	"DateTimeDateDescr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMLIST.SYSTEM-DATE.DATE"
+		}
+	},
+
+	"DateTimeDate": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "date",
+			"Style": "form-control mb-1 p-1 w-100",
+			"ValidateRef": "DateInternational",
+			"ValidateErrorTextID": "TXT.VALIDATE.ERROR.DATE"
+		}
+	},
+
+	"DateTimeHourDescr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMLIST.SYSTEM-DATE.TIME-HOUR"
+		}
+	},
+
+	"DateTimeHour": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "text",
+			"Style": "form-control mb-1 p-1 w-100",
+			"Value": "00",
+			"Placeholder": "00"
+		}
+	},
+
+	"DateTimeMinuteDescr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMLIST.SYSTEM-DATE.TIME-MINUTE"
+		}
+	},
+
+	"DateTimeMinute": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "text",
+			"Style": "form-control mb-1 p-1 w-100",
+			"Value": "00",
+			"Placeholder": "00"
+		}
+	},
+
+	"DateTimeSecondDescr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMLIST.SYSTEM-DATE.TIME-SECOND"
+		}
+	},
+
+	"DateTimeSecond": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "text",
+			"Style": "form-control mb-1 p-1 w-100",
+			"Value": "00",
+			"Placeholder": "00"
+		}
+	},
+
+	"SystemDateTimeErrorContainer": {
+		"Type": "ErrorContainer"
+	},
+
+	"SystemDateTimeButtonSetDeviceDateTime": {
+		"Type": "Button",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.SYSTEM-DATE.SET-DEVICE-DATE",
+			"Style": "btn btn-primary btn-lg w-100 mt-3",
+			"IconStyle": "fa-solid fa-calendar-check",
+			"OnClick": "/python/set-device-date",
+			"Method": "POST",
+			"Validate": {
+				"Formlists":[
+					"SystemDateTimeFormlist"
+				]
+			}
+		}
+	},
+
+	"SystemDateTimeButtonToggleDeviceDateTimeDisplay": {
+		"Type": "Button",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.SYSTEM-DATE.TOGGLE-DISPLAY-DATE",
+			"Style": "btn btn-primary btn-lg w-100 mt-3",
+			"IconStyle": "fa-solid fa-toggle-on",
+			"OnClick": "/python/toggle-display-date"
+		}
+	},
+
+	"SystemScoreSpacerTop":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-3"
+		}
+	},
+
+	"SystemScoreCardContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card text-bg-light mb-3"
+		}
+	},
+
+	"SystemScoreCardHeader":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-header",
+			"TextID": "TXT.CARD.PLAYER-SCORE.HEADER"
+		}
+	},
+
+	"SystemScoreCardBodyContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card-body"
+		}
+	},
+
+	"SystemScoreCardBodyTitle":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-title h1 display-6",
+			"IconStyle": "fa-solid fa-trophy",
+			"TextID": "TXT.CARD.SYSTEM-SCORE.TITLE"
+		}
+	},
+
+	"SystemScoreCardBodyText":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-text",
+			"TextID": "TXT.CARD.SYSTEM-SCORE.TEXT"
+		}
+	},
+
+	"SystemScoreSpacerForm":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-2"
+		}
+	},
+
+	"SystemScoreFormlist": {
+		"Type": "FormfieldList",
+		"Attributes": {
+			"Sections": [
+				{
+					"ID": "SystemSetScoreForm",
+					"Object": "FormSectionHeader",
+					"ObjectAttributes": {
+						"Style": "card card-line bg-body-tertiary border border border-dark-subtle border-2 mb-3",
+						"SubStyle": "card-body mt-n6",
+						"HeaderIcon": "fa-solid fa-ranking-star",
+						"HeaderTextID": "TXT.FORMLIST.SYSTEM-SCORE.HEADER",
+						"SubHeaderTextID": "TXT.FORMLIST.PLAYER-SCORE.SUBHEADER"
+					},
+					"Formfields": [
+						"SystemScoreTypeDescr",
+						"SystemScoreType",
+						"SystemScorePlayer1Descr",
+						"SystemScorePlayer1",
+						"SystemScorePlayer2Descr",
+						"SystemScorePlayer2",
+						"SystemScoreChampionDescr",
+						"SystemScoreChampion"
+					],
+					"RowStyle": "row",
+					"RowAfterElements": 4,
+					"ColStyle": "col-md-6",
+					"ColAfterElements": 2
+				}
+			],
+			"ContextMenuItems": [
+				{
+					"ID": "SetData",
+					"TextID": "TXT.CONTEXTMENU.PASTE-DATA",
+					"IconStyle": "fa-solid fa-paste",
+					"InternalFunction": "set-data"
+				}
+			],
+			"SetDataMapping": {
+				"SystemScoreType": "ScoreType",
+				"SystemScorePlayer1": "ScorePlayer1",
+				"SystemScorePlayer2": "ScorePlayer2",
+				"SystemScoreChampion": "ScoreChampion"
+			}
+		}
+	},
+
+	"SystemScoreTypeDescr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.PLAYER-SCORE.TYPE"
+		}
+	},
+
+	"SystemScoreType": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "text",
+			"Disabled": true,
+			"Style": "form-control mb-1 p-1 w-100"
+		}
+	},
+
+	"SystemScorePlayer1Descr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.PLAYER-SCORE.PLAYER1"
+		}
+	},
+
+	"SystemScorePlayer1": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "text",
+			"Disabled": true,
+			"Style": "form-control mb-1 p-1 w-100"
+		}
+	},
+
+	"SystemScorePlayer2Descr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.PLAYER-SCORE.PLAYER2"
+		}
+	},
+
+	"SystemScorePlayer2": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "text",
+			"Disabled": true,
+			"Style": "form-control mb-1 p-1 w-100"
+		}
+	},
+
+	"SystemScoreChampionDescr": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.PLAYER-SCORE.CHAMPION"
+		}
+	},
+
+	"SystemScoreChampion": {
+		"Type": "Formfield",
+		"Attributes": {
+			"Type": "checkbox",
+			"Disabled": true,
+			"Style": "form-control form-check-input"
+		}
+	},
+
+	"SystemScoreButtonDisplayScore": {
+		"Type": "Button",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.SYSTEM-SCORE.DISPLAY-SCORE",
+			"Style": "btn btn-primary btn-lg w-100 mt-3",
+			"IconStyle": "fa-solid fa-display",
+			"OnClick": "/python/display-score",
+			"Method": "POST"
+		}
+	},
+
+	"x0DemoSpacerTop":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-3"
+		}
+	},
+
+	"x0DemoStartCardContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card text-bg-light mb-3"
+		}
+	},
+
+	"x0DemoStartCardHeader":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"Style": "card-header",
+			"TextID": "TXT.CARD.X0DEMO-START.HEADER"
+		}
+	},
+
+	"x0DemoStartCardBodyContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card-body"
+		}
+	},
+
+	"x0DemoStartCardNoteContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "p-3 mb-3 border-start border-warning border-5 bg-warning-subtle text-warning-emphasis"
+		}
+	},
+
+	"x0DemoStartNoteHeader":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"DOMType": "strong",
+			"TextID": "TXT.NOTE.GLOBAL"
+		}
+	},
+
+	"x0DemoStartNoteContent":
+	{
+		"Type": "SQLText",
+		"Attributes": {
+			"TextID": "TXT.NOTE.X0DEMO-START.CONTENT"
+		}
+	},
+
+	"x0DemoSpacerMiddle":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-3"
+		}
+	},
+
+	"x0DemoExampleContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "row"
+		}
+	},
+
+	"x0DemoTreeOpenCloseContainer":
+	{
+		"Type": "OpenCloseContainer",
+		"Attributes": {
+			"Style": "col col-md-6",
+			"TextID": "TXT.X0-DEMO.OPENCLOSE-CONTAINER.TREE-EXAMPLE",
+			"IconStyle": "fa-solid fa-folder-tree"
+		}
+	},
+
+	"x0DemoSliderOpenCloseContainer":
+	{
+		"Type": "OpenCloseContainer",
+		"Attributes": {
+			"Style": "col col-md-6",
+			"TextID": "TXT.X0-DEMO.OPENCLOSE-CONTAINER.SLIDERS-EXAMPLE",
+			"IconStyle": "fa-solid fa-sliders"
+		}
+	},
+
+	"x0DemoTreeCardContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card-body p-2 border border-2 rounded"
+		}
+	},
+
+	"x0DemoTreeElement":
+	{
+		"Type": "TreeSimple",
+		"Attributes":
+		{
+			"TreeItems":
+			[
+				{
+					"Type": "Node",
+					"TextID": "TXT.TREE.NODE1",
+					"ItemID": "Node1",
+					"Children":
+					[
+						{
+							"Type": "Item",
+							"TextID": "TXT.TREE.ITEM1",
+							"Icon": "fa-solid fa-code-branch"
+						},
+						{
+							"Type": "Node",
+							"TextID": "TXT.TREE.NODE2",
+							"ItemID": "Node2",
+							"Children":
+							[
+								{
+									"Type": "Item",
+									"TextID": "TXT.TREE.ITEM2",
+									"Icon": "fa-solid fa-volume-off"
+								}
+							]
+						},
+						{
+							"Type": "Item",
+							"TextID": "TXT.TREE.ITEM3",
+							"Icon": "fa-solid fa-toggle-on"
+						}
+					]
+				},
+				{
+					"Type": "Node",
+					"TextID": "TXT.TREE.NODE3",
+					"ItemID": "Node3",
+					"Children":
+					[
+						{
+							"Type": "Item",
+							"TextID": "TXT.TREE.ITEM4",
+							"Icon": "fa-solid fa-battery-full"
+						},
+						{
+							"Type": "Item",
+							"TextID": "TXT.TREE.ITEM5",
+							"Icon": "fa-solid fa-power-off"
+						}
+					]
+				}
+			]
+		}
+	},
+
+	"x0DemoTreeFormContainer":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "container p-3 row"
+		}
+	},
+
+	"x0DemoTreeFormCol1":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "col col-md-4"
+		}
+	},
+
+	"x0DemoTreeFormCol2":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "col col-md-4"
+		}
+	},
+
+	"x0DemoTreeFormCol3":
+	{
+		"Type": "Div",
+		"Attributes": {
+			"Style": "col col-md-4"
+		}
+	},
+
+	"TreeNodeDescr": {
+		"Type": "FormfieldLabel",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.X0-DEMO-TREE.PULLDOWN.NODELIST"
+		}
+	},
+
+	"TreeNode": {
+		"Type": "FormfieldPulldown",
+		"Attributes": {
+			"Type": "pulldown",
+			"Style": "form-select w-100",
+			"Options": [
+				{
+					"TextID": "TXT.FORMFIELD.PULLDOWN-OPTION.TREE-NODE.1",
+					"Value": "Node1",
+					"Default": true
+				},
+				{
+					"TextID": "TXT.FORMFIELD.PULLDOWN-OPTION.TREE-NODE.2",
+					"Value": "Node2"
+				},
+				{
+					"TextID": "TXT.FORMFIELD.PULLDOWN-OPTION.TREE-NODE.3",
+					"Value": "Node3"
+				}
+			]
+		}
+	},
+
+	"TreeItemNameDescr": {
+		"Type": "FormfieldLabel",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.X0-DEMO-TREE.PULLDOWN.ITEM-NAME"
+		}
+	},
+
+	"TreeItemName": {
+		"Type": "FormfieldText",
+		"Attributes": {
+			"Type": "text",
+			"Style": "form-control w-100"
+		}
+	},
+
+	"TreeItemStyleDescr": {
+		"Type": "FormfieldLabel",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.X0-DEMO-TREE.PULLDOWN.ICON-STYLE"
+		}
+	},
+
+	"TreeItemStyle": {
+		"Type": "FormfieldText",
+		"Attributes": {
+			"Type": "text",
+			"Style": "form-control w-100"
+		}
+	},
+
+	"TreeNodeAddButton": {
+		"Type": "ButtonInternal",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.X0-DEMO-TREE.ADD-NODE",
+			"Style": "btn btn-primary btn-lg mt-1 display-6 w-100",
+			"IconStyle": "fa-solid fa-arrow-up"
+		}
+	},
+
+	"x0ExampleSlidersContainer": {
+		"Type": "Div",
+		"Attributes": {
+			"Style": "card-body p-2 border border-2 rounded"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar1Row1": {
+		"Type": "Div",
+		"Attributes": {
+			"Style": "row"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar1Row1Col1": {
+		"Type": "Div",
+		"Attributes": {
+			"Style": "col col-md-3"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar1Row1Col2": {
+		"Type": "Div",
+		"Attributes": {
+			"Style": "col col-md-9"
+		}
+	},
+
+	"x0ExampleSlidersP1FormSetValDescr": {
+		"Type": "FormfieldLabel",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.X0-DEMO-SLIDERS.SLIDER1.SETVAL-DESCR"
+		}
+	},
+
+	"x0ExampleSlidersP1FormSetVal": {
+		"Type": "FormfieldText",
+		"Attributes": {
+			"Type": "text",
+			"Value": "50",
+			"Style": "form-control w-100"
+		}
+	},
+
+	"x0ExampleSlidersP1FormButtonSetVal": {
+		"Type": "ButtonInternal",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.X0-DEMO-SLIDERS.SLIDER1.SETVAL",
+			"Style": "btn btn-primary btn-lg mt-3 display-6 w-100",
+			"IconStyle": "fa-solid fa-arrow-up",
+			"Action": "set",
+			"SrcDataObject": "x0ExampleSlidersP1FormSetVal",
+			"DstDataObject": "x0ExampleSlidersProgressBar1"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar1": {
+		"Type": "ProgressBar"
+	},
+
+	"x0ExampleSlidersRangeSlider1": {
+		"Type": "RangeSlider"
+	},
+
+	"x0ExampleSlidersP1FormButtonSetPercentage": {
+		"Type": "ButtonInternal",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.X0-DEMO-SLIDERS.SLIDER1.SETPERCENTAGE",
+			"Style": "btn btn-primary btn-lg mt-3 display-6 w-100",
+			"IconStyle": "fa-solid fa-arrow-left",
+			"Action": "set",
+			"SrcDataObject": "x0ExampleSlidersRangeSlider1",
+			"DstDataObject": "x0ExampleSlidersP1FormSetVal"
+		}
+	},
+
+	"x0ExampleSlidersHorizontalDivider1": {
+		"Type": "Div",
+		"Attributes": {
+			"DOMType": "hr"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar2Row1": {
+		"Type": "Div",
+		"Attributes": {
+			"Style": "row"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar2Row1Col1": {
+		"Type": "Div",
+		"Attributes": {
+			"Style": "col col-md-3"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar2Row1Col2": {
+		"Type": "Div",
+		"Attributes": {
+			"Style": "col col-md-9"
+		}
+	},
+
+	"x0ExampleSlidersP2FormSetValDescr": {
+		"Type": "FormfieldLabel",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.X0-DEMO-SLIDERS.SLIDER1.SETVAL-DESCR"
+		}
+	},
+
+	"x0ExampleSlidersP2FormSetVal": {
+		"Type": "FormfieldText",
+		"Attributes": {
+			"Type": "text",
+			"Value": "50",
+			"Style": "form-control w-100"
+		}
+	},
+
+	"x0ExampleSlidersP2FormButtonSetVal": {
+		"Type": "ButtonInternal",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.X0-DEMO-SLIDERS.SLIDER1.SETVAL",
+			"Style": "btn btn-primary btn-lg mt-3 display-6 w-100",
+			"IconStyle": "fa-solid fa-arrow-up",
+			"Action": "set",
+			"SrcDataObject": "x0ExampleSlidersP2FormSetVal",
+			"DstDataObject": "x0ExampleSlidersProgressBar2"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar2": {
+		"Type": "ProgressBar"
+	},
+
+	"x0ExampleSlidersRangeSlider2": {
+		"Type": "RangeSlider"
+	},
+
+	"x0ExampleSlidersP2FormButtonSetPercentage": {
+		"Type": "ButtonInternal",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.X0-DEMO-SLIDERS.SLIDER1.SETPERCENTAGE",
+			"Style": "btn btn-primary btn-lg mt-3 display-6 w-100",
+			"IconStyle": "fa-solid fa-arrow-left",
+			"Action": "set",
+			"SrcDataObject": "x0ExampleSlidersRangeSlider2",
+			"DstDataObject": "x0ExampleSlidersP2FormSetVal"
+		}
+	},
+
+	"x0ExampleSlidersHorizontalDivider2": {
+		"Type": "Div",
+		"Attributes": {
+			"DOMType": "hr"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar3Row1": {
+		"Type": "Div",
+		"Attributes": {
+			"Style": "row"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar3Row1Col1": {
+		"Type": "Div",
+		"Attributes": {
+			"Style": "col col-md-3"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar3Row1Col2": {
+		"Type": "Div",
+		"Attributes": {
+			"Style": "col col-md-9"
+		}
+	},
+
+	"x0ExampleSlidersP3FormSetValDescr": {
+		"Type": "FormfieldLabel",
+		"Attributes": {
+			"Type": "label",
+			"TextID": "TXT.FORMFIELD.X0-DEMO-SLIDERS.SLIDER1.SETVAL-DESCR"
+		}
+	},
+
+	"x0ExampleSlidersP3FormSetVal": {
+		"Type": "FormfieldText",
+		"Attributes": {
+			"Type": "text",
+			"Value": "50",
+			"Style": "form-control w-100"
+		}
+	},
+
+	"x0ExampleSlidersP3FormButtonSetVal": {
+		"Type": "ButtonInternal",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.X0-DEMO-SLIDERS.SLIDER1.SETVAL",
+			"Style": "btn btn-primary btn-lg mt-3 display-6 w-100",
+			"IconStyle": "fa-solid fa-arrow-up",
+			"Action": "set",
+			"SrcDataObject": "x0ExampleSlidersP3FormSetVal",
+			"DstDataObject": "x0ExampleSlidersProgressBar3"
+		}
+	},
+
+	"x0ExampleSlidersProgressBar3": {
+		"Type": "ProgressBar"
+	},
+
+	"x0ExampleSlidersRangeSlider3": {
+		"Type": "RangeSlider"
+	},
+
+	"x0ExampleSlidersP3FormButtonSetPercentage": {
+		"Type": "ButtonInternal",
+		"Attributes": {
+			"TextID": "TXT.BUTTON.X0-DEMO-SLIDERS.SLIDER1.SETPERCENTAGE",
+			"Style": "btn btn-primary btn-lg mt-3 display-6 w-100",
+			"IconStyle": "fa-solid fa-arrow-left",
+			"Action": "set",
+			"SrcDataObject": "x0ExampleSlidersRangeSlider3",
+			"DstDataObject": "x0ExampleSlidersP3FormSetVal"
+		}
 	}
+
 }
