@@ -165,10 +165,6 @@ sysObjButton.prototype.EventListenerClick = function(Event)
 
         this.CallURL = Attributes.OnClick;
 
-        //console.debug('sysObjButton.EventListenerClick() JSONConfig:%o', this.JSONConfig);
-        //console.debug('sysObjButton.EventListenerClick() ScreenObject:%o', this.ScreenObject.ScreenID);
-        //console.debug('sysObjButton.EventListenerClick() ScreenObjects:%o', sysFactory.getObjectsByType(this.ScreenObject.ScreenID, 'FormfieldList'));
-
         this.PostRequestData.reset();
 
         this.ValidateResultError = true;
@@ -357,41 +353,48 @@ sysObjButton.prototype.processActions = function()
             DstObject = undefined;
         }
 
-        if (Action == 'append') {
+        if (Action == 'set') {
+            const SrcObject = sysFactory.getObjectByID(Attributes.SrcDataObject);
+            const DstObject = sysFactory.getObjectByID(Attributes.DstDataObject);
+            console.debug(DstObject);
+            DstObject.RuntimeSetDataFunc(SrcObject.RuntimeGetDataFunc());
+        }
+
+        else if (Action == 'append') {
             const SrcObject = sysFactory.getObjectByID(Attributes.SrcDataObject);
             const DstObject = sysFactory.getObjectByID(Attributes.DstDataObject);
             DstObject.RuntimeAppendDataFunc(SrcObject.RuntimeGetDataFunc());
         }
 
-        if (Action == 'enable') {
+        else if (Action == 'enable') {
             DstObject.VisibleState = 'visible';
             DstObject.setDOMVisibleState();
         }
 
-        if (Action == 'disable') {
+        else if (Action == 'disable') {
             DstObject.VisibleState = 'hidden';
             DstObject.setDOMVisibleState();
         }
 
-        if (Action == 'activate') {
+        else if (Action == 'activate') {
             DstObject.setActivated();
         }
 
-        if (Action == 'deactivate') {
+        else if (Action == 'deactivate') {
             DstObject.setDeactivated();
         }
 
-        console.debug('::EventListenerClick Config Attributes Action:%s', Action);
-
-        if (Action == 'reset') {
+        else if (Action == 'reset') {
             DstObject.reset();
         }
 
-        if (Action == 'switchscreen') {
+        else if (Action == 'switchscreen') {
             const ScreenObject = sysFactory.getScreenByID(Attributes.DstScreenID);
             //console.debug(this.ParentRow.SetupData);
             this.DstScreenID = Attributes.DstScreenID;
         }
+
+        console.debug('::EventListenerClick Config Attributes Action:%s', Action);
 
         if (this.DstScreenID !== undefined && Action !== undefined) {
             if (Attributes.ResetAll == true) {

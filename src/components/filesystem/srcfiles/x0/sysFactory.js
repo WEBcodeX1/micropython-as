@@ -40,7 +40,9 @@ function sysFactory()
         "FormfieldHidden": sysFormfieldItemHidden,
         "DynRadioList": sysObjDynRadioList,
         "OpenCloseContainer": sysObjOpenClose,
-        "TreeSimple": sysObjTreeSimple
+        "TreeSimple": sysObjTreeSimple,
+        "ProgressBar": sysObjProgressBar,
+        "RangeSlider": sysObjRangeSlider
     };
 
     this.SetupClassesRT = {
