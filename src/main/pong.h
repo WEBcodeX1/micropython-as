@@ -317,4 +317,8 @@ static const char *pong_code2 =
 "\n"
 "def render_frame_no_dt(data):\n"
 "    return render_frame(data, 0.03)\n"
+"\n"
+"def get_player_id(data):\n"
+"    jsondata = json.loads(data)\n"
+"    return jsondata['RequestData']['SelectedPlayer']\n"
 "\n";

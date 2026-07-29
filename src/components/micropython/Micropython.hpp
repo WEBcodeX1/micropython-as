@@ -19,6 +19,7 @@ public:
     ~MicroPython();
 
     bool callFunction(string&, string&, string&);
+    bool callFunctionCBuffer(string&, char*, string&);
 
 private:
 

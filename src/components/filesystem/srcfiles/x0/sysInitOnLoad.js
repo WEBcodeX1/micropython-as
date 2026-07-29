@@ -126,33 +126,40 @@ function InitOk(XHR) {
     //- Set System Vars
     //----------------------------------------------------------------------------
 
-    sysFactory.DisplayDefaultScreen           = sysVarDisplayDefaultScreen;
+    sysFactory.DisplayDefaultScreen = sysVarDisplayDefaultScreen;
 
-    sysFactory.SysDebugLevel                  = sysVarDebugLevel;
-    sysFactory.SysSessionID                   = 'SYS_SESSION';
-    sysFactory.SysUserID                      = UserID;
-    sysFactory.SysSessionValue                = UserSession;
-    sysFactory.MsgServerGetURL                = 'http://x0-msg-server.x0.localnet:8080/python/MsgHandler.py';
+    sysFactory.SysDebugLevel = sysVarDebugLevel;
+    sysFactory.SysSessionID = 'SYS_SESSION';
+    sysFactory.SysUserID = UserID;
+    sysFactory.SysSessionValue = UserSession;
+    sysFactory.MsgServerGetURL = 'http://x0-msg-server.x0.localnet:8080/python/MsgHandler.py';
 
-    sysFactory.ParentWindowURL                = sysVarParentWindowURL;
+    sysFactory.ParentWindowURL = sysVarParentWindowURL;
 
 
     //----------------------------------------------------------------------------
     //- Style Defaults
     //----------------------------------------------------------------------------
 
-    sysFactory.DefaultStyleScreen             = 'col-md-11 ms-auto me-auto';
-    sysFactory.DefaultStyleMenu               = 'menu-absolute-pos';
-    sysFactory.DefaultStyleScreenOverlay      = 'p-3 shadow-lg border bg-gradient bg-opacity-75 overlay-default';
-    sysFactory.DefaultStyleListNavLeft        = 'col-6 p-4 pl-0';
-    sysFactory.DefaultStyleListNavRight       = 'col-6 p-4 float-end text-end pr-0';
+    sysFactory.DefaultStyleScreen = 'col-md-11 ms-auto me-auto';
+    sysFactory.DefaultStyleMenu = 'menu-absolute-pos';
+    sysFactory.DefaultStyleScreenOverlay = 'p-3 shadow-lg border bg-gradient bg-opacity-75 overlay-default';
+    sysFactory.DefaultStyleListNavLeft = 'col-6 p-4 pl-0';
+    sysFactory.DefaultStyleListNavRight = 'col-6 p-4 float-end text-end pr-0';
+
+
+    //----------------------------------------------------------------------------
+    //- Game Player Default
+    //----------------------------------------------------------------------------
+
+    sysFactory.setGlobalVar('SelectedPlayer', '1');
 
 
     //----------------------------------------------------------------------------
     //- Display Language
     //----------------------------------------------------------------------------
 
-    sysFactory.EnvUserLanguage    = sysVarDisplayLanguage;
+    sysFactory.EnvUserLanguage = sysVarDisplayLanguage;
 
 
     //----------------------------------------------------------------------------

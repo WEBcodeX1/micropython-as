@@ -78,7 +78,7 @@
 
 	"GameControlSpacerTop":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-3"
 		}
@@ -86,7 +86,7 @@
 
 	"GameStartCardContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card text-bg-light mb-3"
 		}
@@ -103,7 +103,7 @@
 
 	"GameStartCardBodyContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card-body"
 		}
@@ -135,6 +135,10 @@
 			"Style": "btn btn-primary btn-lg w-100 mt-3 display-6",
 			"IconStyle": "fa-solid fa-play",
 			"OnClick": "/python/startgame",
+			"RequestMethod": "GET",
+			"Action": "setGlobalVar",
+			"SetVar": "SelectedPlayer",
+			"SetValue": "2",
 			"Notify": {
 				"ID": "GameStart",
 				"DisplayHeaderID": "TXT.GAMESTART.NOTIFYMSG"
@@ -149,6 +153,7 @@
 			"Style": "btn btn-primary btn-lg w-100 mt-3 display-6",
 			"IconStyle": "fa-solid fa-stop",
 			"OnClick": "/python/stopgame",
+			"RequestMethod": "GET",
 			"Notify": {
 				"ID": "GameStop",
 				"DisplayHeaderID": "TXT.GAMESTOP.NOTIFYMSG"
@@ -158,7 +163,7 @@
 
 	"GameControlSpacerMiddle":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-3"
 		}
@@ -166,7 +171,7 @@
 
 	"GameMovementCardContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card text-bg-light mb-3"
 		}
@@ -183,7 +188,7 @@
 
 	"GameMovementCardBodyContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card-body"
 		}
@@ -212,9 +217,16 @@
 		"Type": "Button",
 		"Attributes": {
 			"TextID": "TXT.BUTTON.GAME.PADDLE-UP",
-			"Style": "btn btn-primary btn-lg w-100 mt-3",
+			"Style": "btn btn-primary btn-lg btn-huge w-100 mt-3",
 			"IconStyle": "fa-solid fa-chevron-up",
-			"OnClick": "/python/paddleup"
+			"OnClick": "/python/paddleup",
+			"SrcDataObjects":
+			{
+				"SelectedPlayer":
+				{
+					"Type": "GlobalVar"
+				}
+			}
 		}
 	},
 
@@ -222,15 +234,22 @@
 		"Type": "Button",
 		"Attributes": {
 			"TextID": "TXT.BUTTON.GAME.PADDLE-DOWN",
-			"Style": "btn btn-primary btn-lg w-100 mt-3",
+			"Style": "btn btn-primary btn-lg btn-huge w-100 mt-3",
 			"IconStyle": "fa-solid fa-chevron-down",
-			"OnClick": "/python/paddledown"
+			"OnClick": "/python/paddledown",
+			"SrcDataObjects":
+			{
+				"SelectedPlayer":
+				{
+					"Type": "GlobalVar"
+				}
+			}
 		}
 	},
 
 	"PlayerScoreSpacerTop":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-3"
 		}
@@ -238,7 +257,7 @@
 
 	"PlayerScoreCardContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card text-bg-light mb-3"
 		}
@@ -255,7 +274,7 @@
 
 	"PlayerScoreCardBodyContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card-body"
 		}
@@ -282,7 +301,7 @@
 
 	"PlayerScoreSpacerForm":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-2"
 		}
@@ -416,7 +435,7 @@
 
 	"PlayerScoreSpacerDown":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-3"
 		}
@@ -494,7 +513,7 @@
 
 	"SystemDateTimeSpacerTop":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-3"
 		}
@@ -502,7 +521,7 @@
 
 	"SystemDateTimeCardContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card text-bg-light mb-3"
 		}
@@ -519,7 +538,7 @@
 
 	"SystemDateTimeCardBodyContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card-body"
 		}
@@ -546,7 +565,7 @@
 
 	"SystemDateTimeSpacerForm":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-2"
 		}
@@ -701,7 +720,7 @@
 
 	"SystemScoreSpacerTop":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-3"
 		}
@@ -709,7 +728,7 @@
 
 	"SystemScoreCardContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card text-bg-light mb-3"
 		}
@@ -726,7 +745,7 @@
 
 	"SystemScoreCardBodyContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card-body"
 		}
@@ -753,7 +772,7 @@
 
 	"SystemScoreSpacerForm":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-2"
 		}
@@ -887,7 +906,7 @@
 
 	"x0DemoSpacerTop":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-3"
 		}
@@ -895,7 +914,7 @@
 
 	"x0DemoStartCardContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card text-bg-light mb-3"
 		}
@@ -912,7 +931,7 @@
 
 	"x0DemoStartCardBodyContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card-body"
 		}
@@ -920,7 +939,7 @@
 
 	"x0DemoStartCardNoteContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "p-3 mb-3 border-start border-warning border-5 bg-warning-subtle text-warning-emphasis"
 		}
@@ -945,7 +964,7 @@
 
 	"x0DemoSpacerMiddle":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-3"
 		}
@@ -953,7 +972,7 @@
 
 	"x0DemoExampleContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "row"
 		}
@@ -981,7 +1000,7 @@
 
 	"x0DemoTreeCardContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card-body p-2 border border-2 rounded"
 		}
@@ -1049,7 +1068,7 @@
 
 	"x0DemoTreeFormContainer":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "container p-3 row"
 		}
@@ -1057,7 +1076,7 @@
 
 	"x0DemoTreeFormCol1":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "col col-md-4"
 		}
@@ -1065,7 +1084,7 @@
 
 	"x0DemoTreeFormCol2":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "col col-md-4"
 		}
@@ -1073,7 +1092,7 @@
 
 	"x0DemoTreeFormCol3":
 	{
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "col col-md-4"
 		}
@@ -1152,28 +1171,28 @@
 	},
 
 	"x0ExampleSlidersContainer": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "card-body p-2 border border-2 rounded"
 		}
 	},
 
 	"x0ExampleSlidersProgressBar1Row1": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "row"
 		}
 	},
 
 	"x0ExampleSlidersProgressBar1Row1Col1": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "col col-md-3"
 		}
 	},
 
 	"x0ExampleSlidersProgressBar1Row1Col2": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "col col-md-9"
 		}
@@ -1229,28 +1248,28 @@
 	},
 
 	"x0ExampleSlidersHorizontalDivider1": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"DOMType": "hr"
 		}
 	},
 
 	"x0ExampleSlidersProgressBar2Row1": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "row"
 		}
 	},
 
 	"x0ExampleSlidersProgressBar2Row1Col1": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "col col-md-3"
 		}
 	},
 
 	"x0ExampleSlidersProgressBar2Row1Col2": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "col col-md-9"
 		}
@@ -1306,28 +1325,28 @@
 	},
 
 	"x0ExampleSlidersHorizontalDivider2": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"DOMType": "hr"
 		}
 	},
 
 	"x0ExampleSlidersProgressBar3Row1": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "row"
 		}
 	},
 
 	"x0ExampleSlidersProgressBar3Row1Col1": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "col col-md-3"
 		}
 	},
 
 	"x0ExampleSlidersProgressBar3Row1Col2": {
-		"Type": "Div",
+		"Type": "DivUnique",
 		"Attributes": {
 			"Style": "col col-md-9"
 		}

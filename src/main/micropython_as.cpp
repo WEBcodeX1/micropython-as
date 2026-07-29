@@ -7,6 +7,9 @@
 #include "GameScreen.hpp"
 #include "NetworkWifi.hpp"
 #include "Micropython.hpp"
+#include "ASRequestHandler.hpp"
+#include "ASRequestDef.hpp"
+#include "DateTime.hpp"
 
 // LED control
 #include "LED3Color.hpp"
@@ -14,7 +17,7 @@
 // include constants
 #include "constants.h"
 
-// include PONG MicroPython .mpy object code
+// include PONG MicroPython .py code
 #include "pong.h"
 
 // include posix thread wrapper
@@ -24,6 +27,9 @@
 // include rtos
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+
+// include extern definitions
+#include "ASRequestGlobal.hpp"
 
 // thread function prototypes
 static void* led_flashing_thread(void* arg);
@@ -39,14 +45,23 @@ std::string Network::IPNetmask = "255.255.255.0";
 // global shared LED flash indicator
 static unsigned int LEDFlashTrigger = 0;
 
-// global shared http application server "locks"
-static unsigned int HTTPAppServerMsgInReady = 0;
-static unsigned int HTTPAppServerMsgOutReady = 0;
+// as request global specs
+unsigned int ASRequestStatus = AS_REQ_WAIT_IN;
+unsigned int ASRequestID = 0;
+unsigned int ASRequestContentLength = 0;
+char ASRequestExchangeBuffer[2048];
+
+// MicroPython game start constants
+static const string MPFunctionParamStartSingle("{ \"start\": \"single\" }");
+static const string MPFunctionParamStartMulti("{ \"start\": \"multi\" }");
 
 
 // main loop
 extern "C" void app_main(void)
 {
+    // set system time according to build time
+    set_system_time();
+
     //- MicroPython heap
     static char InterpreterHeap[MICROPYTHON_HEAP_SIZE];
 
@@ -92,65 +107,118 @@ extern "C" void app_main(void)
     string ResultString;
     bool ResultStatus;
 
-    string FunctionParamStart("{ \"start\": \"single\" }");
-    string FunctionParamMove("{ \"player2\": \"up\" }");
+    string MPFunctionParamStart = MPFunctionParamStartSingle;
+    string MPFunctionParamMove("{ \"player2\": \"none\" }");
 
-    string FunctionName("render_frame_no_dt");
+    string MPFunctionParamStop("{ \"quit\" }");
 
+    string MPFunctionRenderGameFrame("render_frame_no_dt");
+    string MPFunctionGetPlayer = "get_player_id";
+
+    //- game screen data
     TitleScreen TitleScreenRef;
 
     GameScreen GameScreenRef;
     GameScreenRef.setDisplayDev(TitleScreenRef.getDisplayDev());
     GameScreenRef.setLEDFlashTriggerRef(&LEDFlashTrigger);
 
-    int LoopIncrementCount = 0;
+    //- init main loop
+    int LoopIncrementCount = 1;
     enum ScreenType SelectedScreen = MAIN;
     bool ScreenInit = true;
     bool GameRunning = false;
+    string LastProcessedPlayer = "2";
 
-    while (1) {
+    //- loop main loop
+    while (true) {
 
-        if (SelectedScreen == MAIN && ScreenInit == true) {
-            TitleScreenRef.printHeader();
-            ScreenInit = false;
+        //- server request processing
+        if (ASRequestStatus == AS_REQ_PROCESSING) {
+
+            ESP_LOGI("MainLoop", "ASRequestID:%d ASRequestStatus:%d", ASRequestID, ASRequestStatus);
+
+            if (ASRequestID == AS_REQ_GAME_START && GameRunning == false)
+            {
+                if (TitleScreenRef.getPlayerCount() == 2) {
+                    MPFunctionParamStart = MPFunctionParamStartMulti;
+                }
+                else {
+                    MPFunctionParamStart = MPFunctionParamStartSingle;
+                }
+
+                SelectedScreen = GAME;
+                ScreenInit = true;
+                GameRunning = true;
+            }
+
+            else if (ASRequestID == AS_REQ_GAME_STOP && GameRunning == true)
+            {
+                ResultStatus = interpreter.callFunction(
+                    MPFunctionRenderGameFrame, MPFunctionParamStop, ResultString
+                );
+
+                SelectedScreen = MAIN;
+                ScreenInit = true;
+                GameRunning = false;
+            }
+
+            if ((ASRequestID == AS_REQ_PADDLE_UP || ASRequestID == AS_REQ_PADDLE_DOWN) && GameRunning == true) {
+
+                ESP_LOGI("MainLoop", "PaddleMovement ASRequestContentLength:%d", ASRequestContentLength);
+
+                ASRequestExchangeBuffer[ASRequestContentLength+1] = 0;
+
+                ESP_LOG_BUFFER_CHAR_LEVEL("MainLoop", &ASRequestExchangeBuffer[0], ASRequestContentLength, ESP_LOG_INFO);
+
+                ResultStatus = interpreter.callFunctionCBuffer(
+                    MPFunctionGetPlayer, &ASRequestExchangeBuffer[0], ResultString
+                );
+
+                ESP_LOGI("MainLoop", "PaddleMovement MPStatus:%d MPResult:%s", ResultStatus, ResultString.c_str());
+
+                if (ASRequestID == AS_REQ_PADDLE_UP)
+                {
+                    MPFunctionParamMove = "{ \"player" + ResultString + "\": \"up\" }";
+                    LastProcessedPlayer = ResultString;
+                }
+
+                else if (ASRequestID == AS_REQ_PADDLE_DOWN)
+                {
+                    MPFunctionParamMove = "{ \"player" + ResultString + "\": \"down\" }";
+                    LastProcessedPlayer = ResultString;
+                }
+            }
+
+            ASRequestStatus = AS_REQ_PROCESSED;
         }
-        else if (SelectedScreen == MAIN && ScreenInit == false) {
-            TitleScreenRef.printPlayerInfo();
+        else {
+            MPFunctionParamMove = "{ \"player" + LastProcessedPlayer + "\": \"none\" }";
+        }
+
+        //- screen rendering
+        if (SelectedScreen == MAIN) {
             TitleScreenRef.render();
         }
         else if (SelectedScreen == GAME && ScreenInit == true) {
             ResultStatus = interpreter.callFunction(
-                FunctionName, FunctionParamStart, ResultString
+                MPFunctionRenderGameFrame, MPFunctionParamStart, ResultString
             );
             GameScreenRef.reset();
             ScreenInit = false;
         }
         else if (SelectedScreen == GAME && ScreenInit == false) {
             ResultStatus = interpreter.callFunction(
-                FunctionName, FunctionParamMove, ResultString
+                MPFunctionRenderGameFrame, MPFunctionParamMove, ResultString
             );
             GameScreenRef.render(ResultString);
         }
 
-        LoopIncrementCount++;
+        //- screen rendering
+        LoopIncrementCount--;
 
-        if (LoopIncrementCount == 50) {
+        if (LoopIncrementCount == 0) {
 
-            LoopIncrementCount = 0;
-
-            //- (temp) trigger game start
-            if (TitleScreenRef.getPlayerCount() == 2 && GameRunning == false) {
-                SelectedScreen = GAME;
-                ScreenInit = true;
-                GameRunning = true;
-            }
-
-            //- (temp) trigger game stop
-            if (SelectedScreen == GAME && TitleScreenRef.getPlayerCount() == 0 && GameRunning == true) {
-                SelectedScreen = MAIN;
-                ScreenInit = true;
-                GameRunning = false;
-            }
+            LoopIncrementCount = 50;
 
             const EventGroupHandle_t EventHandle = getWifiEventHandle();
 
@@ -163,11 +231,17 @@ extern "C" void app_main(void)
                 TitleScreenRef.addPlayer();
                 xEventGroupClearBits(EventHandle, WIFI_CONNECTED_BIT | WIFI_STA_IP_ASSIGNED_BIT);
             }
-            if ((WifiStatusBits & WIFI_DISCONNECTED_BIT) != 0) {
+            else if ((WifiStatusBits & WIFI_DISCONNECTED_BIT) != 0) {
                 LEDFlashTrigger = 2;
                 TitleScreenRef.removePlayer();
                 xEventGroupClearBits(EventHandle, WIFI_DISCONNECTED_BIT);
             }
+
+            if (SelectedScreen == MAIN) {
+                TitleScreenRef.printHeader();
+                TitleScreenRef.printPlayerInfo();
+            }
+
         }
 
         vTaskDelay(1);
@@ -180,8 +254,8 @@ static void* led_flashing_thread(void * arg)
     led1.init(GPIO_NUM_1, GPIO_NUM_2, GPIO_NUM_3);
     led1.setColor(100, 0, 4000);
 
-    while(1) {
-
+    while(true)
+    {
         if (LEDFlashTrigger == LED_FLASH_WIFI_CONNECT) {
             led1.fade(
                 { 100, 200, 250, 90, 100, 0, 40, 3 }
@@ -213,7 +287,6 @@ static void* led_flashing_thread(void * arg)
         else {
             vTaskDelay(10);
         }
-
         //ESP_LOGI("LEDControl", "LEDFlashTrigger:%d", LEDFlashTrigger);
     }
     return nullptr;

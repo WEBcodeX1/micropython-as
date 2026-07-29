@@ -1,5 +1,5 @@
 //-------1---------2---------3---------4---------5---------6---------7--------//
-//- Copyright WEB/codeX, clickIT 2011 - 2025                                 -//
+//- Copyright WEB/codeX, clickIT 2011 - 2026                                 -//
 //-------1---------2---------3---------4---------5---------6---------7--------//
 //-                                                                          -//
 //-------1---------2---------3---------4---------5---------6---------7--------//
@@ -17,20 +17,23 @@
 
 function sysObjButton()
 {
-    this.DOMType             = 'button'
-    this.DOMAttributes       = new Object();
+    this.DOMType             = 'button'                         //- DOM Type
+    this.DOMAttributes       = new Object();                    //- DOM Attributes
 
-    this.EventListeners      = new Object();
-    this.ChildObjects        = new Array();
+    this.overrideDOMObjectID = true;                            //- Override recursive ObjectID
+    this.ObjectID            = this.ID;                         //- Set unique ID
 
-    this.PostRequestData     = new sysRequestDataHandler();
+    this.EventListeners      = new Object();                    //- Event Listerners Object
+    this.ChildObjects        = new Array();                     //- Child Objects Array
 
-    this.CallURL             = null;
-    this.CallService         = false;
+    this.PostRequestData     = new sysRequestDataHandler();     //- POST Request Data Handler
 
-    this.FormValidate        = false;
+    this.CallURL             = null;                            //- Request URL
+    this.CallService         = false;                           //- Call Service Flag (true || false)
 
-    this.ValidateResultError = true;
+    this.FormValidate        = false;                           //- Form Validation Flag (true || false)
+
+    this.ValidateResultError = true;                            //- Validation Result (true || false)
 }
 
 //- inherit sysBaseObject
@@ -174,8 +177,8 @@ sysObjButton.prototype.EventListenerClick = function(Event)
         console.debug('::EventListenerClick Validate result:%s', this.ValidateResultError);
 
         if (this.ValidateResultError == false) {
-            this.processSourceObjects();
             this.processActions();
+            this.processSourceObjects();
             this.callService();
         }
     }
@@ -189,8 +192,11 @@ sysObjButton.prototype.EventListenerClick = function(Event)
 sysObjButton.prototype.callService = function()
 {
     if (this.CallURL !== undefined && this.CallURL != null) {
+        const Attributes = this.JSONConfig.Attributes;
+        var RequestMethod = (Attributes.RequestMethod != undefined && Attributes.RequestMethod == 'GET') ? 'GET': 'POST';
         this.addNotifyHandler();
         RPC = new sysCallXMLRPC(this.CallURL);
+        RPC.setRequestType(RequestMethod);
         RPC.Request(this);
     }
 }
@@ -392,6 +398,11 @@ sysObjButton.prototype.processActions = function()
             const ScreenObject = sysFactory.getScreenByID(Attributes.DstScreenID);
             //console.debug(this.ParentRow.SetupData);
             this.DstScreenID = Attributes.DstScreenID;
+        }
+
+        else if (Action == 'setglobalvar') {
+            sysFactory.setGlobalVar(Attributes.SetVar, Attributes.SetValue);
+            console.debug('SetGlobal Var:%s Value:%s', Attributes.SetVar, Attributes.SetValue);
         }
 
         console.debug('::EventListenerClick Config Attributes Action:%s', Action);

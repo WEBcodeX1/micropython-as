@@ -29,3 +29,20 @@ bool MicroPython::callFunction(string& FunctionName, string& FunctionParam, stri
 
     return false;
 }
+
+bool MicroPython::callFunctionCBuffer(string& FunctionName, char* FunctionParam, string& Result)
+{
+    const char* CResultPointer = nullptr;
+
+    CResultPointer = mp_embed_exec_string_function(
+        FunctionName.c_str(),
+        FunctionParam
+    );
+
+    if (CResultPointer) {
+        Result.assign(CResultPointer);
+        return true;
+    }
+
+    return false;
+}

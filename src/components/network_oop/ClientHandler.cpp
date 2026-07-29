@@ -1,3 +1,4 @@
+#include "ASRequestGlobal.hpp"
 #include "ClientHandler.hpp"
 #include "Filesystem.hpp"
 
@@ -66,12 +67,38 @@ uint8_t ClientHandler::processClients()
 
             const RequestProperties_t Request = Requests->at(0);
 
+            //- check for MicroPython request
+            if (ASRequestStatus == AS_REQ_WAIT_IN) {
+                ClientObj->ASRequestInit(Request);
+            }
+
             if (ClientObj->MsgGetSendStatus() == SEND_STATE_IDLE) {
 
                 //- reset httpgenerator object
                 ClientObj->MsgReset();
 
-                if (Request.HTTPMethod == 1) {
+                // on AS SEND_RESULT command, send result message
+                if (ASRequestStatus == AS_REQ_PROCESSED) {
+
+                    ClientObj->MsgAddDateHeader();
+                    ClientObj->MsgAddHeader("Content-Type", "application/json");
+                    ClientObj->MsgAddHeader("Connection", "keep-alive");
+                    ClientObj->MsgAddHeader("Server", "falcon-as");
+
+                    ClientObj->MsgSetBodyRef(
+                        reinterpret_cast<const unsigned char*>(ASRequestExchangeBuffer),
+                        ASRequestContentLength
+                    );
+
+                    ClientObj->MsgGenerate();
+                    ClientObj->MsgSetSendStatus(SEND_STATE_SENDING);
+
+                    //- reset AS status to wait incoming
+                    ASRequestStatus = AS_REQ_WAIT_IN;
+                }
+
+                //- on non-AS request && GET request (static file)
+                else if (Request.HTTPMethod == 1) {
 
                     //ESP_LOGI("HTTPServer", "Request GET URL:%s", Request.URL.c_str());
 
@@ -118,7 +145,7 @@ uint8_t ClientHandler::processClients()
                     }
                 }
                 else if (ClientObj->MsgUpdateSendMetadata(BytesWritten) == true) {
-                    ESP_LOGI("HTTPServer", "Request finished, erasing");
+                    //ESP_LOGI("HTTPServer", "Request finished, erasing");
                     ClientObj->MsgReset();
                     Requests->erase(Requests->begin());
                 }
