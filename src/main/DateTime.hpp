@@ -1,8 +1,10 @@
 #pragma once
 
 #include <chrono>
+#include <cstdlib>    // setenv
+#include <ctime>      // time_t
 #include <string_view>
-
+#include <sys/time.h> // settimeofday, timeval
 [[nodiscard]] constexpr std::chrono::sys_seconds get_build_timestamp() noexcept
 {
     using namespace std::chrono_literals;
