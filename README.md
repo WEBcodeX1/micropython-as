@@ -32,6 +32,8 @@ I have added some videos showing the current project status / progress in [./vid
 | FalconAS HTTP/1.1 GET / POST MicroPython Interface | Stable, tested                 | :white_check_mark: |
 | Static HTTP/1.1 Server / OS DNS+HTTP Requests      | Unstable                       | :x:                |
 
+## External Links
+
 - https://github.com/WEBcodeX1/http-1.2
 - https://github.com/WEBcodeX1/x0
 - https://github.com/clauspruefer/MicroPythonPong
