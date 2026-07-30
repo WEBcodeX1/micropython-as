@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef LINUX_BUILD
-#include "/usr/local/include/linux/httpconstants.hpp"
+#include "httpconstants.hpp"
 #else
 #include "/usr/local/include/esp32s3/httpconstants.hpp"
 #endif

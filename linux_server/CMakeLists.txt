@@ -20,15 +20,25 @@ set(SOURCES
 )
 
 # ---------------------------------------------------------------------------
+# HTTP library – built from source via the WEBcodeX1/http-1.2 submodule.
+# The submodule lives at linux_server/third_party/http-1.2.
+# Its lib/http/CMakeLists.txt creates a single static target named "httpparser"
+# that contains both the parser and the generator compilation units.
+# ---------------------------------------------------------------------------
+add_subdirectory(third_party/http-1.2/lib/http)
+target_include_directories(httpparser PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/http-1.2/lib/http)
+
+# ---------------------------------------------------------------------------
 # Include paths
 # Stubs directory comes first so it shadows ESP-IDF / FreeRTOS headers.
+# The http-1.2 headers are exposed via the httpparser target above.
 # ---------------------------------------------------------------------------
 include_directories(
     stubs
     ../src/components/network_oop
     ../src/components/filesystem
     ../src/main
-    /usr/local/include/linux
 )
 
 # ---------------------------------------------------------------------------
@@ -36,22 +46,7 @@ include_directories(
 # ---------------------------------------------------------------------------
 add_executable(server_linux ${SOURCES})
 
-# ---------------------------------------------------------------------------
-# External HTTP libraries (Linux-native builds from the FalconAS http-1.2 port)
-# Install instructions: see BUILD.md section "Linux Server Build".
-# Expected locations after installation:
-#   /usr/local/lib/linux/libhttpparser.a
-#   /usr/local/lib/linux/libhttpgenerator.a
-# ---------------------------------------------------------------------------
-add_library(httpparser_lib STATIC IMPORTED)
-set_property(TARGET httpparser_lib PROPERTY
-    IMPORTED_LOCATION /usr/local/lib/linux/libhttpparser.a)
-
-add_library(httpgenerator_lib STATIC IMPORTED)
-set_property(TARGET httpgenerator_lib PROPERTY
-    IMPORTED_LOCATION /usr/local/lib/linux/libhttpgenerator.a)
-
-target_link_libraries(server_linux PRIVATE httpparser_lib httpgenerator_lib)
+target_link_libraries(server_linux PRIVATE httpparser)
 
 # ---------------------------------------------------------------------------
 # Optional: enable AddressSanitizer for runtime crash/memory analysis.

@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef LINUX_BUILD
-#include "/usr/local/include/linux/httpparser.hpp"
+#include "httpparser.hpp"
 #else
 #include "/usr/local/include/esp32s3/httpparser.hpp"
 #endif

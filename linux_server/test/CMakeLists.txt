@@ -39,18 +39,20 @@ target_include_directories(server_test PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/filesystem  # test Filesystem.hpp — must be first
     ${LS}/stubs
     ${NET_OOP}
-    /usr/local/include/linux
 )
 
-add_library(httpparser_srv STATIC IMPORTED)
-set_property(TARGET httpparser_srv PROPERTY
-    IMPORTED_LOCATION /usr/local/lib/linux/libhttpparser.a)
+# ---------------------------------------------------------------------------
+# HTTP library – built from source via the WEBcodeX1/http-1.2 submodule.
+# Guard prevents redefinition when this file is included from the parent build.
+# ---------------------------------------------------------------------------
+if(NOT TARGET httpparser)
+    add_subdirectory(${LS}/third_party/http-1.2/lib/http
+                     ${CMAKE_CURRENT_BINARY_DIR}/http-1.2)
+    target_include_directories(httpparser PUBLIC
+        ${LS}/third_party/http-1.2/lib/http)
+endif()
 
-add_library(httpgenerator_srv STATIC IMPORTED)
-set_property(TARGET httpgenerator_srv PROPERTY
-    IMPORTED_LOCATION /usr/local/lib/linux/libhttpgenerator.a)
-
-target_link_libraries(server_test PRIVATE httpparser_srv httpgenerator_srv)
+target_link_libraries(server_test PRIVATE httpparser)
 
 # ---------------------------------------------------------------------------
 # test_client binary

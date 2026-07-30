@@ -1,0 +1,3 @@
+[submodule "linux_server/third_party/http-1.2"]
+	path = linux_server/third_party/http-1.2
+	url = https://github.com/WEBcodeX1/http-1.2.git
