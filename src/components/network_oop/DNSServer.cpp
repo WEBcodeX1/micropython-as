@@ -97,7 +97,7 @@ void DNSServer::ServerLoop()
                 RecvBuffer[ReceivedBytes+14] = stoi(IPAddressSplit[2]); //- IPv4 byte3
                 RecvBuffer[ReceivedBytes+15] = stoi(IPAddressSplit[3]); //- IPv4 byte4
 
-                //ESP_LOG_BUFFER_HEX_LEVEL("DNSServer", &RecvBuffer[0], ReceivedBytes+16, ESP_LOG_INFO);
+                ESP_LOG_BUFFER_CHAR_LEVEL("DNSServer", &RecvBuffer[0], ReceivedBytes+16, ESP_LOG_INFO);
 
                 sendto(ServerSocketFD, &RecvBuffer[0], ReceivedBytes+16, 0, (const struct sockaddr*) &ClientSocketAddr, ClientSocketLen);
             }

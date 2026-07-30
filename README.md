@@ -28,15 +28,15 @@ I have added some videos showing the current project status / progress in [./vid
 | BSD-Socket Porting / FalconAS                      | Stable, tested                 | :white_check_mark: |
 | Static Filesystem / FalconAS HTTP/1.1 GET          | Stable, tested                 | :white_check_mark: |
 | Modified, working x0 Browser Framework             | Stable, tested                 | :white_check_mark: |
-| Complete x0 Browser Application                    | Finished, unimplemented        | :x:                |
-| FalconAS HTTP/1.1 GET / POST MicroPython Interface | Nearly finished                | :x:                |
+| x0 Browser Application                             | Finished, 90% functionality    | :white_check_mark: |
+| FalconAS HTTP/1.1 GET / POST MicroPython Interface | Stable, tested                 | :white_check_mark: |
+| Static HTTP/1.1 Server / OS DNS+HTTP Requests      | Unstable                       | :x:                |
+
+## External Links
 
 - https://github.com/WEBcodeX1/http-1.2
 - https://github.com/WEBcodeX1/x0
 - https://github.com/clauspruefer/MicroPythonPong
-
-> [!NOTE]
-> The **x0 framework** has been adapted to work databaselessly with the FalconAS HTTP/1.1 ESP32 component. Finishing the project is just a matter of days.
 
 # 1. ESP32-C3 SoC
 

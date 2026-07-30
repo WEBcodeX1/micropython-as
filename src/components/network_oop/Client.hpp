@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ASRequestHandler.hpp"
+
 #include "/usr/local/include/esp32s3/httpparser.hpp"
 #include "/usr/local/include/esp32s3/httpgenerator.hpp"
 
@@ -11,7 +13,7 @@
 
 typedef int ClientFD_t;
 
-class Client : public HTTPParser, public HTTPGenerator
+class Client : public HTTPParser, public HTTPGenerator, public ASRequestHandler
 {
 
 public:

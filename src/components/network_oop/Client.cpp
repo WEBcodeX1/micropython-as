@@ -1,11 +1,14 @@
 #include "Client.hpp"
+#include "Server.hpp"
 
 #include "esp_log.h"
 
 using namespace std;
 
 
-Client::Client(ClientFD_t ClientFD) :
+Client::Client(
+    ClientFD_t ClientFD
+) :
     HTTPParser(1024),
     _ClientFD(ClientFD)
 {
@@ -24,7 +27,7 @@ bool Client::receiveData(char* BufferRef)
         ssize_t RcvBytes = read(_ClientFD, &BufferRef[0], 1024);
 
         if (RcvBytes > 0) {
-            ESP_LOGI("HTTPServer", "Client received bytes:%d", RcvBytes);
+            //ESP_LOGI("HTTPServer", "Client received bytes:%d", RcvBytes);
             //ESP_LOG_BUFFER_HEX_LEVEL("HTTPServer", &BufferRef[0], RcvBytes, ESP_LOG_INFO);
             appendBuffer(&BufferRef[0], RcvBytes);
         }
@@ -34,7 +37,7 @@ bool Client::receiveData(char* BufferRef)
         else if (RcvBytes < 0) {
             const int RecvErrno = errno;
             DataInKernelBuffer = false;
-            //ESP_LOGI("HTTPServer", "Errno:%d", RecvErrno);
+            ESP_LOGI("HTTPServer", "Errno:%d", RecvErrno);
             if (RecvErrno == EAGAIN || RecvErrno == EWOULDBLOCK || RecvErrno == EINTR) {
                 return false;
             }
@@ -45,5 +48,5 @@ bool Client::receiveData(char* BufferRef)
 
 ClientFD_t Client::getClientFD()
 {
-        return _ClientFD;
+    return _ClientFD;
 }

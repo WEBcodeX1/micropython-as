@@ -71,7 +71,7 @@ void Server::setupPoll()
 void Server::ServerLoop()
 {
     //- main server loop
-    while(1) {
+    while(true) {
 
         //- poll server fd for incoming connections
         if (poll(ServerConnFD, 1, 0) > 0) {

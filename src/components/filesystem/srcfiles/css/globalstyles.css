@@ -16,6 +16,11 @@ body {
     color: red;
 }
 
+.btn-huge {
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
 .overlay-default {
     position: absolute;
     top: 5%;
