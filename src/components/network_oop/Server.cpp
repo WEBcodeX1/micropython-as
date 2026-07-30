@@ -1,6 +1,10 @@
 #include "Server.hpp"
 #include "Network.hpp"
 
+#ifdef LINUX_BUILD
+#include "freertos/task.h"
+#endif
+
 #include "esp_log.h"
 
 using namespace std;
@@ -18,7 +22,11 @@ void Server::start()
 {
     //- set listen address / port
     SocketListenAddress = Network::getIPAddr();
+#ifdef LINUX_BUILD
+    SocketListenPort = 8080;
+#else
     SocketListenPort = 80;
+#endif
 
     //- setup server socket
     setupSocket();

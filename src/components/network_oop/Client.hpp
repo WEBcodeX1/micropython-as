@@ -2,8 +2,13 @@
 
 #include "ASRequestHandler.hpp"
 
+#ifdef LINUX_BUILD
+#include "/usr/local/include/linux/httpparser.hpp"
+#include "/usr/local/include/linux/httpgenerator.hpp"
+#else
 #include "/usr/local/include/esp32s3/httpparser.hpp"
 #include "/usr/local/include/esp32s3/httpgenerator.hpp"
+#endif
 
 #include <cstdint>
 #include <string>
