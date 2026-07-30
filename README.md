@@ -36,9 +36,6 @@ I have added some videos showing the current project status / progress in [./vid
 - https://github.com/WEBcodeX1/x0
 - https://github.com/clauspruefer/MicroPythonPong
 
-> [!NOTE]
-> The **x0 framework** has been adapted to work databaselessly with the FalconAS HTTP/1.1 ESP32 component. Finishing the project is just a matter of days.
-
 # 1. ESP32-C3 SoC
 
 [Espressif Systems](https://www.espressif.com/) developed the **ESP32-C3** system-on-chip, based on a 32-bit single-core RISC-V CPU. Ready-to-use boards are available from *Seeed Studio* (XIAO ESP32-C3 mini board) at an affordable price point (5€ :moneybag::star2:).
