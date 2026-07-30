@@ -58,6 +58,7 @@ target_link_libraries(server_test PRIVATE httpparser_srv httpgenerator_srv)
 # Self-contained POSIX client; no FalconAS or ESP-IDF dependencies.
 # ---------------------------------------------------------------------------
 add_executable(test_client test_client.cpp)
+target_link_libraries(test_client PRIVATE pthread)
 
 # ---------------------------------------------------------------------------
 # Optional sanitizer pass-through (inherit from parent or set explicitly)

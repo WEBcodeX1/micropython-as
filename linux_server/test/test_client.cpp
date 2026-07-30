@@ -32,8 +32,10 @@
 #include <algorithm>
 #include <cassert>
 #include <map>
+#include <mutex>
 #include <sstream>
 #include <string>
+#include <thread>
 #include <vector>
 
 // ---------------------------------------------------------------------------
@@ -599,6 +601,296 @@ static void testSizeExtremes()
 }
 
 // ---------------------------------------------------------------------------
+// Multi-client framework
+//
+// ClientBehavior controls what each concurrent client thread does.
+// ClientProfile bundles a behavior with its parameters so that any number
+// of profiles can be handed to runMultiClient(), which launches one
+// std::thread per profile and runs them all simultaneously.
+// ---------------------------------------------------------------------------
+
+enum class ClientBehavior {
+    BIG_FILES_ONLY,      // request only the N largest test files (by index)
+    RANDOM_FILES,        // request files chosen with a simple LCG RNG
+    PARTIAL_SENDS,       // split every request across two writes with a 50 ms gap
+    SEQUENTIAL_PERSIST,  // sequential GETs batched on persistent connections
+    PIPELINED,           // pipeline bursts of pipelineDepth requests
+};
+
+static const char* behaviorName(ClientBehavior b)
+{
+    switch (b) {
+    case ClientBehavior::BIG_FILES_ONLY:     return "BIG_FILES_ONLY";
+    case ClientBehavior::RANDOM_FILES:       return "RANDOM_FILES";
+    case ClientBehavior::PARTIAL_SENDS:      return "PARTIAL_SENDS";
+    case ClientBehavior::SEQUENTIAL_PERSIST: return "SEQUENTIAL_PERSIST";
+    case ClientBehavior::PIPELINED:          return "PIPELINED";
+    }
+    return "UNKNOWN";
+}
+
+struct ClientProfile {
+    std::string    name;
+    ClientBehavior behavior;
+    int            requestCount;   // total requests to issue
+    int            pipelineDepth;  // burst size for PIPELINED (default 8)
+    unsigned int   seed;           // RNG seed for RANDOM_FILES
+
+    ClientProfile(std::string n, ClientBehavior b, int rc,
+                  int pd = 8, unsigned int s = 42u)
+        : name(std::move(n)), behavior(b), requestCount(rc),
+          pipelineDepth(pd), seed(s) {}
+};
+
+struct ClientResult {
+    std::string name;
+    int  pass      = 0;
+    int  fail      = 0;
+    bool completed = false;
+};
+
+// Run a single ClientProfile and return its result.
+// This function is called in its own thread; it uses only thread-local state
+// (local variables + per-call socket fds).  g_host / g_port are read-only.
+static ClientResult runClientProfile(const ClientProfile& profile)
+{
+    ClientResult result;
+    result.name = profile.name;
+
+    // Simple multiplicative LCG for RANDOM_FILES.
+    unsigned int rng = profile.seed;
+    auto nextRand = [&]() -> int {
+        rng = rng * 1664525u + 1013904223u;
+        return static_cast<int>((rng >> 1) % static_cast<unsigned int>(TEST_NUM_FILES));
+    };
+
+    switch (profile.behavior) {
+
+    // ---- BIG_FILES_ONLY ------------------------------------------------
+    // Requests the last min(requestCount, TEST_NUM_FILES) files by index,
+    // cycling round-robin when requestCount > that pool.
+    case ClientBehavior::BIG_FILES_ONLY: {
+        int pool = std::min(profile.requestCount, TEST_NUM_FILES);
+        for (int k = 0; k < profile.requestCount; k++) {
+            // cycle through the largest `pool` files (highest indices)
+            int i = TEST_NUM_FILES - 1 - (k % pool);
+            int fd = openConnection();
+            if (fd < 0) { result.fail++; continue; }
+
+            std::string req = makeGet(fileURL(i), g_host);
+            if (!sendAll(fd, req.data(), req.size())) {
+                close(fd); result.fail++; continue;
+            }
+            HttpResponse resp = readResponse(fd, 30000);
+            close(fd);
+
+            unsigned int sz = expectedFileSize(i);
+            if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+                result.fail++;
+            else
+                result.pass++;
+        }
+        break;
+    }
+
+    // ---- RANDOM_FILES --------------------------------------------------
+    // Picks file indices at random (seeded per-profile for reproducibility).
+    case ClientBehavior::RANDOM_FILES: {
+        for (int k = 0; k < profile.requestCount; k++) {
+            int i  = nextRand();
+            int fd = openConnection();
+            if (fd < 0) { result.fail++; continue; }
+
+            std::string req = makeGet(fileURL(i), g_host);
+            if (!sendAll(fd, req.data(), req.size())) {
+                close(fd); result.fail++; continue;
+            }
+            HttpResponse resp = readResponse(fd, 30000);
+            close(fd);
+
+            unsigned int sz = expectedFileSize(i);
+            if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+                result.fail++;
+            else
+                result.pass++;
+        }
+        break;
+    }
+
+    // ---- PARTIAL_SENDS -------------------------------------------------
+    // Each request is split into two writes with a 50 ms pause between them.
+    case ClientBehavior::PARTIAL_SENDS: {
+        for (int k = 0; k < profile.requestCount; k++) {
+            int i  = k % TEST_NUM_FILES;
+            int fd = openConnection();
+            if (fd < 0) { result.fail++; continue; }
+
+            std::string req = makeGet(fileURL(i), g_host);
+            size_t split = req.size() * 6 / 10;
+            if (split == 0)          split = 1;
+            if (split >= req.size()) split = req.size() - 1;
+
+            bool ok = sendAll(fd, req.data(), split);
+            usleep(50 * 1000);   // 50 ms gap
+            ok = ok && sendAll(fd, req.data() + split, req.size() - split);
+
+            if (!ok) { close(fd); result.fail++; continue; }
+
+            HttpResponse resp = readResponse(fd);
+            close(fd);
+
+            unsigned int sz = expectedFileSize(i);
+            if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+                result.fail++;
+            else
+                result.pass++;
+        }
+        break;
+    }
+
+    // ---- SEQUENTIAL_PERSIST --------------------------------------------
+    // Batches requests on a single keep-alive connection; opens a new one
+    // every 50 requests (mirrors testSequentialGetPersistent).
+    case ClientBehavior::SEQUENTIAL_PERSIST: {
+        static constexpr int BATCH = 50;
+        int remaining = profile.requestCount;
+        int fileIdx   = 0;
+        while (remaining > 0) {
+            int fd = openConnection();
+            if (fd < 0) { result.fail += remaining; break; }
+
+            int batch = std::min(BATCH, remaining);
+            for (int k = 0; k < batch; k++) {
+                int i = fileIdx++ % TEST_NUM_FILES;
+                std::string req = makeGet(fileURL(i), g_host);
+                if (!sendAll(fd, req.data(), req.size())) {
+                    result.fail++; break;
+                }
+                HttpResponse resp = readResponse(fd);
+                unsigned int sz   = expectedFileSize(i);
+                if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+                    result.fail++;
+                else
+                    result.pass++;
+            }
+            close(fd);
+            remaining -= batch;
+        }
+        break;
+    }
+
+    // ---- PIPELINED -----------------------------------------------------
+    // Sends pipelineDepth requests in one burst before reading any response.
+    case ClientBehavior::PIPELINED: {
+        int depth = profile.pipelineDepth;
+        int sent  = 0;
+        while (sent < profile.requestCount) {
+            int fd = openConnection();
+            if (fd < 0) {
+                int skip = std::min(depth, profile.requestCount - sent);
+                result.fail += skip;
+                sent        += skip;
+                continue;
+            }
+            int burst = std::min(depth, profile.requestCount - sent);
+            std::string bulk;
+            for (int k = 0; k < burst; k++)
+                bulk += makeGet(fileURL((sent + k) % TEST_NUM_FILES), g_host);
+
+            if (!sendAll(fd, bulk.data(), bulk.size())) {
+                close(fd); result.fail += burst; sent += burst; continue;
+            }
+            for (int k = 0; k < burst; k++) {
+                int i = (sent + k) % TEST_NUM_FILES;
+                HttpResponse resp = readResponse(fd);
+                unsigned int sz   = expectedFileSize(i);
+                if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+                    result.fail++;
+                else
+                    result.pass++;
+            }
+            close(fd);
+            sent += burst;
+        }
+        break;
+    }
+
+    } // switch
+
+    result.completed = true;
+    return result;
+}
+
+// Launch one std::thread per profile, run all simultaneously, collect results.
+static void runMultiClient(const std::vector<ClientProfile>& profiles)
+{
+    printf("[Multi-client] %zu clients running simultaneously\n", profiles.size());
+    for (const auto& p : profiles) {
+        printf("  %-24s  behavior=%-20s  requests=%d\n",
+               p.name.c_str(), behaviorName(p.behavior), p.requestCount);
+    }
+    printf("\n");
+
+    std::vector<ClientResult>  results(profiles.size());
+    std::vector<std::thread>   threads;
+    threads.reserve(profiles.size());
+
+    for (size_t i = 0; i < profiles.size(); i++) {
+        threads.emplace_back([&profiles, &results, i]() {
+            results[i] = runClientProfile(profiles[i]);
+        });
+    }
+    for (auto& t : threads) t.join();
+
+    int total_pass = 0, total_fail = 0;
+    for (const auto& r : results) {
+        printf("  Client %-24s  pass=%-4d  fail=%-4d  %s\n",
+               r.name.c_str(), r.pass, r.fail,
+               r.completed ? "completed" : "INCOMPLETE");
+        total_pass += r.pass;
+        total_fail += r.fail;
+    }
+    printf("  Aggregate: %d passed, %d failed\n", total_pass, total_fail);
+
+    if (total_fail == 0)
+        PASS("all multi-client requests served correctly");
+    else {
+        char m[80];
+        snprintf(m, sizeof(m), "%d multi-client request(s) failed", total_fail);
+        FAIL(m);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Test 9 – Multi-client: simultaneous connections with distinct behaviors
+//
+// Three core profiles mirror the examples from the feature request:
+//   client1  → only the 100 largest files
+//   client2  → 200 files selected at random
+//   client3  → 20 requests with partial sends
+// Two additional profiles exercise sequential-persistent and pipelined paths.
+// ---------------------------------------------------------------------------
+static void testMultiClientParallel()
+{
+    printf("[Test 9] Multi-client simultaneous connections\n\n");
+
+    std::vector<ClientProfile> profiles = {
+        // client1: 100 big files only (largest by index)
+        ClientProfile("client1-big-files",  ClientBehavior::BIG_FILES_ONLY,      100),
+        // client2: 200 random files (seeded for reproducibility)
+        ClientProfile("client2-random",     ClientBehavior::RANDOM_FILES,         200, 8, 98765u),
+        // client3: partial-send only
+        ClientProfile("client3-partial",    ClientBehavior::PARTIAL_SENDS,         20),
+        // client4: sequential on persistent keep-alive connections
+        ClientProfile("client4-sequential", ClientBehavior::SEQUENTIAL_PERSIST,    50),
+        // client5: pipelined bursts (depth 8, 40 total requests)
+        ClientProfile("client5-pipelined",  ClientBehavior::PIPELINED,             40, 8),
+    };
+
+    runMultiClient(profiles);
+}
+
+// ---------------------------------------------------------------------------
 // Entry point
 // ---------------------------------------------------------------------------
 
@@ -618,6 +910,7 @@ int main(int argc, char* argv[])
     testStressSequential();
     test404Response();
     testSizeExtremes();
+    testMultiClientParallel();
 
     printf("\n=== Results: %d passed, %d failed ===\n", g_pass, g_fail);
     return (g_fail == 0) ? 0 : 1;
