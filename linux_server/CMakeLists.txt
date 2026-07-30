@@ -72,3 +72,13 @@ if(TSAN)
     target_compile_options(server_linux PRIVATE -fsanitize=thread -fno-omit-frame-pointer -g)
     target_link_options(server_linux PRIVATE -fsanitize=thread)
 endif()
+
+# ---------------------------------------------------------------------------
+# Optional: build the stability test suite (server_test + test_client).
+# Activate by passing -DBUILD_TESTS=ON to cmake.
+# See linux_server/test/README.md for details.
+# ---------------------------------------------------------------------------
+option(BUILD_TESTS "Build the stability test server and test client" OFF)
+if(BUILD_TESTS)
+    add_subdirectory(test)
+endif()
