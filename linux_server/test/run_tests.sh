@@ -2,7 +2,7 @@
 # run_tests.sh – build, start the test server, run the test client, report.
 #
 # Usage (from linux_server/test/):
-#   ./run_tests.sh [--asan] [--tsan]
+#   ./run_tests.sh [--asan] [--tsan] [test_client args...]
 #
 # Options:
 #   --asan   Build and run with AddressSanitizer
@@ -17,11 +17,13 @@ BUILD_DIR="${SCRIPT_DIR}/build"
 
 ASAN_FLAG="OFF"
 TSAN_FLAG="OFF"
+TEST_ARGS=()
 
 for arg in "$@"; do
     case "$arg" in
         --asan) ASAN_FLAG="ON" ;;
         --tsan) TSAN_FLAG="ON" ;;
+        *) TEST_ARGS+=("$arg") ;;
     esac
 done
 
@@ -71,7 +73,7 @@ done
 echo ""
 echo "=== Running test_client ==="
 set +e
-"${TEST_BIN}" "${HOST}" "${PORT}"
+"${TEST_BIN}" "${HOST}" "${PORT}" "${TEST_ARGS[@]}"
 TEST_RC=$?
 set -e
 

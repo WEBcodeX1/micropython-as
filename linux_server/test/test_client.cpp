@@ -11,7 +11,9 @@
 //  5. Connection close mid-response – server must not crash
 //  6. Stress – 500 rapid sequential requests across persistent connections
 //
-// Usage:  ./test_client [host] [port]
+// Usage:  ./test_client [host] [port] [--test <name>]
+//         ./test_client [host] [port] --client <name> <behavior> <count>
+//                                     [pipelineDepth|seed] [--client ...]
 //         Default host 127.0.0.1, default port 8080.
 //
 // Exit code 0 = all tests passed, non-zero = at least one failure.
@@ -31,6 +33,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cctype>
 #include <map>
 #include <mutex>
 #include <sstream>
@@ -610,6 +613,7 @@ static void testSizeExtremes()
 // ---------------------------------------------------------------------------
 
 enum class ClientBehavior {
+    SINGLE_GETS,         // one GET per connection, repeated requestCount times
     BIG_FILES_ONLY,      // request only the N largest test files (by index)
     RANDOM_FILES,        // request files chosen with a simple LCG RNG
     PARTIAL_SENDS,       // split every request across two writes with a 50 ms gap
@@ -620,6 +624,7 @@ enum class ClientBehavior {
 static const char* behaviorName(ClientBehavior b)
 {
     switch (b) {
+    case ClientBehavior::SINGLE_GETS:         return "SINGLE_GETS";
     case ClientBehavior::BIG_FILES_ONLY:     return "BIG_FILES_ONLY";
     case ClientBehavior::RANDOM_FILES:       return "RANDOM_FILES";
     case ClientBehavior::PARTIAL_SENDS:      return "PARTIAL_SENDS";
@@ -665,6 +670,30 @@ static ClientResult runClientProfile(const ClientProfile& profile)
     };
 
     switch (profile.behavior) {
+
+    // ---- SINGLE_GETS ----------------------------------------------------
+    // Opens one connection per request, cycling through the existing files.
+    case ClientBehavior::SINGLE_GETS: {
+        for (int k = 0; k < profile.requestCount; k++) {
+            int i = k % TEST_NUM_FILES;
+            int fd = openConnection();
+            if (fd < 0) { result.fail++; continue; }
+
+            std::string req = makeGet(fileURL(i), g_host);
+            if (!sendAll(fd, req.data(), req.size())) {
+                close(fd); result.fail++; continue;
+            }
+            HttpResponse resp = readResponse(fd);
+            close(fd);
+
+            unsigned int sz = expectedFileSize(i);
+            if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+                result.fail++;
+            else
+                result.pass++;
+        }
+        break;
+    }
 
     // ---- BIG_FILES_ONLY ------------------------------------------------
     // Requests the last min(requestCount, TEST_NUM_FILES) files by index,
@@ -890,27 +919,170 @@ static void testMultiClientParallel()
     runMultiClient(profiles);
 }
 
+static std::string normalizeArg(std::string value)
+{
+    std::transform(value.begin(), value.end(), value.begin(),
+                   [](unsigned char c) -> unsigned char {
+                       return (c == '-') ? '_' : static_cast<unsigned char>(std::tolower(c));
+                   });
+    return value;
+}
+
+static bool parseBehavior(const std::string& raw, ClientBehavior& behavior)
+{
+    const std::string value = normalizeArg(raw);
+    if (value == "single" || value == "single_get" || value == "single_gets") {
+        behavior = ClientBehavior::SINGLE_GETS;
+        return true;
+    }
+    if (value == "big" || value == "big_files" || value == "big_files_only") {
+        behavior = ClientBehavior::BIG_FILES_ONLY;
+        return true;
+    }
+    if (value == "random" || value == "random_files") {
+        behavior = ClientBehavior::RANDOM_FILES;
+        return true;
+    }
+    if (value == "partial" || value == "partial_send" || value == "partial_sends") {
+        behavior = ClientBehavior::PARTIAL_SENDS;
+        return true;
+    }
+    if (value == "sequential" || value == "sequential_persist" || value == "persistent") {
+        behavior = ClientBehavior::SEQUENTIAL_PERSIST;
+        return true;
+    }
+    if (value == "pipeline" || value == "pipelined") {
+        behavior = ClientBehavior::PIPELINED;
+        return true;
+    }
+    return false;
+}
+
+static void printUsage(const char* argv0)
+{
+    fprintf(stderr,
+            "Usage:\n"
+            "  %s [host] [port]\n"
+            "  %s [host] [port] --test <all|single|sequential|pipelined|partial|midclose|stress|404|extremes|multi>\n"
+            "  %s [host] [port] --client <name> <single|big|random|partial|sequential|pipelined> <count> [value]\n"
+            "\n"
+            "Notes:\n"
+            "  --test 404 runs the standalone non-existent-file test only.\n"
+            "  --client may be repeated to launch one or more simultaneous client profiles.\n"
+            "  Optional [value] is RNG seed for random, pipeline depth for pipelined.\n",
+            argv0, argv0, argv0);
+}
+
+static bool runNamedTest(const std::string& rawName)
+{
+    const std::string name = normalizeArg(rawName);
+
+    if (name == "all") {
+        testSingleGetPerConnection();
+        testSequentialGetPersistent();
+        testPipelinedGet();
+        testPartialSend();
+        testConnectionCloseMidResponse();
+        testStressSequential();
+        test404Response();
+        testSizeExtremes();
+        testMultiClientParallel();
+        return true;
+    }
+    if (name == "single")                 { testSingleGetPerConnection();   return true; }
+    if (name == "sequential")             { testSequentialGetPersistent();  return true; }
+    if (name == "pipelined")              { testPipelinedGet();             return true; }
+    if (name == "partial")                { testPartialSend();              return true; }
+    if (name == "midclose")               { testConnectionCloseMidResponse(); return true; }
+    if (name == "stress")                 { testStressSequential();         return true; }
+    if (name == "404" || name == "not_found") { test404Response();         return true; }
+    if (name == "extremes")               { testSizeExtremes();             return true; }
+    if (name == "multi")                  { testMultiClientParallel();      return true; }
+    return false;
+}
+
 // ---------------------------------------------------------------------------
 // Entry point
 // ---------------------------------------------------------------------------
 
 int main(int argc, char* argv[])
 {
-    if (argc >= 2) g_host = argv[1];
-    if (argc >= 3) g_port = atoi(argv[2]);
+    int argi = 1;
+    if (argi < argc && strncmp(argv[argi], "--", 2) != 0) g_host = argv[argi++];
+    if (argi < argc && strncmp(argv[argi], "--", 2) != 0) g_port = atoi(argv[argi++]);
+
+    std::string testName = "all";
+    std::vector<ClientProfile> cliProfiles;
+
+    while (argi < argc) {
+        std::string arg = argv[argi++];
+        if (arg == "--test") {
+            if (argi >= argc) {
+                printUsage(argv[0]);
+                return 2;
+            }
+            testName = argv[argi++];
+            continue;
+        }
+
+        if (arg == "--client") {
+            if (argi + 2 >= argc) {
+                printUsage(argv[0]);
+                return 2;
+            }
+
+            std::string name = argv[argi++];
+            std::string behaviorRaw = argv[argi++];
+            ClientBehavior behavior;
+            if (!parseBehavior(behaviorRaw, behavior)) {
+                fprintf(stderr, "Unknown client behavior: %s\n", behaviorRaw.c_str());
+                printUsage(argv[0]);
+                return 2;
+            }
+
+            int requestCount = atoi(argv[argi++]);
+            int pipelineDepth = 8;
+            unsigned int seed = 42u;
+
+            if (behavior == ClientBehavior::PIPELINED &&
+                argi < argc && strncmp(argv[argi], "--", 2) != 0) {
+                pipelineDepth = atoi(argv[argi++]);
+            }
+            if (behavior == ClientBehavior::RANDOM_FILES &&
+                argi < argc && strncmp(argv[argi], "--", 2) != 0) {
+                seed = static_cast<unsigned int>(strtoul(argv[argi++], nullptr, 10));
+            }
+
+            cliProfiles.emplace_back(name, behavior, requestCount, pipelineDepth, seed);
+            continue;
+        }
+
+        if (arg == "--help" || arg == "-h") {
+            printUsage(argv[0]);
+            return 0;
+        }
+
+        fprintf(stderr, "Unknown argument: %s\n", arg.c_str());
+        printUsage(argv[0]);
+        return 2;
+    }
+
+    if (!cliProfiles.empty() && normalizeArg(testName) != "all") {
+        fprintf(stderr, "--test and --client cannot be combined\n");
+        printUsage(argv[0]);
+        return 2;
+    }
 
     printf("=== HTTP server stability tests ===\n");
     printf("Target: %s:%d\n\n", g_host, g_port);
 
-    testSingleGetPerConnection();
-    testSequentialGetPersistent();
-    testPipelinedGet();
-    testPartialSend();
-    testConnectionCloseMidResponse();
-    testStressSequential();
-    test404Response();
-    testSizeExtremes();
-    testMultiClientParallel();
+    if (!cliProfiles.empty()) {
+        runMultiClient(cliProfiles);
+    } else if (!runNamedTest(testName)) {
+        fprintf(stderr, "Unknown test name: %s\n", testName.c_str());
+        printUsage(argv[0]);
+        return 2;
+    }
 
     printf("\n=== Results: %d passed, %d failed ===\n", g_pass, g_fail);
     return (g_fail == 0) ? 0 : 1;
