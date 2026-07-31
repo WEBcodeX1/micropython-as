@@ -42,17 +42,34 @@ target_include_directories(server_test PRIVATE
 )
 
 # ---------------------------------------------------------------------------
-# HTTP library – built from source via the WEBcodeX1/http-1.2 submodule.
-# Guard prevents redefinition when this file is included from the parent build.
+# HTTP libraries – use the system-installed Linux FalconAS headers and static
+# libraries under /usr/local as documented in BUILD.md §10.
 # ---------------------------------------------------------------------------
-if(NOT TARGET httpparser)
-    add_subdirectory(${LS}/third_party/http-1.2/lib/http
-                     ${CMAKE_CURRENT_BINARY_DIR}/http-1.2)
-    target_include_directories(httpparser PUBLIC
-        ${LS}/third_party/http-1.2/lib/http)
-endif()
+set(HTTP_SYSTEM_PREFIX "/usr/local" CACHE PATH
+    "Base path containing the Linux FalconAS HTTP headers and static libraries")
 
-target_link_libraries(server_test PRIVATE httpparser)
+find_path(HTTP_INCLUDE_DIR
+    NAMES httpparser.hpp httpgenerator.hpp httpconstants.hpp
+    PATHS ${HTTP_SYSTEM_PREFIX}/include/linux
+    NO_DEFAULT_PATH
+    REQUIRED)
+
+find_library(HTTPPARSER_LIBRARY
+    NAMES httpparser
+    PATHS ${HTTP_SYSTEM_PREFIX}/lib/linux
+    NO_DEFAULT_PATH
+    REQUIRED)
+
+find_library(HTTPGENERATOR_LIBRARY
+    NAMES httpgenerator
+    PATHS ${HTTP_SYSTEM_PREFIX}/lib/linux
+    NO_DEFAULT_PATH
+    REQUIRED)
+
+target_include_directories(server_test PRIVATE ${HTTP_INCLUDE_DIR})
+target_link_libraries(server_test PRIVATE
+    ${HTTPPARSER_LIBRARY}
+    ${HTTPGENERATOR_LIBRARY})
 
 # ---------------------------------------------------------------------------
 # test_client binary

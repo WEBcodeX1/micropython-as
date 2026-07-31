@@ -20,25 +20,41 @@ set(SOURCES
 )
 
 # ---------------------------------------------------------------------------
-# HTTP library – built from source via the WEBcodeX1/http-1.2 submodule.
-# The submodule lives at linux_server/third_party/http-1.2.
-# Its lib/http/CMakeLists.txt creates a single static target named "httpparser"
-# that contains both the parser and the generator compilation units.
+# HTTP libraries – use the system-installed Linux FalconAS headers and static
+# libraries under /usr/local as documented in BUILD.md §10.
 # ---------------------------------------------------------------------------
-add_subdirectory(third_party/http-1.2/lib/http)
-target_include_directories(httpparser PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/http-1.2/lib/http)
+set(HTTP_SYSTEM_PREFIX "/usr/local" CACHE PATH
+    "Base path containing the Linux FalconAS HTTP headers and static libraries")
+
+find_path(HTTP_INCLUDE_DIR
+    NAMES httpparser.hpp httpgenerator.hpp httpconstants.hpp
+    PATHS ${HTTP_SYSTEM_PREFIX}/include/linux
+    NO_DEFAULT_PATH
+    REQUIRED)
+
+find_library(HTTPPARSER_LIBRARY
+    NAMES httpparser
+    PATHS ${HTTP_SYSTEM_PREFIX}/lib/linux
+    NO_DEFAULT_PATH
+    REQUIRED)
+
+find_library(HTTPGENERATOR_LIBRARY
+    NAMES httpgenerator
+    PATHS ${HTTP_SYSTEM_PREFIX}/lib/linux
+    NO_DEFAULT_PATH
+    REQUIRED)
 
 # ---------------------------------------------------------------------------
 # Include paths
 # Stubs directory comes first so it shadows ESP-IDF / FreeRTOS headers.
-# The http-1.2 headers are exposed via the httpparser target above.
+# The FalconAS headers are provided by the system include directory above.
 # ---------------------------------------------------------------------------
 include_directories(
     stubs
     ../src/components/network_oop
     ../src/components/filesystem
     ../src/main
+    ${HTTP_INCLUDE_DIR}
 )
 
 # ---------------------------------------------------------------------------
@@ -46,7 +62,9 @@ include_directories(
 # ---------------------------------------------------------------------------
 add_executable(server_linux ${SOURCES})
 
-target_link_libraries(server_linux PRIVATE httpparser)
+target_link_libraries(server_linux PRIVATE
+    ${HTTPPARSER_LIBRARY}
+    ${HTTPGENERATOR_LIBRARY})
 
 # ---------------------------------------------------------------------------
 # Optional: enable AddressSanitizer for runtime crash/memory analysis.
