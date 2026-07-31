@@ -57,6 +57,7 @@ find_library(HTTPPARSER_LIBRARY
 # ---------------------------------------------------------------------------
 include_directories(
     stubs
+    filesystem
     ../src/components/network_oop
     ../src/components/filesystem
     ../src/main
@@ -101,6 +102,8 @@ option(BUILD_TESTS "Build the stability test server and test client" ON)
 if(BUILD_TESTS)
     set(GENERATED_FS_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated_fs)
     set(TEST_FS_GENERATOR ${CMAKE_CURRENT_SOURCE_DIR}/generate_test_headers.py)
+
+    include_directories(${GENERATED_FS_DIR})
 
     find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
