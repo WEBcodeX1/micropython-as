@@ -39,25 +39,27 @@ cmake --build build --parallel
 
 ## Test file set
 
-200 files served at `/testfile001.html` … `/testfile200.html`, linearly sized
-from **10 KB** (file 1) to **1 MB** (file 200). Their paths and metadata live
-in generated `filemetadata-test.h` / `filedata-test.h` headers, created during
-the parent `linux_server/CMakeLists.txt` configuration in `build/generated_fs/`
-and refreshed again during builds when the generator changes. When tests are
+The generated files are served at `/testfile001.html` onward using the shared
+defaults from `generate_test_headers.py`. Their paths and metadata live in
+generated `filemetadata-test.h` / `filedata-test.h` headers, created during the
+parent `linux_server/CMakeLists.txt` configuration in `build/generated_fs/` and
+refreshed again during builds when the generator changes. When tests are
 enabled, CMake copies the original `/src/components/filesystem/Filesystem.hpp`
 into `linux_server/filesystem/Filesystem.hpp` and rewrites only its two include
 lines to point at the generated test headers, so the Linux test server serves
 only the generated test files without duplicating the original filesystem
-implementation. The test client independently recomputes and verifies the
-expected bytes (files ≤ 128 KB) or spot-checks the first and last 512 bytes
-(larger files). All generated test files are served with `Content-Type:
-text/html`.
+implementation. `server_test` and `test_client` both read the same count and
+size defaults from the generator, so the served files and the client
+expectations always stay aligned. The test client independently recomputes and
+verifies the expected bytes (files ≤ 128 KB) or spot-checks the first and last
+512 bytes (larger files). All generated test files are served with
+`Content-Type: text/html`.
 
 ## Test scenarios
 
 | # | Scenario | Coverage |
 |---|----------|----------|
-| 1 | Single GET per new connection × 200 files | Basic correctness, connection teardown |
+| 1 | Single GET per new connection × all generated files | Basic correctness, connection teardown |
 | 2 | 50 sequential GETs on one keep-alive connection | Persistent connection, request queue |
 | 3 | Pipelined GETs (8 requests sent before reading) × 5 bursts | HTTP pipelining, request queue depth |
 | 4 | Partial-send: request split across 2 writes with 50 ms gap × 20 | Parser buffering, partial TCP segments |

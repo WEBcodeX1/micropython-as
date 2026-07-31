@@ -4,7 +4,7 @@
 // Connects to a running server_test instance and exercises the following
 // HTTP/1.1 request patterns:
 //
-//  1. Single GET per connection – repeated for all 200 test files
+//  1. Single GET per connection – repeated for all generated test files
 //  2. Sequential GETs on one keep-alive connection
 //  3. Pipelined GETs (N requests sent before reading any response)
 //  4. Partial send  – request split across two writes with a short gap
@@ -46,15 +46,15 @@
 // ---------------------------------------------------------------------------
 
 #ifndef TEST_NUM_FILES
-#define TEST_NUM_FILES 200
+#error "TEST_NUM_FILES must be provided by the parent linux_server CMake configuration."
 #endif
 
 #ifndef TEST_MIN_SIZE
-#define TEST_MIN_SIZE (10u * 1024u)
+#error "TEST_MIN_SIZE must be provided by the parent linux_server CMake configuration."
 #endif
 
 #ifndef TEST_MAX_SIZE
-#define TEST_MAX_SIZE (1024u * 1024u)
+#error "TEST_MAX_SIZE must be provided by the parent linux_server CMake configuration."
 #endif
 
 static constexpr int  kTestNumFiles = TEST_NUM_FILES;
@@ -390,7 +390,7 @@ static int g_fail = 0;
 
 // ---------------------------------------------------------------------------
 // Test 1 – Single GET per connection
-// One new connection per file; all 200 test files.
+// One new connection per file; all generated test files.
 // ---------------------------------------------------------------------------
 static void testSingleGetPerConnection()
 {

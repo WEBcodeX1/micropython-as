@@ -106,13 +106,34 @@ if(BUILD_TESTS)
     set(GENERATED_FS_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated_fs)
     set(TEST_FS_GENERATOR ${CMAKE_CURRENT_SOURCE_DIR}/generate_test_headers.py)
     set(SOURCE_FILESYSTEM_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/../src/components/filesystem/Filesystem.hpp)
-    set(TEST_FS_NUM_FILES 200)
-    set(TEST_FS_MIN_SIZE 10240)
-    set(TEST_FS_MAX_SIZE 1048576)
 
     include_directories(${GENERATED_FS_DIR})
 
     find_package(Python3 COMPONENTS Interpreter REQUIRED)
+
+    execute_process(
+        COMMAND
+            ${Python3_EXECUTABLE}
+            -c
+            "import importlib.util; spec = importlib.util.spec_from_file_location('generate_test_headers', r'${TEST_FS_GENERATOR}'); module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module); print(module.DEFAULT_TEST_NUM_FILES, module.DEFAULT_MIN_SIZE, module.DEFAULT_MAX_SIZE)"
+        OUTPUT_VARIABLE TEST_FS_DEFAULTS
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE TEST_FS_DEFAULTS_RESULT
+    )
+
+    if(NOT TEST_FS_DEFAULTS_RESULT EQUAL 0)
+        message(FATAL_ERROR "Failed to read Linux test filesystem defaults")
+    endif()
+
+    separate_arguments(TEST_FS_DEFAULTS UNIX_COMMAND "${TEST_FS_DEFAULTS}")
+    list(LENGTH TEST_FS_DEFAULTS TEST_FS_DEFAULTS_LENGTH)
+    if(NOT TEST_FS_DEFAULTS_LENGTH EQUAL 3)
+        message(FATAL_ERROR "Unexpected Linux test filesystem defaults: ${TEST_FS_DEFAULTS}")
+    endif()
+
+    list(GET TEST_FS_DEFAULTS 0 TEST_FS_NUM_FILES)
+    list(GET TEST_FS_DEFAULTS 1 TEST_FS_MIN_SIZE)
+    list(GET TEST_FS_DEFAULTS 2 TEST_FS_MAX_SIZE)
 
     execute_process(
         COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_FS_DIR}
@@ -131,9 +152,6 @@ if(BUILD_TESTS)
             ${Python3_EXECUTABLE}
             ${TEST_FS_GENERATOR}
             ${GENERATED_FS_DIR}
-            --count ${TEST_FS_NUM_FILES}
-            --min-size ${TEST_FS_MIN_SIZE}
-            --max-size ${TEST_FS_MAX_SIZE}
         RESULT_VARIABLE GENERATE_TEST_HEADERS_RESULT
     )
 
@@ -150,9 +168,6 @@ if(BUILD_TESTS)
             ${Python3_EXECUTABLE}
             ${TEST_FS_GENERATOR}
             ${GENERATED_FS_DIR}
-            --count ${TEST_FS_NUM_FILES}
-            --min-size ${TEST_FS_MIN_SIZE}
-            --max-size ${TEST_FS_MAX_SIZE}
         DEPENDS ${TEST_FS_GENERATOR}
         COMMENT "Generating Linux test filesystem headers"
         VERBATIM
