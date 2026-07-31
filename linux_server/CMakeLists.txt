@@ -131,11 +131,5 @@ if(BUILD_TESTS)
         VERBATIM
     )
 
-    add_custom_target(generate_test_filesystem_headers
-        DEPENDS
-            ${GENERATED_FS_DIR}/filedata-test.h
-            ${GENERATED_FS_DIR}/filemetadata-test.h
-    )
-
     add_subdirectory(test)
 endif()

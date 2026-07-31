@@ -1,9 +1,5 @@
 #pragma once
 
-// Test-build replacement for src/components/filesystem/Filesystem.hpp.
-// Reuses the production embedded files from /src and appends generated
-// stability-test files after the existing f66 entry.
-
 #include <array>
 #include <string>
 
@@ -21,8 +17,8 @@ struct ServerFile {
 #include "../../../src/components/filesystem/filemetadata.h"
 #undef ServerFiles
 
-#include "filedata-test.h"
-#include "filemetadata-test.h"
+#include "../generated_fs/filedata-test.h"
+#include "../generated_fs/filemetadata-test.h"
 
 class Filesystem
 {

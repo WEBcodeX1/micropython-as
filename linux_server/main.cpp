@@ -8,6 +8,8 @@
 // The server listens on port 8080.  Run 'curl http://localhost:8080/' to exercise it.
 // Build with AddressSanitizer or Valgrind for detailed crash analysis.
 
+#include "./filesystem/Filesystem.hpp"
+
 #include "Server.hpp"
 #include "Network.hpp"
 #include "ASRequestHandler.hpp"
