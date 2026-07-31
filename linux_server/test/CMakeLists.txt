@@ -12,6 +12,12 @@ add_compile_definitions(LINUX_BUILD)
 set(ROOT    ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 set(NET_OOP ${ROOT}/src/components/network_oop)
 set(LS      ${CMAKE_CURRENT_SOURCE_DIR}/..)
+set(GENERATED_FS_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated_fs)
+set(TEST_FS_NUM_FILES 200 CACHE STRING "Number of generated Linux test files")
+set(TEST_FS_MIN_SIZE 10240 CACHE STRING "Minimum generated Linux test file size in bytes")
+set(TEST_FS_MAX_SIZE 1048576 CACHE STRING "Maximum generated Linux test file size in bytes")
+
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
 # ---------------------------------------------------------------------------
 # server_test binary
@@ -35,8 +41,28 @@ set(SERVER_SOURCES
 
 add_executable(server_test ${SERVER_SOURCES})
 
+add_custom_command(
+    OUTPUT
+        ${GENERATED_FS_DIR}/filedata-test.h
+        ${GENERATED_FS_DIR}/filemetadata-test.h
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_FS_DIR}
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/filesystem/generate_test_headers.py ${GENERATED_FS_DIR} --count ${TEST_FS_NUM_FILES} --min-size ${TEST_FS_MIN_SIZE} --max-size ${TEST_FS_MAX_SIZE}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/filesystem/generate_test_headers.py
+    COMMENT "Generating Linux test filesystem headers"
+    VERBATIM
+)
+
+add_custom_target(generate_test_filesystem_headers
+    DEPENDS
+        ${GENERATED_FS_DIR}/filedata-test.h
+        ${GENERATED_FS_DIR}/filemetadata-test.h
+)
+
+add_dependencies(server_test generate_test_filesystem_headers)
+
 target_include_directories(server_test PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/filesystem  # test Filesystem.hpp — must be first
+    ${GENERATED_FS_DIR}
     ${LS}/stubs
     ${NET_OOP}
 )

@@ -42,7 +42,7 @@
 #include <vector>
 
 // ---------------------------------------------------------------------------
-// Test file parameters – must match linux_server/test/filesystem/filedata-test.h
+// Test file parameters – must match the generated linux_server/test filedata-test.h
 // ---------------------------------------------------------------------------
 
 static constexpr int  TEST_NUM_FILES = 200;

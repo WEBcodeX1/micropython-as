@@ -40,12 +40,12 @@ cmake --build build --parallel
 
 200 files served at `/testfile001.html` … `/testfile200.html`, linearly sized
 from **10 KB** (file 1) to **1 MB** (file 200).  Their paths and metadata live
-in `filesystem/filemetadata-test.h`, while the deterministic content pattern and
-404 fallback data live in `filesystem/filedata-test.h`.  The test server fills
-those HTML payloads at startup, and the test client independently recomputes
-and verifies the expected bytes (files ≤ 128 KB) or spot-checks the first and
-last 512 bytes (larger files).  All generated test files are served with
-`Content-Type: text/html`.
+in generated `filemetadata-test.h` / `filedata-test.h` headers, created at
+build time in `test/build/generated_fs/`. Those headers append the extra test
+entries after the production `f66` entry while leaving `/src/components/filesystem/`
+untouched. The test client independently recomputes and verifies the expected
+bytes (files ≤ 128 KB) or spot-checks the first and last 512 bytes (larger
+files). All generated test files are served with `Content-Type: text/html`.
 
 ## Test scenarios
 

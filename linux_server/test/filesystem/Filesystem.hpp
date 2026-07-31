@@ -1,12 +1,11 @@
 #pragma once
 
 // Test-build replacement for src/components/filesystem/Filesystem.hpp.
-// Keeps the production split between file data declarations and file metadata
-// declarations, while generating the large HTML test payloads deterministically.
+// Reuses the production embedded files from /src and appends generated
+// stability-test files after the existing f66 entry.
 
 #include <array>
 #include <string>
-#include <vector>
 
 using namespace std;
 
@@ -17,16 +16,29 @@ struct ServerFile {
     unsigned int ContentLength;
 };
 
-struct TestFileSpec {
-    const char* ContentPath;
-    const char* ContentType;
-    unsigned int ContentLength;
-};
+#include "../../../src/components/filesystem/filedata.h"
+#define ServerFiles BaseServerFiles
+#include "../../../src/components/filesystem/filemetadata.h"
+#undef ServerFiles
 
 #include "filedata-test.h"
 #include "filemetadata-test.h"
 
-class Filesystem {
+class Filesystem
+{
+
+private:
+
 public:
-    static ServerFile getFileMetadata(string URLPath);
+
+    static ServerFile getFileMetadata(string URLPath)
+    {
+        for(const ServerFile &FileMetadata: ServerFiles) {
+            if (FileMetadata.ContentPath == URLPath) {
+                return FileMetadata;
+            }
+        }
+        return { "", "", nullptr, 0 };
+    }
+
 };
