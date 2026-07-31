@@ -26,21 +26,33 @@ set(SOURCES
 set(HTTP_SYSTEM_PREFIX "/usr/local" CACHE PATH
     "Base path containing the Linux FalconAS HTTP headers and static libraries")
 
+set(HTTP_INCLUDE_SEARCH_PATHS
+    ${HTTP_SYSTEM_PREFIX}/include/linux
+    ${HTTP_SYSTEM_PREFIX}/include
+)
+
+set(HTTP_LIBRARY_SEARCH_PATHS
+    ${HTTP_SYSTEM_PREFIX}/lib/linux
+    ${HTTP_SYSTEM_PREFIX}/lib
+    ${HTTP_SYSTEM_PREFIX}/libs/linux
+    ${HTTP_SYSTEM_PREFIX}/libs
+)
+
 find_path(HTTP_INCLUDE_DIR
     NAMES httpparser.hpp httpgenerator.hpp httpconstants.hpp
-    PATHS ${HTTP_SYSTEM_PREFIX}/include/linux
+    PATHS ${HTTP_INCLUDE_SEARCH_PATHS}
     NO_DEFAULT_PATH
     REQUIRED)
 
 find_library(HTTPPARSER_LIBRARY
     NAMES httpparser
-    PATHS ${HTTP_SYSTEM_PREFIX}/lib/linux
+    PATHS ${HTTP_LIBRARY_SEARCH_PATHS}
     NO_DEFAULT_PATH
     REQUIRED)
 
 find_library(HTTPGENERATOR_LIBRARY
     NAMES httpgenerator
-    PATHS ${HTTP_SYSTEM_PREFIX}/lib/linux
+    PATHS ${HTTP_LIBRARY_SEARCH_PATHS}
     NO_DEFAULT_PATH
     REQUIRED)
 

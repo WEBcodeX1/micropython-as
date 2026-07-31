@@ -132,11 +132,11 @@ The same HTTP parser and generator libraries from the FalconAS project are requi
 Follow the instructions in the `https://github.com/WEBcodeX1/http-1.2` repository under `ports/linux/` and install the resulting static libraries and headers:
 
 ```
-/usr/local/lib/linux/libhttpparser.a
-/usr/local/lib/linux/libhttpgenerator.a
-/usr/local/include/linux/httpparser.hpp
-/usr/local/include/linux/httpgenerator.hpp
-/usr/local/include/linux/httpconstants.hpp
+/usr/local/lib/linux/libhttpparser.a      or /usr/local/libs/libhttpparser.a
+/usr/local/lib/linux/libhttpgenerator.a   or /usr/local/libs/libhttpgenerator.a
+/usr/local/include/linux/httpparser.hpp   or /usr/local/include/httpparser.hpp
+/usr/local/include/linux/httpgenerator.hpp or /usr/local/include/httpgenerator.hpp
+/usr/local/include/linux/httpconstants.hpp or /usr/local/include/httpconstants.hpp
 ```
 
 ### 10.2. Build
