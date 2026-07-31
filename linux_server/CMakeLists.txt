@@ -97,13 +97,10 @@ endif()
 # Activate by passing -DBUILD_TESTS=ON to cmake.
 # See linux_server/test/README.md for details.
 # ---------------------------------------------------------------------------
-option(BUILD_TESTS "Build the stability test server and test client" OFF)
+option(BUILD_TESTS "Build the stability test server and test client" ON)
 if(BUILD_TESTS)
-    set(TEST_FS_NUM_FILES 200 CACHE STRING "Number of generated Linux test files")
-    set(TEST_FS_MIN_SIZE 10240 CACHE STRING "Minimum generated Linux test file size in bytes")
-    set(TEST_FS_MAX_SIZE 1048576 CACHE STRING "Maximum generated Linux test file size in bytes")
     set(GENERATED_FS_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated_fs)
-    set(TEST_FS_GENERATOR ${CMAKE_CURRENT_SOURCE_DIR}/test/filesystem/generate_test_headers.py)
+    set(TEST_FS_GENERATOR ${CMAKE_CURRENT_SOURCE_DIR}/generate_test_headers.py)
 
     find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
