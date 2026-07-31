@@ -50,12 +50,6 @@ find_library(HTTPPARSER_LIBRARY
     NO_DEFAULT_PATH
     REQUIRED)
 
-find_library(HTTPGENERATOR_LIBRARY
-    NAMES httpgenerator
-    PATHS ${HTTP_LIBRARY_SEARCH_PATHS}
-    NO_DEFAULT_PATH
-    REQUIRED)
-
 # ---------------------------------------------------------------------------
 # Include paths
 # Stubs directory comes first so it shadows ESP-IDF / FreeRTOS headers.
@@ -76,7 +70,7 @@ add_executable(server_linux ${SOURCES})
 
 target_link_libraries(server_linux PRIVATE
     ${HTTPPARSER_LIBRARY}
-    ${HTTPGENERATOR_LIBRARY})
+)
 
 # ---------------------------------------------------------------------------
 # Optional: enable AddressSanitizer for runtime crash/memory analysis.

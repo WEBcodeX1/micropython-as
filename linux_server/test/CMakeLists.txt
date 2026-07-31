@@ -72,16 +72,10 @@ find_library(HTTPPARSER_LIBRARY
     NO_DEFAULT_PATH
     REQUIRED)
 
-find_library(HTTPGENERATOR_LIBRARY
-    NAMES httpgenerator
-    PATHS ${HTTP_LIBRARY_SEARCH_PATHS}
-    NO_DEFAULT_PATH
-    REQUIRED)
-
 target_include_directories(server_test PRIVATE ${HTTP_INCLUDE_DIR})
 target_link_libraries(server_test PRIVATE
     ${HTTPPARSER_LIBRARY}
-    ${HTTPGENERATOR_LIBRARY})
+)
 
 # ---------------------------------------------------------------------------
 # test_client binary
