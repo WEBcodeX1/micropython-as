@@ -38,12 +38,13 @@ cmake --build build --parallel
 
 ## Test file set
 
-200 files served at `/testfile001.bin` … `/testfile200.bin`, linearly sized
+200 files served at `/testfile001.html` … `/testfile200.html`, linearly sized
 from **10 KB** (file 1) to **1 MB** (file 200).  Content is generated
 deterministically at startup — no static C arrays, no large committed data
 files.  The test client independently recomputes the expected content and
 compares byte-for-byte (files ≤ 128 KB) or spot-checks the first and last
-512 bytes (larger files).
+512 bytes (larger files).  All generated test files are served with
+`Content-Type: text/html`.
 
 ## Test scenarios
 

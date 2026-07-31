@@ -70,7 +70,7 @@ static unsigned char expectedByte(int fileIdx, unsigned int byteOffset)
 static std::string fileURL(int i)
 {
     char buf[32];
-    snprintf(buf, sizeof(buf), "/testfile%03d.bin", i + 1);
+    snprintf(buf, sizeof(buf), "/testfile%03d.html", i + 1);
     return buf;
 }
 
@@ -224,6 +224,39 @@ static std::string headerValue(const std::string& header, const std::string& fie
     return header.substr(pos, end - pos);
 }
 
+static std::string trimCopy(std::string value)
+{
+    while (!value.empty() && std::isspace(static_cast<unsigned char>(value.front()))) {
+        value.erase(value.begin());
+    }
+    while (!value.empty() && std::isspace(static_cast<unsigned char>(value.back()))) {
+        value.pop_back();
+    }
+    return value;
+}
+
+static bool verifyContentTypeHeader(const std::string& header,
+                                    const std::string& expectedType)
+{
+    std::string contentType = trimCopy(headerValue(header, "Content-Type"));
+    if (contentType.empty()) {
+        fprintf(stderr, "  missing Content-Type header\n");
+        return false;
+    }
+
+    const auto separator = contentType.find(';');
+    if (separator != std::string::npos) {
+        contentType = trimCopy(contentType.substr(0, separator));
+    }
+
+    if (contentType != expectedType) {
+        fprintf(stderr, "  content-type mismatch: got '%s' expected '%s'\n",
+                contentType.c_str(), expectedType.c_str());
+        return false;
+    }
+    return true;
+}
+
 // Parse the HTTP status code from the status line.
 static int parseStatusCode(const std::string& header)
 {
@@ -317,6 +350,22 @@ static bool verifyBody(const std::vector<unsigned char>& body, int fileIdx,
     return true;
 }
 
+static bool verifyHtmlFileResponse(const HttpResponse& resp, int fileIdx,
+                                   unsigned int expectedLen)
+{
+    return resp.ok &&
+           resp.status == 200 &&
+           verifyContentTypeHeader(resp.header, "text/html") &&
+           verifyBody(resp.body, fileIdx, expectedLen);
+}
+
+static bool verifyHtml404Response(const HttpResponse& resp)
+{
+    return resp.ok &&
+           resp.status == 404 &&
+           verifyContentTypeHeader(resp.header, "text/html");
+}
+
 // ---------------------------------------------------------------------------
 // Test result tracking
 // ---------------------------------------------------------------------------
@@ -353,7 +402,7 @@ static void testSingleGetPerConnection()
         close(fd);
 
         unsigned int sz = expectedFileSize(i);
-        if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz)) {
+        if (!verifyHtmlFileResponse(resp, i, sz)) {
             fail++;
         } else {
             pass++;
@@ -387,7 +436,7 @@ static void testSequentialGetPersistent()
         HttpResponse resp = readResponse(fd);
         logResponseDetails(testType, file, resp.header, resp.contentLength);
         unsigned int sz = expectedFileSize(i);
-        if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+        if (!verifyHtmlFileResponse(resp, i, sz))
             fail++;
         else
             pass++;
@@ -440,7 +489,7 @@ static void testPipelinedGet()
             HttpResponse resp = readResponse(fd);
             logResponseDetails(testType, file, resp.header, resp.contentLength);
             unsigned int sz = expectedFileSize(i);
-            if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+            if (!verifyHtmlFileResponse(resp, i, sz))
                 total_fail++;
             else
                 total_pass++;
@@ -491,7 +540,7 @@ static void testPartialSend()
         close(fd);
 
         unsigned int sz = expectedFileSize(i);
-        if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+        if (!verifyHtmlFileResponse(resp, i, sz))
             fail++;
         else
             pass++;
@@ -555,7 +604,8 @@ static void testConnectionCloseMidResponse()
     logResponseDetails(testType, file, resp.header, resp.contentLength);
     close(fd);
 
-    if (resp.ok && resp.status == 200)
+    if (resp.ok && resp.status == 200 &&
+        verifyContentTypeHeader(resp.header, "text/html"))
         PASS("server alive after mid-response connection closes");
     else
         FAIL("server unresponsive after mid-response connection closes");
@@ -596,7 +646,8 @@ static void testStressSequential()
             logResponseDetails(testType, file, header, cl);
             if (header.empty()) { fail++; break; }
 
-            if (cl < 0 || (unsigned int)cl != expectedLen) { fail++; break; }
+            if (!verifyContentTypeHeader(header, "text/html") ||
+                cl < 0 || (unsigned int)cl != expectedLen) { fail++; break; }
 
             // Consume body without copying to vector (saves memory on stress run)
             std::vector<unsigned char> body(static_cast<size_t>(cl));
@@ -635,7 +686,7 @@ static void test404Response()
     logResponseDetails(testType, file, resp.header, resp.contentLength);
     close(fd);
 
-    if (resp.ok && resp.status == 404)
+    if (verifyHtml404Response(resp))
         PASS("404 returned for unknown URL");
     else {
         fprintf(stderr, "  status=%d ok=%d\n", resp.status, (int)resp.ok);
@@ -671,7 +722,7 @@ static void testSizeExtremes()
         close(fd);
 
         unsigned int sz = expectedFileSize(i);
-        if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+        if (!verifyHtmlFileResponse(resp, i, sz))
             fail++;
         else
             pass++;
@@ -769,7 +820,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             close(fd);
 
             unsigned int sz = expectedFileSize(i);
-            if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+            if (!verifyHtmlFileResponse(resp, i, sz))
                 result.fail++;
             else
                 result.pass++;
@@ -799,7 +850,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             close(fd);
 
             unsigned int sz = expectedFileSize(i);
-            if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+            if (!verifyHtmlFileResponse(resp, i, sz))
                 result.fail++;
             else
                 result.pass++;
@@ -826,7 +877,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             close(fd);
 
             unsigned int sz = expectedFileSize(i);
-            if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+            if (!verifyHtmlFileResponse(resp, i, sz))
                 result.fail++;
             else
                 result.pass++;
@@ -860,7 +911,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             close(fd);
 
             unsigned int sz = expectedFileSize(i);
-            if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+            if (!verifyHtmlFileResponse(resp, i, sz))
                 result.fail++;
             else
                 result.pass++;
@@ -891,7 +942,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
                 HttpResponse resp = readResponse(fd);
                 logResponseDetails(testType, file, resp.header, resp.contentLength);
                 unsigned int sz   = expectedFileSize(i);
-                if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+                if (!verifyHtmlFileResponse(resp, i, sz))
                     result.fail++;
                 else
                     result.pass++;
@@ -934,7 +985,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
                 HttpResponse resp = readResponse(fd);
                 logResponseDetails(testType, file, resp.header, resp.contentLength);
                 unsigned int sz   = expectedFileSize(i);
-                if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
+                if (!verifyHtmlFileResponse(resp, i, sz))
                     result.fail++;
                 else
                     result.pass++;

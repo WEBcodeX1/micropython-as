@@ -13,7 +13,7 @@ using namespace std;
 // Test file parameters
 // ---------------------------------------------------------------------------
 
-// Number of test files served at /testfileNNN.bin (NNN = 001 … NUM_TEST_FILES)
+// Number of test files served at /testfileNNN.html (NNN = 001 … NUM_TEST_FILES)
 static constexpr int TEST_NUM_FILES = 200;
 // Smallest file size (file index 0)
 static constexpr unsigned int TEST_MIN_SIZE = 10u * 1024u;     // 10 KB
@@ -67,9 +67,9 @@ static void initTestFiles()
         TestFileEntry entry;
 
         char url[32];
-        snprintf(url, sizeof(url), "/testfile%03d.bin", i + 1);
+        snprintf(url, sizeof(url), "/testfile%03d.html", i + 1);
         entry.path        = url;
-        entry.contentType = "application/octet-stream";
+        entry.contentType = "text/html";
         entry.data.resize(sz);
         fillContent(entry.data.data(), sz, i);
         gTestFiles.push_back(std::move(entry));
