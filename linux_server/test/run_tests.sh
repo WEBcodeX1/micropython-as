@@ -13,7 +13,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BUILD_DIR="${SCRIPT_DIR}/build"
+SERVER_DIR="${SCRIPT_DIR}/.."
+BUILD_DIR="${SERVER_DIR}/build"
 
 ASAN_FLAG="OFF"
 TSAN_FLAG="OFF"
@@ -31,7 +32,8 @@ done
 # Build
 # ---------------------------------------------------------------------------
 echo "=== Configuring ==="
-cmake -B "${BUILD_DIR}" -S "${SCRIPT_DIR}" \
+cmake -B "${BUILD_DIR}" -S "${SERVER_DIR}" \
+      -DBUILD_TESTS=ON \
       -DASAN="${ASAN_FLAG}" \
       -DTSAN="${TSAN_FLAG}"
 
@@ -41,8 +43,8 @@ cmake --build "${BUILD_DIR}" --parallel
 # ---------------------------------------------------------------------------
 # Start server
 # ---------------------------------------------------------------------------
-SERVER_BIN="${BUILD_DIR}/server_test"
-TEST_BIN="${BUILD_DIR}/test_client"
+SERVER_BIN="${BUILD_DIR}/test/server_test"
+TEST_BIN="${BUILD_DIR}/test/test_client"
 HOST="127.0.0.1"
 PORT="8080"
 

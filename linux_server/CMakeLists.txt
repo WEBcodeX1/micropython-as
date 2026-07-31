@@ -99,5 +99,49 @@ endif()
 # ---------------------------------------------------------------------------
 option(BUILD_TESTS "Build the stability test server and test client" OFF)
 if(BUILD_TESTS)
+    set(TEST_FS_NUM_FILES 200 CACHE STRING "Number of generated Linux test files")
+    set(TEST_FS_MIN_SIZE 10240 CACHE STRING "Minimum generated Linux test file size in bytes")
+    set(TEST_FS_MAX_SIZE 1048576 CACHE STRING "Maximum generated Linux test file size in bytes")
+    set(GENERATED_FS_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated_fs)
+    set(TEST_FS_GENERATOR ${CMAKE_CURRENT_SOURCE_DIR}/test/filesystem/generate_test_headers.py)
+
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_FS_DIR}
+    )
+
+    execute_process(
+        COMMAND
+            ${Python3_EXECUTABLE}
+            ${TEST_FS_GENERATOR}
+            ${GENERATED_FS_DIR}
+            --count ${TEST_FS_NUM_FILES}
+            --min-size ${TEST_FS_MIN_SIZE}
+            --max-size ${TEST_FS_MAX_SIZE}
+        RESULT_VARIABLE GENERATE_TEST_HEADERS_RESULT
+    )
+
+    if(NOT GENERATE_TEST_HEADERS_RESULT EQUAL 0)
+        message(FATAL_ERROR "Failed to generate Linux test filesystem headers")
+    endif()
+
+    add_custom_command(
+        OUTPUT
+            ${GENERATED_FS_DIR}/filedata-test.h
+            ${GENERATED_FS_DIR}/filemetadata-test.h
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_FS_DIR}
+        COMMAND ${Python3_EXECUTABLE} ${TEST_FS_GENERATOR} ${GENERATED_FS_DIR} --count ${TEST_FS_NUM_FILES} --min-size ${TEST_FS_MIN_SIZE} --max-size ${TEST_FS_MAX_SIZE}
+        DEPENDS ${TEST_FS_GENERATOR}
+        COMMENT "Generating Linux test filesystem headers"
+        VERBATIM
+    )
+
+    add_custom_target(generate_test_filesystem_headers
+        DEPENDS
+            ${GENERATED_FS_DIR}/filedata-test.h
+            ${GENERATED_FS_DIR}/filemetadata-test.h
+    )
+
     add_subdirectory(test)
 endif()

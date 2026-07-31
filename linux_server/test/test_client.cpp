@@ -42,21 +42,33 @@
 #include <vector>
 
 // ---------------------------------------------------------------------------
-// Test file parameters – must match the generated linux_server/test filedata-test.h
+// Test file parameters – passed from the parent linux_server CMake configuration
 // ---------------------------------------------------------------------------
 
-static constexpr int  TEST_NUM_FILES = 200;
-static constexpr unsigned int TEST_MIN_SIZE = 10u * 1024u;
-static constexpr unsigned int TEST_MAX_SIZE = 1024u * 1024u;
+#ifndef TEST_NUM_FILES
+#define TEST_NUM_FILES 200
+#endif
+
+#ifndef TEST_MIN_SIZE
+#define TEST_MIN_SIZE (10u * 1024u)
+#endif
+
+#ifndef TEST_MAX_SIZE
+#define TEST_MAX_SIZE (1024u * 1024u)
+#endif
+
+static constexpr int  kTestNumFiles = TEST_NUM_FILES;
+static constexpr unsigned int kTestMinSize = TEST_MIN_SIZE;
+static constexpr unsigned int kTestMaxSize = TEST_MAX_SIZE;
 
 // Compute expected file size for file i (0-based), same formula as server.
 static unsigned int expectedFileSize(int i)
 {
-    if (TEST_NUM_FILES <= 1) return TEST_MIN_SIZE;
+    if (kTestNumFiles <= 1) return kTestMinSize;
     return static_cast<unsigned int>(
-        TEST_MIN_SIZE +
-        (unsigned long long)(TEST_MAX_SIZE - TEST_MIN_SIZE) * (unsigned int)i
-        / (unsigned int)(TEST_NUM_FILES - 1)
+        kTestMinSize +
+        (unsigned long long)(kTestMaxSize - kTestMinSize) * (unsigned int)i
+        / (unsigned int)(kTestNumFiles - 1)
     );
 }
 

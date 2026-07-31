@@ -26,14 +26,15 @@ The script:
 ## Manual build
 
 ```bash
-cmake -B build
+cd ..
+cmake -B build -DBUILD_TESTS=ON
 cmake --build build --parallel
 
 # Terminal 1 – start the server
-./build/server_test 127.0.0.1
+./build/test/server_test 127.0.0.1
 
 # Terminal 2 – run the tests
-./build/test_client 127.0.0.1 8080
+./build/test/test_client 127.0.0.1 8080
 ```
 
 ## Test file set
@@ -41,7 +42,8 @@ cmake --build build --parallel
 200 files served at `/testfile001.html` … `/testfile200.html`, linearly sized
 from **10 KB** (file 1) to **1 MB** (file 200).  Their paths and metadata live
 in generated `filemetadata-test.h` / `filedata-test.h` headers, created during
-`cmake` configuration in `test/build/generated_fs/` and refreshed again during
+the parent `linux_server/CMakeLists.txt` configuration in `build/generated_fs/`
+and refreshed again during
 builds when the generator changes. Those headers append the extra test
 entries after the production `f66` entry while leaving `/src/components/filesystem/`
 untouched. The test client independently recomputes and verifies the expected
