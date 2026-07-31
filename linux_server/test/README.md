@@ -48,11 +48,13 @@ enabled, CMake copies the original `/src/components/filesystem/Filesystem.hpp`
 into `linux_server/filesystem/Filesystem.hpp` and rewrites only its two include
 lines to point at the generated test headers, so the Linux test server serves
 only the generated test files without duplicating the original filesystem
-implementation. `server_test` and `test_client` both read the same count and
-size defaults from the generator, so the served files and the client
-expectations always stay aligned. The test client independently recomputes and
-verifies the expected bytes (files ≤ 128 KB) or spot-checks the first and last
-512 bytes (larger files). All generated test files are served with
+implementation. The generator defaults drive the shared generated headers, so
+the served files and the client expectations always stay aligned. The test
+client includes the same generated
+`filedata-test.h` / `filemetadata-test.h` headers as the Linux test server and
+verifies those bytes directly (files ≤ 128 KB) or spot-checks the first and
+last 512 bytes (larger files). All generated test files are ASCII-only and
+served with
 `Content-Type: text/html`.
 
 ## Test scenarios

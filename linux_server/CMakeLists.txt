@@ -112,30 +112,6 @@ if(BUILD_TESTS)
     find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
     execute_process(
-        COMMAND
-            ${Python3_EXECUTABLE}
-            -c
-            "import importlib.util; spec = importlib.util.spec_from_file_location('generate_test_headers', r'${TEST_FS_GENERATOR}'); module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module); print(module.DEFAULT_TEST_NUM_FILES, module.DEFAULT_MIN_SIZE, module.DEFAULT_MAX_SIZE)"
-        OUTPUT_VARIABLE TEST_FS_DEFAULTS
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        RESULT_VARIABLE TEST_FS_DEFAULTS_RESULT
-    )
-
-    if(NOT TEST_FS_DEFAULTS_RESULT EQUAL 0)
-        message(FATAL_ERROR "Failed to read Linux test filesystem defaults")
-    endif()
-
-    separate_arguments(TEST_FS_DEFAULTS UNIX_COMMAND "${TEST_FS_DEFAULTS}")
-    list(LENGTH TEST_FS_DEFAULTS TEST_FS_DEFAULTS_LENGTH)
-    if(NOT TEST_FS_DEFAULTS_LENGTH EQUAL 3)
-        message(FATAL_ERROR "Unexpected Linux test filesystem defaults: ${TEST_FS_DEFAULTS}")
-    endif()
-
-    list(GET TEST_FS_DEFAULTS 0 TEST_FS_NUM_FILES)
-    list(GET TEST_FS_DEFAULTS 1 TEST_FS_MIN_SIZE)
-    list(GET TEST_FS_DEFAULTS 2 TEST_FS_MAX_SIZE)
-
-    execute_process(
         COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_FS_DIR}
     )
 

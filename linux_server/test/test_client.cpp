@@ -32,6 +32,7 @@
 #include <unistd.h>
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <cctype>
 #include <map>
@@ -42,48 +43,44 @@
 #include <vector>
 
 // ---------------------------------------------------------------------------
-// Test file parameters – passed from the parent linux_server CMake configuration
+// Generated test filesystem metadata
 // ---------------------------------------------------------------------------
 
-#ifndef TEST_NUM_FILES
-#error "TEST_NUM_FILES must be provided by the parent linux_server CMake configuration."
-#endif
+struct ServerFile {
+    std::string ContentPath;
+    std::string ContentType;
+    const unsigned char* ContentPointer;
+    unsigned int ContentLength;
+};
 
-#ifndef TEST_MIN_SIZE
-#error "TEST_MIN_SIZE must be provided by the parent linux_server CMake configuration."
-#endif
+#include "filedata-test.h"
+#include "filemetadata-test.h"
 
-#ifndef TEST_MAX_SIZE
-#error "TEST_MAX_SIZE must be provided by the parent linux_server CMake configuration."
-#endif
+static const int kTestNumFiles = static_cast<int>(ServerFiles.size());
 
-static constexpr int  kTestNumFiles = TEST_NUM_FILES;
-static constexpr unsigned int kTestMinSize = TEST_MIN_SIZE;
-static constexpr unsigned int kTestMaxSize = TEST_MAX_SIZE;
+static const ServerFile& testFile(int i)
+{
+    return ServerFiles[static_cast<size_t>(i)];
+}
 
-// Compute expected file size for file i (0-based), same formula as server.
 static unsigned int expectedFileSize(int i)
 {
-    if (kTestNumFiles <= 1) return kTestMinSize;
-    return static_cast<unsigned int>(
-        kTestMinSize +
-        (unsigned long long)(kTestMaxSize - kTestMinSize) * (unsigned int)i
-        / (unsigned int)(kTestNumFiles - 1)
-    );
+    return testFile(i).ContentLength;
 }
 
-// Expected byte value at offset j in file i (0-based).
 static unsigned char expectedByte(int fileIdx, unsigned int byteOffset)
 {
-    return static_cast<unsigned char>((fileIdx * 7 + byteOffset) & 0xFF);
+    return testFile(fileIdx).ContentPointer[byteOffset];
 }
 
-// URL for file i (0-based).
 static std::string fileURL(int i)
 {
-    char buf[32];
-    snprintf(buf, sizeof(buf), "/testfile%03d.html", i + 1);
-    return buf;
+    return testFile(i).ContentPath;
+}
+
+static int extremeSampleCount()
+{
+    return std::min(10, kTestNumFiles);
 }
 
 // ---------------------------------------------------------------------------
@@ -395,10 +392,10 @@ static int g_fail = 0;
 static void testSingleGetPerConnection()
 {
     const std::string testType = "single";
-    printf("[Test 1] Single GET per connection (%d files)\n", TEST_NUM_FILES);
+    printf("[Test 1] Single GET per connection (%d files)\n", kTestNumFiles);
 
     int pass = 0, fail = 0;
-    for (int i = 0; i < TEST_NUM_FILES; i++) {
+    for (int i = 0; i < kTestNumFiles; i++) {
         int fd = openConnection();
         if (fd < 0) { fail++; continue; }
 
@@ -420,7 +417,7 @@ static void testSingleGetPerConnection()
             pass++;
         }
     }
-    printf("  %d/%d files OK\n", pass, TEST_NUM_FILES);
+    printf("  %d/%d files OK\n", pass, kTestNumFiles);
     if (fail == 0) PASS("all single-GET requests served correctly");
     else { char m[64]; snprintf(m,sizeof(m),"%d requests failed",fail); FAIL(m); }
 }
@@ -439,7 +436,7 @@ static void testSequentialGetPersistent()
 
     int pass = 0, fail = 0;
     for (int k = 0; k < 50; k++) {
-        int i = k % TEST_NUM_FILES;
+        int i = k % kTestNumFiles;
         std::string file = fileURL(i);
         std::string req = makeGet(file, g_host);
         logRequestDetails(testType, file, req);
@@ -484,7 +481,7 @@ static void testPipelinedGet()
         std::string bulk;
         std::vector<std::string> files;
         for (int k = 0; k < DEPTH; k++) {
-            int i = (b * DEPTH + k) % TEST_NUM_FILES;
+            int i = (b * DEPTH + k) % kTestNumFiles;
             std::string file = fileURL(i);
             files.push_back(file);
             bulk += makeGet(file, g_host);
@@ -496,7 +493,7 @@ static void testPipelinedGet()
 
         // Read all DEPTH responses
         for (int k = 0; k < DEPTH; k++) {
-            int i = (b * DEPTH + k) % TEST_NUM_FILES;
+            int i = (b * DEPTH + k) % kTestNumFiles;
             std::string file = fileURL(i);
             HttpResponse resp = readResponse(fd);
             logResponseDetails(testType, file, resp.header, resp.contentLength);
@@ -528,7 +525,7 @@ static void testPartialSend()
 
     int pass = 0, fail = 0;
     for (int k = 0; k < 20; k++) {
-        int i = k % TEST_NUM_FILES;
+        int i = k % kTestNumFiles;
         int fd = openConnection();
         if (fd < 0) { fail++; continue; }
 
@@ -570,12 +567,13 @@ static void testPartialSend()
 static void testConnectionCloseMidResponse()
 {
     const std::string testType = "midclose";
-    printf("[Test 5] Connection close mid-response (10 large files)\n");
+    const int sampleCount = extremeSampleCount();
+    printf("[Test 5] Connection close mid-response (%d large files)\n", sampleCount);
 
     int ok_count = 0;
-    for (int k = 0; k < 10; k++) {
+    for (int k = 0; k < sampleCount; k++) {
         // Use large files (last quarter of the list) so we can cut mid-body
-        int i = TEST_NUM_FILES - 10 + k;
+        int i = kTestNumFiles - sampleCount + k;
         int fd = openConnection();
         if (fd < 0) continue;
 
@@ -643,7 +641,7 @@ static void testStressSequential()
         if (fd < 0) { fail += BATCH; continue; }
 
         for (int k = 0; k < BATCH && (base + k) < TOTAL; k++) {
-            int i   = (base + k) % TEST_NUM_FILES;
+            int i   = (base + k) % kTestNumFiles;
             unsigned int expectedLen = expectedFileSize(i);
 
             std::string file = fileURL(i);
@@ -713,12 +711,16 @@ static void test404Response()
 static void testSizeExtremes()
 {
     const std::string testType = "extremes";
-    printf("[Test 8] Small files (first 10) and large files (last 10)\n");
+    const int sampleCount = extremeSampleCount();
+    printf("[Test 8] Small files (first %d) and large files (last %d)\n",
+           sampleCount, sampleCount);
 
     int pass = 0, fail = 0;
     std::vector<int> indices;
-    for (int i = 0; i < 10; i++)                    indices.push_back(i);
-    for (int i = TEST_NUM_FILES - 10; i < TEST_NUM_FILES; i++) indices.push_back(i);
+    for (int i = 0; i < sampleCount; i++) indices.push_back(i);
+    for (int i = std::max(sampleCount, kTestNumFiles - sampleCount); i < kTestNumFiles; i++) {
+        indices.push_back(i);
+    }
 
     for (int i : indices) {
         int fd = openConnection();
@@ -739,7 +741,7 @@ static void testSizeExtremes()
         else
             pass++;
     }
-    printf("  %d/20 extreme-size requests OK\n", pass);
+    printf("  %d/%zu extreme-size requests OK\n", pass, indices.size());
     if (fail == 0) PASS("small and large file extremes served correctly");
     else { char m[64]; snprintf(m,sizeof(m),"%d size-extreme requests failed",fail); FAIL(m); }
 }
@@ -808,7 +810,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
     unsigned int rng = profile.seed;
     auto nextRand = [&]() -> int {
         rng = rng * 1664525u + 1013904223u;
-        return static_cast<int>((rng >> 1) % static_cast<unsigned int>(TEST_NUM_FILES));
+        return static_cast<int>((rng >> 1) % static_cast<unsigned int>(kTestNumFiles));
     };
 
     switch (profile.behavior) {
@@ -817,7 +819,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
     // Opens one connection per request, cycling through the existing files.
     case ClientBehavior::SINGLE_GETS: {
         for (int k = 0; k < profile.requestCount; k++) {
-            int i = k % TEST_NUM_FILES;
+            int i = k % kTestNumFiles;
             int fd = openConnection();
             if (fd < 0) { result.fail++; continue; }
 
@@ -841,13 +843,13 @@ static ClientResult runClientProfile(const ClientProfile& profile)
     }
 
     // ---- BIG_FILES_ONLY ------------------------------------------------
-    // Requests the last min(requestCount, TEST_NUM_FILES) files by index,
+    // Requests the last min(requestCount, kTestNumFiles) files by index,
     // cycling round-robin when requestCount > that pool.
     case ClientBehavior::BIG_FILES_ONLY: {
-        int pool = std::min(profile.requestCount, TEST_NUM_FILES);
+        int pool = std::min(profile.requestCount, kTestNumFiles);
         for (int k = 0; k < profile.requestCount; k++) {
             // cycle through the largest `pool` files (highest indices)
-            int i = TEST_NUM_FILES - 1 - (k % pool);
+            int i = kTestNumFiles - 1 - (k % pool);
             int fd = openConnection();
             if (fd < 0) { result.fail++; continue; }
 
@@ -901,7 +903,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
     // Each request is split into two writes with a 50 ms pause between them.
     case ClientBehavior::PARTIAL_SENDS: {
         for (int k = 0; k < profile.requestCount; k++) {
-            int i  = k % TEST_NUM_FILES;
+            int i  = k % kTestNumFiles;
             int fd = openConnection();
             if (fd < 0) { result.fail++; continue; }
 
@@ -944,7 +946,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
 
             int batch = std::min(BATCH, remaining);
             for (int k = 0; k < batch; k++) {
-                int i = fileIdx++ % TEST_NUM_FILES;
+                int i = fileIdx++ % kTestNumFiles;
                 std::string file = fileURL(i);
                 std::string req = makeGet(file, g_host);
                 logRequestDetails(testType, file, req);
@@ -982,7 +984,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             std::string bulk;
             std::vector<std::string> files;
             for (int k = 0; k < burst; k++) {
-                std::string file = fileURL((sent + k) % TEST_NUM_FILES);
+                std::string file = fileURL((sent + k) % kTestNumFiles);
                 files.push_back(file);
                 bulk += makeGet(file, g_host);
             }
@@ -992,7 +994,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
                 close(fd); result.fail += burst; sent += burst; continue;
             }
             for (int k = 0; k < burst; k++) {
-                int i = (sent + k) % TEST_NUM_FILES;
+                int i = (sent + k) % kTestNumFiles;
                 std::string file = fileURL(i);
                 HttpResponse resp = readResponse(fd);
                 logResponseDetails(testType, file, resp.header, resp.contentLength);
@@ -1239,6 +1241,11 @@ int main(int argc, char* argv[])
 
     printf("=== HTTP server stability tests ===\n");
     printf("Target: %s:%d\n\n", g_host, g_port);
+
+    if (kTestNumFiles <= 0) {
+        fprintf(stderr, "No generated test files are available\n");
+        return 2;
+    }
 
     if (!cliProfiles.empty()) {
         runMultiClient(cliProfiles);

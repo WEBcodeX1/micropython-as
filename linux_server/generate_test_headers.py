@@ -6,6 +6,9 @@ DEFAULT_TEST_NUM_FILES = 50
 DEFAULT_MIN_SIZE = 5 * 1024
 DEFAULT_MAX_SIZE = 400 * 1024
 LINE_BYTES = 16
+HTML_PREFIX = '<!DOCTYPE html>\n<html><head><title>testfile{file_number:03d}</title></head><body>\n'
+HTML_LINE = '<p>testfile{file_number:03d} line {line_number:06d} FalconAS Linux stability test payload.</p>\n'
+HTML_SUFFIX = '</body></html>\n'
 
 
 def test_file_size(index: int, count: int, min_size: int, max_size: int) -> int:
@@ -14,8 +17,26 @@ def test_file_size(index: int, count: int, min_size: int, max_size: int) -> int:
     return min_size + ((max_size - min_size) * index) // (count - 1)
 
 
-def test_file_byte(file_index: int, byte_offset: int) -> int:
-    return (file_index * 7 + byte_offset) & 0xFF
+def build_test_file_bytes(file_number: int, file_length: int) -> bytes:
+    prefix = HTML_PREFIX.format(file_number=file_number)
+    suffix = HTML_SUFFIX
+    content = prefix
+    line_number = 0
+
+    while len(content) + len(suffix) < file_length:
+        line = HTML_LINE.format(file_number=file_number, line_number=line_number)
+        remaining = file_length - len(content) - len(suffix)
+        if len(line) > remaining:
+            content += line[:remaining]
+            break
+        content += line
+        line_number += 1
+
+    padding = file_length - len(content) - len(suffix)
+    if padding > 0:
+        content += ' ' * padding
+    content += suffix
+    return content.encode('ascii')
 
 
 def write_filedata(out_path: Path, count: int, min_size: int, max_size: int) -> None:
@@ -25,11 +46,12 @@ def write_filedata(out_path: Path, count: int, min_size: int, max_size: int) -> 
         for test_index in range(count):
             file_number = test_index + 1
             file_length = test_file_size(test_index, count, min_size, max_size)
+            file_bytes = build_test_file_bytes(file_number, file_length)
             fh.write(f'static const unsigned char file{file_number}[{file_length}] = {{')
-            for offset in range(file_length):
+            for offset, byte in enumerate(file_bytes):
                 if offset % LINE_BYTES == 0:
                     fh.write('\n\t')
-                fh.write(f'0x{test_file_byte(test_index, offset):02x}, ')
+                fh.write(f'0x{byte:02x}, ')
             fh.write('\n};\n')
 
 

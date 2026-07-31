@@ -19,12 +19,8 @@ set(LS      ${CMAKE_CURRENT_SOURCE_DIR}/..)
 # Self-contained POSIX client; no FalconAS or ESP-IDF dependencies.
 # ---------------------------------------------------------------------------
 add_executable(test_client test_client.cpp)
+target_include_directories(test_client PRIVATE ${GENERATED_FS_DIR})
 target_link_libraries(test_client PRIVATE pthread)
-target_compile_definitions(test_client PRIVATE
-    TEST_NUM_FILES=${TEST_FS_NUM_FILES}
-    TEST_MIN_SIZE=${TEST_FS_MIN_SIZE}
-    TEST_MAX_SIZE=${TEST_FS_MAX_SIZE}
-)
 
 # ---------------------------------------------------------------------------
 # Optional sanitizer pass-through (inherit from parent or set explicitly)
