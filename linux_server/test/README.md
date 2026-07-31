@@ -40,8 +40,9 @@ cmake --build build --parallel
 
 200 files served at `/testfile001.html` … `/testfile200.html`, linearly sized
 from **10 KB** (file 1) to **1 MB** (file 200).  Their paths and metadata live
-in generated `filemetadata-test.h` / `filedata-test.h` headers, created at
-build time in `test/build/generated_fs/`. Those headers append the extra test
+in generated `filemetadata-test.h` / `filedata-test.h` headers, created during
+`cmake` configuration in `test/build/generated_fs/` and refreshed again during
+builds when the generator changes. Those headers append the extra test
 entries after the production `f66` entry while leaving `/src/components/filesystem/`
 untouched. The test client independently recomputes and verifies the expected
 bytes (files ≤ 128 KB) or spot-checks the first and last 512 bytes (larger
