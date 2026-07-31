@@ -1,13 +1,10 @@
 #pragma once
 
 // Test-build replacement for src/components/filesystem/Filesystem.hpp.
-// Provides 200 files sized from 10 KB to 1 MB with deterministic content —
-// no embedded C arrays needed.  Content is generated once on first access.
-//
-// File URL scheme:  /testfileNNN.html  (NNN = 001 … 200)
-// Content byte at offset j in file i (0-based):  (uint8_t)((i * 7 + j) & 0xFF)
-// Additionally serves /404.html for 404 responses.
+// Keeps the production split between file data declarations and file metadata
+// declarations, while generating the large HTML test payloads deterministically.
 
+#include <array>
 #include <string>
 #include <vector>
 
@@ -19,6 +16,15 @@ struct ServerFile {
     const unsigned char* ContentPointer;
     unsigned int ContentLength;
 };
+
+struct TestFileSpec {
+    const char* ContentPath;
+    const char* ContentType;
+    unsigned int ContentLength;
+};
+
+#include "filedata-test.h"
+#include "filemetadata-test.h"
 
 class Filesystem {
 public:
