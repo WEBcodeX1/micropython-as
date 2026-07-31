@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdio>
+
 #define ESP_LOGI(tag, fmt, ...) \
     std::printf("[INFO][" tag "] " fmt "\n", ##__VA_ARGS__)
 
