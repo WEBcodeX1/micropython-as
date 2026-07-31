@@ -80,6 +80,43 @@ static std::string fileURL(int i)
 
 static const char* g_host = "127.0.0.1";
 static int         g_port = 8080;
+static std::mutex  g_logMutex;
+
+static void logRequestDetails(const std::string& testType,
+                              const std::string& fileDesc,
+                              const std::string& request)
+{
+    std::lock_guard<std::mutex> lock(g_logMutex);
+    printf("  [Request] test=%s\n", testType.c_str());
+    printf("  [Request] file=%s\n", fileDesc.c_str());
+    printf("  [Request] raw=\n%s", request.c_str());
+}
+
+static void logResponseDetails(const std::string& testType,
+                               const std::string& fileDesc,
+                               const std::string& header,
+                               int contentLength)
+{
+    std::lock_guard<std::mutex> lock(g_logMutex);
+    printf("  [Response] test=%s\n", testType.c_str());
+    printf("  [Response] file=%s\n", fileDesc.c_str());
+    if (!header.empty()) {
+        printf("  [Response] headers=\n%s", header.c_str());
+    } else {
+        printf("  [Response] headers=<none>\n");
+    }
+    printf("  [Response] content-length=%d\n", contentLength);
+}
+
+static std::string joinFileList(const std::vector<std::string>& files)
+{
+    std::ostringstream oss;
+    for (size_t i = 0; i < files.size(); i++) {
+        if (i != 0) oss << ", ";
+        oss << files[i];
+    }
+    return oss.str();
+}
 
 // Open a blocking TCP connection to g_host:g_port.
 // Returns socket fd or -1 on error.
@@ -201,6 +238,7 @@ static int parseStatusCode(const std::string& header)
 struct HttpResponse {
     int status        = -1;
     int contentLength = -1;
+    std::string header;
     std::vector<unsigned char> body;
     bool ok           = false;
 };
@@ -213,6 +251,7 @@ static HttpResponse readResponse(int fd, int timeout_ms = 10000)
     std::string header = recvHeader(fd, dummy, timeout_ms);
     if (header.empty()) return resp;
 
+    resp.header = header;
     resp.status = parseStatusCode(header);
 
     std::string clStr = headerValue(header, "Content-Length");
@@ -294,6 +333,7 @@ static int g_fail = 0;
 // ---------------------------------------------------------------------------
 static void testSingleGetPerConnection()
 {
+    const std::string testType = "single";
     printf("[Test 1] Single GET per connection (%d files)\n", TEST_NUM_FILES);
 
     int pass = 0, fail = 0;
@@ -301,12 +341,15 @@ static void testSingleGetPerConnection()
         int fd = openConnection();
         if (fd < 0) { fail++; continue; }
 
-        std::string req = makeGet(fileURL(i), g_host);
+        std::string file = fileURL(i);
+        std::string req = makeGet(file, g_host);
+        logRequestDetails(testType, file, req);
         if (!sendAll(fd, req.data(), req.size())) {
             close(fd); fail++; continue;
         }
 
         HttpResponse resp = readResponse(fd);
+        logResponseDetails(testType, file, resp.header, resp.contentLength);
         close(fd);
 
         unsigned int sz = expectedFileSize(i);
@@ -327,6 +370,7 @@ static void testSingleGetPerConnection()
 // ---------------------------------------------------------------------------
 static void testSequentialGetPersistent()
 {
+    const std::string testType = "sequential";
     printf("[Test 2] Sequential GETs on persistent connection (50 files)\n");
 
     int fd = openConnection();
@@ -335,10 +379,13 @@ static void testSequentialGetPersistent()
     int pass = 0, fail = 0;
     for (int k = 0; k < 50; k++) {
         int i = k % TEST_NUM_FILES;
-        std::string req = makeGet(fileURL(i), g_host);
+        std::string file = fileURL(i);
+        std::string req = makeGet(file, g_host);
+        logRequestDetails(testType, file, req);
         if (!sendAll(fd, req.data(), req.size())) { fail++; break; }
 
         HttpResponse resp = readResponse(fd);
+        logResponseDetails(testType, file, resp.header, resp.contentLength);
         unsigned int sz = expectedFileSize(i);
         if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
             fail++;
@@ -359,6 +406,7 @@ static void testSequentialGetPersistent()
 // ---------------------------------------------------------------------------
 static void testPipelinedGet()
 {
+    const std::string testType = "pipelined";
     printf("[Test 3] Pipelined GETs\n");
 
     // Pipeline depth per burst
@@ -373,10 +421,14 @@ static void testPipelinedGet()
 
         // Build and send all DEPTH requests in one write
         std::string bulk;
+        std::vector<std::string> files;
         for (int k = 0; k < DEPTH; k++) {
             int i = (b * DEPTH + k) % TEST_NUM_FILES;
-            bulk += makeGet(fileURL(i), g_host);
+            std::string file = fileURL(i);
+            files.push_back(file);
+            bulk += makeGet(file, g_host);
         }
+        logRequestDetails(testType, joinFileList(files), bulk);
         if (!sendAll(fd, bulk.data(), bulk.size())) {
             close(fd); total_fail += DEPTH; continue;
         }
@@ -384,7 +436,9 @@ static void testPipelinedGet()
         // Read all DEPTH responses
         for (int k = 0; k < DEPTH; k++) {
             int i = (b * DEPTH + k) % TEST_NUM_FILES;
+            std::string file = fileURL(i);
             HttpResponse resp = readResponse(fd);
+            logResponseDetails(testType, file, resp.header, resp.contentLength);
             unsigned int sz = expectedFileSize(i);
             if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
                 total_fail++;
@@ -408,6 +462,7 @@ static void testPipelinedGet()
 // ---------------------------------------------------------------------------
 static void testPartialSend()
 {
+    const std::string testType = "partial";
     printf("[Test 4] Partial GET request sends (20 files)\n");
 
     int pass = 0, fail = 0;
@@ -416,7 +471,9 @@ static void testPartialSend()
         int fd = openConnection();
         if (fd < 0) { fail++; continue; }
 
-        std::string req = makeGet(fileURL(i), g_host);
+        std::string file = fileURL(i);
+        std::string req = makeGet(file, g_host);
+        logRequestDetails(testType, file, req);
 
         // Split at ≈ 60 % of the request length (guaranteed inside the header)
         size_t split = req.size() * 6 / 10;
@@ -430,6 +487,7 @@ static void testPartialSend()
         if (!ok) { close(fd); fail++; continue; }
 
         HttpResponse resp = readResponse(fd);
+        logResponseDetails(testType, file, resp.header, resp.contentLength);
         close(fd);
 
         unsigned int sz = expectedFileSize(i);
@@ -450,6 +508,7 @@ static void testPartialSend()
 // ---------------------------------------------------------------------------
 static void testConnectionCloseMidResponse()
 {
+    const std::string testType = "midclose";
     printf("[Test 5] Connection close mid-response (10 large files)\n");
 
     int ok_count = 0;
@@ -459,12 +518,16 @@ static void testConnectionCloseMidResponse()
         int fd = openConnection();
         if (fd < 0) continue;
 
-        std::string req = makeGet(fileURL(i), g_host);
+        std::string file = fileURL(i);
+        std::string req = makeGet(file, g_host);
+        logRequestDetails(testType, file, req);
         if (!sendAll(fd, req.data(), req.size())) { close(fd); continue; }
 
         // Read the header
         std::vector<unsigned char> dummy;
         std::string header = recvHeader(fd, dummy);
+        int contentLength = atoi(headerValue(header, "Content-Length").c_str());
+        logResponseDetails(testType, file, header, contentLength);
         if (header.empty()) { close(fd); continue; }
 
         // Read only first 1 KB of body, then close abruptly
@@ -484,9 +547,12 @@ static void testConnectionCloseMidResponse()
         FAIL("server not responding after mid-response connection closes");
         return;
     }
-    std::string req = makeGet(fileURL(0), g_host);
+    std::string file = fileURL(0);
+    std::string req = makeGet(file, g_host);
+    logRequestDetails(testType, file, req);
     sendAll(fd, req.data(), req.size());
     HttpResponse resp = readResponse(fd);
+    logResponseDetails(testType, file, resp.header, resp.contentLength);
     close(fd);
 
     if (resp.ok && resp.status == 200)
@@ -501,6 +567,7 @@ static void testConnectionCloseMidResponse()
 // ---------------------------------------------------------------------------
 static void testStressSequential()
 {
+    const std::string testType = "stress";
     static constexpr int TOTAL = 500;
     static constexpr int BATCH =  50; // requests per connection
 
@@ -517,15 +584,18 @@ static void testStressSequential()
             int i   = (base + k) % TEST_NUM_FILES;
             unsigned int expectedLen = expectedFileSize(i);
 
-            std::string req = makeGet(fileURL(i), g_host);
+            std::string file = fileURL(i);
+            std::string req = makeGet(file, g_host);
+            logRequestDetails(testType, file, req);
             if (!sendAll(fd, req.data(), req.size())) { fail++; break; }
 
             // Read header
             std::vector<unsigned char> dummy;
             std::string header = recvHeader(fd, dummy);
+            int cl = atoi(headerValue(header, "Content-Length").c_str());
+            logResponseDetails(testType, file, header, cl);
             if (header.empty()) { fail++; break; }
 
-            int cl = atoi(headerValue(header, "Content-Length").c_str());
             if (cl < 0 || (unsigned int)cl != expectedLen) { fail++; break; }
 
             // Consume body without copying to vector (saves memory on stress run)
@@ -550,15 +620,19 @@ static void testStressSequential()
 // ---------------------------------------------------------------------------
 static void test404Response()
 {
+    const std::string testType = "404";
     printf("[Test 7] 404 response for unknown URL\n");
 
     int fd = openConnection();
     if (fd < 0) { FAIL("could not connect"); return; }
 
-    std::string req = makeGet("/no/such/file.txt", g_host);
+    std::string file = "/no/such/file.txt";
+    std::string req = makeGet(file, g_host);
+    logRequestDetails(testType, file, req);
     if (!sendAll(fd, req.data(), req.size())) { close(fd); FAIL("send failed"); return; }
 
     HttpResponse resp = readResponse(fd);
+    logResponseDetails(testType, file, resp.header, resp.contentLength);
     close(fd);
 
     if (resp.ok && resp.status == 404)
@@ -575,6 +649,7 @@ static void test404Response()
 // ---------------------------------------------------------------------------
 static void testSizeExtremes()
 {
+    const std::string testType = "extremes";
     printf("[Test 8] Small files (first 10) and large files (last 10)\n");
 
     int pass = 0, fail = 0;
@@ -586,10 +661,13 @@ static void testSizeExtremes()
         int fd = openConnection();
         if (fd < 0) { fail++; continue; }
 
-        std::string req = makeGet(fileURL(i), g_host);
+        std::string file = fileURL(i);
+        std::string req = makeGet(file, g_host);
+        logRequestDetails(testType, file, req);
         if (!sendAll(fd, req.data(), req.size())) { close(fd); fail++; continue; }
 
         HttpResponse resp = readResponse(fd, 30000);  // large files need more time
+        logResponseDetails(testType, file, resp.header, resp.contentLength);
         close(fd);
 
         unsigned int sz = expectedFileSize(i);
@@ -661,6 +739,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
 {
     ClientResult result;
     result.name = profile.name;
+    const std::string testType = "client:" + profile.name;
 
     // Simple multiplicative LCG for RANDOM_FILES.
     unsigned int rng = profile.seed;
@@ -679,11 +758,14 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             int fd = openConnection();
             if (fd < 0) { result.fail++; continue; }
 
-            std::string req = makeGet(fileURL(i), g_host);
+            std::string file = fileURL(i);
+            std::string req = makeGet(file, g_host);
+            logRequestDetails(testType, file, req);
             if (!sendAll(fd, req.data(), req.size())) {
                 close(fd); result.fail++; continue;
             }
             HttpResponse resp = readResponse(fd);
+            logResponseDetails(testType, file, resp.header, resp.contentLength);
             close(fd);
 
             unsigned int sz = expectedFileSize(i);
@@ -706,11 +788,14 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             int fd = openConnection();
             if (fd < 0) { result.fail++; continue; }
 
-            std::string req = makeGet(fileURL(i), g_host);
+            std::string file = fileURL(i);
+            std::string req = makeGet(file, g_host);
+            logRequestDetails(testType, file, req);
             if (!sendAll(fd, req.data(), req.size())) {
                 close(fd); result.fail++; continue;
             }
             HttpResponse resp = readResponse(fd, 30000);
+            logResponseDetails(testType, file, resp.header, resp.contentLength);
             close(fd);
 
             unsigned int sz = expectedFileSize(i);
@@ -730,11 +815,14 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             int fd = openConnection();
             if (fd < 0) { result.fail++; continue; }
 
-            std::string req = makeGet(fileURL(i), g_host);
+            std::string file = fileURL(i);
+            std::string req = makeGet(file, g_host);
+            logRequestDetails(testType, file, req);
             if (!sendAll(fd, req.data(), req.size())) {
                 close(fd); result.fail++; continue;
             }
             HttpResponse resp = readResponse(fd, 30000);
+            logResponseDetails(testType, file, resp.header, resp.contentLength);
             close(fd);
 
             unsigned int sz = expectedFileSize(i);
@@ -754,7 +842,9 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             int fd = openConnection();
             if (fd < 0) { result.fail++; continue; }
 
-            std::string req = makeGet(fileURL(i), g_host);
+            std::string file = fileURL(i);
+            std::string req = makeGet(file, g_host);
+            logRequestDetails(testType, file, req);
             size_t split = req.size() * 6 / 10;
             if (split == 0)          split = 1;
             if (split >= req.size()) split = req.size() - 1;
@@ -766,6 +856,7 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             if (!ok) { close(fd); result.fail++; continue; }
 
             HttpResponse resp = readResponse(fd);
+            logResponseDetails(testType, file, resp.header, resp.contentLength);
             close(fd);
 
             unsigned int sz = expectedFileSize(i);
@@ -791,11 +882,14 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             int batch = std::min(BATCH, remaining);
             for (int k = 0; k < batch; k++) {
                 int i = fileIdx++ % TEST_NUM_FILES;
-                std::string req = makeGet(fileURL(i), g_host);
+                std::string file = fileURL(i);
+                std::string req = makeGet(file, g_host);
+                logRequestDetails(testType, file, req);
                 if (!sendAll(fd, req.data(), req.size())) {
                     result.fail++; break;
                 }
                 HttpResponse resp = readResponse(fd);
+                logResponseDetails(testType, file, resp.header, resp.contentLength);
                 unsigned int sz   = expectedFileSize(i);
                 if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
                     result.fail++;
@@ -823,15 +917,22 @@ static ClientResult runClientProfile(const ClientProfile& profile)
             }
             int burst = std::min(depth, profile.requestCount - sent);
             std::string bulk;
-            for (int k = 0; k < burst; k++)
-                bulk += makeGet(fileURL((sent + k) % TEST_NUM_FILES), g_host);
+            std::vector<std::string> files;
+            for (int k = 0; k < burst; k++) {
+                std::string file = fileURL((sent + k) % TEST_NUM_FILES);
+                files.push_back(file);
+                bulk += makeGet(file, g_host);
+            }
+            logRequestDetails(testType, joinFileList(files), bulk);
 
             if (!sendAll(fd, bulk.data(), bulk.size())) {
                 close(fd); result.fail += burst; sent += burst; continue;
             }
             for (int k = 0; k < burst; k++) {
                 int i = (sent + k) % TEST_NUM_FILES;
+                std::string file = fileURL(i);
                 HttpResponse resp = readResponse(fd);
+                logResponseDetails(testType, file, resp.header, resp.contentLength);
                 unsigned int sz   = expectedFileSize(i);
                 if (!resp.ok || resp.status != 200 || !verifyBody(resp.body, i, sz))
                     result.fail++;
