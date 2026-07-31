@@ -99,9 +99,6 @@ endif()
 # See linux_server/test/README.md for details.
 # ---------------------------------------------------------------------------
 option(BUILD_TESTS "Build the stability test server and test client" ON)
-set(TEST_FS_NUM_FILES "200" CACHE STRING "Number of generated Linux stability-test files")
-set(TEST_FS_MIN_SIZE "10240" CACHE STRING "Size in bytes of the smallest generated Linux stability-test file")
-set(TEST_FS_MAX_SIZE "1048576" CACHE STRING "Size in bytes of the largest generated Linux stability-test file")
 set(LINUX_FILESYSTEM_OVERRIDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/filesystem)
 set(LINUX_FILESYSTEM_OVERRIDE_HEADER ${LINUX_FILESYSTEM_OVERRIDE_DIR}/Filesystem.hpp)
 
@@ -109,6 +106,9 @@ if(BUILD_TESTS)
     set(GENERATED_FS_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated_fs)
     set(TEST_FS_GENERATOR ${CMAKE_CURRENT_SOURCE_DIR}/generate_test_headers.py)
     set(SOURCE_FILESYSTEM_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/../src/components/filesystem/Filesystem.hpp)
+    set(TEST_FS_NUM_FILES 200)
+    set(TEST_FS_MIN_SIZE 10240)
+    set(TEST_FS_MAX_SIZE 1048576)
 
     include_directories(${GENERATED_FS_DIR})
 
