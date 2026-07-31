@@ -18,7 +18,7 @@ cd linux_server/test
 ```
 
 The script:
-1. Configures and builds `server_test` and `test_client` under `test/build/`.
+1. Configures and builds `server_test` and `test_client` under `linux_server/build/`.
 2. Starts `server_test` on `127.0.0.1:8080` in the background.
 3. Runs `test_client` which reports pass/fail per scenario.
 4. Kills the server and exits with the test client's exit code.
@@ -40,15 +40,18 @@ cmake --build build --parallel
 ## Test file set
 
 200 files served at `/testfile001.html` … `/testfile200.html`, linearly sized
-from **10 KB** (file 1) to **1 MB** (file 200).  Their paths and metadata live
+from **10 KB** (file 1) to **1 MB** (file 200). Their paths and metadata live
 in generated `filemetadata-test.h` / `filedata-test.h` headers, created during
 the parent `linux_server/CMakeLists.txt` configuration in `build/generated_fs/`
-and refreshed again during
-builds when the generator changes. Those headers append the extra test
-entries after the production `f66` entry while leaving `/src/components/filesystem/`
-untouched. The test client independently recomputes and verifies the expected
-bytes (files ≤ 128 KB) or spot-checks the first and last 512 bytes (larger
-files). All generated test files are served with `Content-Type: text/html`.
+and refreshed again during builds when the generator changes. When tests are
+enabled, CMake copies the original `/src/components/filesystem/Filesystem.hpp`
+into `linux_server/filesystem/Filesystem.hpp` and rewrites only its two include
+lines to point at the generated test headers, so the Linux test server serves
+only the generated test files without duplicating the original filesystem
+implementation. The test client independently recomputes and verifies the
+expected bytes (files ≤ 128 KB) or spot-checks the first and last 512 bytes
+(larger files). All generated test files are served with `Content-Type:
+text/html`.
 
 ## Test scenarios
 
