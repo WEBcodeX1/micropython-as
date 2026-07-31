@@ -153,7 +153,32 @@ The resulting binary is `build/server_linux`.  It listens on **port 8080** by de
 ./build/server_linux 127.0.0.1
 ```
 
-### 10.3. Sanitizer Builds
+### 10.3. Background Start / Stop Script
+
+For repeated stability tests, `linux_server/run_server.sh` can start the server
+in the background, stop it again, and optionally capture stdout/stderr to a log
+file:
+
+```bash
+cd ~/src/micropython-as/linux_server
+
+# start in background without logging
+./run_server.sh start
+
+# start in background on loopback and save logs to a file
+./run_server.sh start --host 127.0.0.1 --log --log-file ./build/server_linux.log
+
+# check whether the server is running
+./run_server.sh status
+
+# stop the background server
+./run_server.sh stop
+```
+
+By default, the script expects the binary at `linux_server/build/server_linux`
+and stores the PID in `linux_server/build/server_linux.pid`.
+
+### 10.4. Sanitizer Builds
 
 For detailed crash and memory analysis, enable the AddressSanitizer or ThreadSanitizer at configure time:
 
@@ -167,13 +192,13 @@ cmake -B build -DTSAN=ON
 cmake --build build
 ```
 
-### 10.4. Valgrind
+### 10.5. Valgrind
 
 ```bash
 valgrind --tool=memcheck --leak-check=full ./build/server_linux
 ```
 
-### 10.5. Load Testing
+### 10.6. Load Testing
 
 Use `ab` (Apache Benchmark) or `wrk` against `http://localhost:8080/` to reproduce timeout-related crashes under load:
 
