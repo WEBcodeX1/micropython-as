@@ -1,7 +1,9 @@
 #pragma once
 
+#ifndef LINUX_BUILD
 #include "esp_netif.h"
 #include "esp_event.h"
+#endif
 #include "fcntl.h"
 
 #include <cstring>
@@ -24,6 +26,7 @@ public:
 
     static bool StaticIP;
 
+#ifndef LINUX_BUILD
     static void init()
     {
         ESP_ERROR_CHECK(esp_netif_init());
@@ -51,10 +54,16 @@ public:
         // re-start DHCP server
         esp_netif_dhcps_start(NetInterface);
     }
+#endif
 
     static string getIPAddr()
     {
         return IPAddr;
+    }
+
+    static void setIPAddr(const string& Addr)
+    {
+        IPAddr = Addr;
     }
 
 };

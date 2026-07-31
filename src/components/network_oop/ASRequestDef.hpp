@@ -1,6 +1,10 @@
 #pragma once
 
+#ifdef LINUX_BUILD
+#include "httpconstants.hpp"
+#else
 #include "/usr/local/include/esp32s3/httpconstants.hpp"
+#endif
 
 #include "ASRequestHandler.hpp"
 

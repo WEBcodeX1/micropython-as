@@ -1,7 +1,12 @@
 #pragma once
 
+#ifdef LINUX_BUILD
+#include "httpparser.hpp"
+#else
 #include "/usr/local/include/esp32s3/httpparser.hpp"
+#endif
 
+#include <cstdint>
 #include <string>
 
 

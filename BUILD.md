@@ -113,3 +113,95 @@ idf.py flash
 
 > [!NOTE]
 > RAM (heap and stack) settings are already adjusted for **ESP32-S3**, it may be necessary to adjust these for **ESP32-C3**.
+
+## 10. Linux Server Build (Stability Testing)
+
+The HTTP server component can be compiled and run as a **native Linux binary** for stability and crash analysis — without any ESP32 hardware, ESP-IDF, or FreeRTOS.  This enables use of tools such as `gdb`, Valgrind, and the Clang/GCC sanitizers (AddressSanitizer, ThreadSanitizer) to pinpoint crashes and timeout-related bugs.
+
+Only the following components are compiled:
+- `Server` / `ClientHandler` / `Client` (TCP connection handling)
+- `ASRequestHandler` / `ASRequestDef` (MicroPython request routing stubs)
+- `Filesystem` (static file serving from embedded data)
+
+WiFi, DNS, LED, display, and MicroPython execution are **not** included.
+
+### 10.1. Prerequisites
+
+The same HTTP parser and generator libraries from the FalconAS project are required, but built for the **host Linux architecture** instead of a microcontroller cross-target.
+
+Follow the instructions in the `https://github.com/WEBcodeX1/http-1.2` repository under `ports/linux/` and install the resulting static libraries and headers:
+
+```
+/usr/local/lib/linux/libhttpparser.a      or /usr/local/libs/libhttpparser.a
+/usr/local/lib/linux/libhttpgenerator.a   or /usr/local/libs/libhttpgenerator.a
+/usr/local/include/linux/httpparser.hpp   or /usr/local/include/httpparser.hpp
+/usr/local/include/linux/httpgenerator.hpp or /usr/local/include/httpgenerator.hpp
+/usr/local/include/linux/httpconstants.hpp or /usr/local/include/httpconstants.hpp
+```
+
+### 10.2. Build
+
+```bash
+cd ~/src/micropython-as/linux_server
+cmake -B build
+cmake --build build
+```
+
+The resulting binary is `build/server_linux`.  It listens on **port 8080** by default.  An optional IPv4 listen address can be passed as the first argument (default: `0.0.0.0`):
+
+```bash
+./build/server_linux 127.0.0.1
+```
+
+### 10.3. Background Start / Stop Script
+
+For repeated stability tests, `linux_server/run_server.sh` can start the server
+in the background, stop it again, and optionally capture stdout/stderr to a log
+file:
+
+```bash
+cd ~/src/micropython-as/linux_server
+
+# start in background without logging
+./run_server.sh start
+
+# start in background on loopback and save logs to a file
+./run_server.sh start --host 127.0.0.1 --log --log-file ./build/server_linux.log
+
+# check whether the server is running
+./run_server.sh status
+
+# stop the background server
+./run_server.sh stop
+```
+
+By default, the script expects the binary at `linux_server/build/server_linux`
+and stores the PID in `linux_server/build/server_linux.pid`.
+
+### 10.4. Sanitizer Builds
+
+For detailed crash and memory analysis, enable the AddressSanitizer or ThreadSanitizer at configure time:
+
+```bash
+# AddressSanitizer (detects buffer overflows, use-after-free, …)
+cmake -B build -DASAN=ON
+cmake --build build
+
+# ThreadSanitizer (detects data races)
+cmake -B build -DTSAN=ON
+cmake --build build
+```
+
+### 10.5. Valgrind
+
+```bash
+valgrind --tool=memcheck --leak-check=full ./build/server_linux
+```
+
+### 10.6. Load Testing
+
+Use `ab` (Apache Benchmark) or `wrk` against `http://localhost:8080/` to reproduce timeout-related crashes under load:
+
+```bash
+ab -n 10000 -c 50 http://localhost:8080/
+```
