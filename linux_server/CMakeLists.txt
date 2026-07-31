@@ -113,9 +113,6 @@ if(BUILD_TESTS)
             ${Python3_EXECUTABLE}
             ${TEST_FS_GENERATOR}
             ${GENERATED_FS_DIR}
-            --count ${TEST_FS_NUM_FILES}
-            --min-size ${TEST_FS_MIN_SIZE}
-            --max-size ${TEST_FS_MAX_SIZE}
         RESULT_VARIABLE GENERATE_TEST_HEADERS_RESULT
     )
 
@@ -128,7 +125,7 @@ if(BUILD_TESTS)
             ${GENERATED_FS_DIR}/filedata-test.h
             ${GENERATED_FS_DIR}/filemetadata-test.h
         COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_FS_DIR}
-        COMMAND ${Python3_EXECUTABLE} ${TEST_FS_GENERATOR} ${GENERATED_FS_DIR} --count ${TEST_FS_NUM_FILES} --min-size ${TEST_FS_MIN_SIZE} --max-size ${TEST_FS_MAX_SIZE}
+        COMMAND ${Python3_EXECUTABLE} ${TEST_FS_GENERATOR} ${GENERATED_FS_DIR}
         DEPENDS ${TEST_FS_GENERATOR}
         COMMENT "Generating Linux test filesystem headers"
         VERBATIM
