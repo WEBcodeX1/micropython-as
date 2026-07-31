@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BUILD_DIR="${SCRIPT_DIR}/build"
+BUILD_DIR="${SCRIPT_DIR}"
 SERVER_BIN="${BUILD_DIR}/server_linux"
 PID_FILE="${BUILD_DIR}/server_linux.pid"
 HOST="0.0.0.0"
