@@ -19,6 +19,8 @@
 #include <string>
 #include <thread>
 
+#include <signal.h>
+
 using namespace std;
 
 // ---------------------------------------------------------------------------
@@ -43,6 +45,10 @@ char         ASRequestExchangeBuffer[2048];
 
 int main(int argc, char* argv[])
 {
+
+    //- ignore PIPE signal
+    signal(SIGPIPE, SIG_IGN);
+
     if (argc >= 2) {
         Network::setIPAddr(string(argv[1]));
     }
