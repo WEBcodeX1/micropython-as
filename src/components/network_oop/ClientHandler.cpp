@@ -12,6 +12,8 @@
 
 #include "esp_log.h"
 
+#include <set>
+
 using namespace std;
 
 
@@ -42,7 +44,7 @@ void ClientHandler::addClient(const ClientFD_t ClientFD)
 uint8_t ClientHandler::processClients()
 {
     //- receive data from all client filedescriptors
-    vector<ClientFD_t> EraseFDs;
+    set<ClientFD_t> EraseFDs;
 
     //- sum existing messages
     uint8_t sumMessages = 0;

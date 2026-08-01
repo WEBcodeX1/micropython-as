@@ -16,6 +16,7 @@
 #include "ASRequestDef.hpp"
 #include "ASRequestGlobal.hpp"
 
+#include <signal.h>
 #include <string>
 #include <thread>
 
@@ -43,6 +44,10 @@ char         ASRequestExchangeBuffer[2048];
 
 int main(int argc, char* argv[])
 {
+    // Ignore SIGPIPE so that write() to a closed socket returns EPIPE instead
+    // of killing the process (triggered by test_client --test midclose).
+    signal(SIGPIPE, SIG_IGN);
+
     if (argc >= 2) {
         Network::setIPAddr(string(argv[1]));
     }
