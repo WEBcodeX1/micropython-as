@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
+#include <cstddef>
 #include <vector>
 #include <string>
 
@@ -25,6 +26,13 @@ public:
 private:
 
     uint16_t SocketListenPort = 53;
+    static constexpr size_t DNSQuestionOffset = 12;
+    static constexpr unsigned char PongGameQueryName[] = {
+        0x04, 'p', 'o', 'n', 'g',
+        0x04, 'g', 'a', 'm', 'e',
+        0x00
+    };
+    static constexpr size_t PongGameQueryNameLength = sizeof(PongGameQueryName);
 
     struct sockaddr_in ServerSocketAddr;
     struct sockaddr_in ClientSocketAddr;

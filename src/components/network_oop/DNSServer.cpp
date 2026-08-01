@@ -56,13 +56,26 @@ void DNSServer::ServerLoop()
             const unsigned char QTypeByte2 = RecvBuffer[ReceivedBytes-3];
             const unsigned char QTypeByte3 = RecvBuffer[ReceivedBytes-2];
             const unsigned char QTypeByte4 = RecvBuffer[ReceivedBytes-1];
+            const bool IsPongGameQuery =
+                ReceivedBytes == DNSQuestionOffset + PongGameQueryNameLength + 4 &&
+                RecvBuffer[12] == PongGameQueryName[0] &&
+                RecvBuffer[13] == PongGameQueryName[1] &&
+                RecvBuffer[14] == PongGameQueryName[2] &&
+                RecvBuffer[15] == PongGameQueryName[3] &&
+                RecvBuffer[16] == PongGameQueryName[4] &&
+                RecvBuffer[17] == PongGameQueryName[5] &&
+                RecvBuffer[18] == PongGameQueryName[6] &&
+                RecvBuffer[19] == PongGameQueryName[7] &&
+                RecvBuffer[20] == PongGameQueryName[8] &&
+                RecvBuffer[21] == PongGameQueryName[9] &&
+                RecvBuffer[22] == PongGameQueryName[10];
 
             ESP_LOGI("DNSServer", "QueryType b1:%d b2:%d b3:%d b4:%d", QTypeByte1, QTypeByte2, QTypeByte3, QTypeByte4);
 
-            //- answer QCLASS=IN, QTYPE=A queries only
-            if (QTypeByte1 == 0x00 && QTypeByte2 == 0x01 && QTypeByte3 == 0x00 && QTypeByte4 == 0x01) {
-
-                // respond to all (*) A record queries with HTTP servers IP address
+            //- answer QCLASS=IN, QTYPE=A queries for pong.game only
+            if (IsPongGameQuery &&
+                QTypeByte1 == 0x00 && QTypeByte2 == 0x01 &&
+                QTypeByte3 == 0x00 && QTypeByte4 == 0x01) {
 
                 //- construct answer packets
                 RecvBuffer[2] = 0x81;  //- response type byte1
