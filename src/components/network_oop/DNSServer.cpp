@@ -68,32 +68,38 @@ void DNSServer::ServerLoop()
                 RecvBuffer[20] == PongGameQueryName[8] &&
                 RecvBuffer[21] == PongGameQueryName[9] &&
                 RecvBuffer[22] == PongGameQueryName[10];
+
             const bool IsAInQuery =
                 RecvBuffer[DNSQuestionTypeOffset] == 0x00 &&
                 RecvBuffer[DNSQuestionTypeOffset+1] == 0x01 &&
                 RecvBuffer[DNSQuestionTypeOffset+2] == 0x00 &&
                 RecvBuffer[DNSQuestionTypeOffset+3] == 0x01;
+
             const bool IsStandardSingleQuestionQuery =
                 RecvBuffer[4] == 0x00 && RecvBuffer[5] == 0x01 &&
                 RecvBuffer[6] == 0x00 && RecvBuffer[7] == 0x00 &&
                 RecvBuffer[8] == 0x00 && RecvBuffer[9] == 0x00;
+
             const bool IsEdns0OptQuery =
                 ReceivedBytes >= PongGameEdns0QueryLengthMinimum &&
                 RecvBuffer[Edns0OptRecordOffset] == 0x00 &&
                 RecvBuffer[Edns0OptTypeOffset] == 0x00 &&
                 RecvBuffer[Edns0OptTypeOffset+1] == 0x29;
+
             const bool IsPlainPongGameQuery =
                 HasPongGameQueryName &&
                 ReceivedBytes == PongGameQueryLength &&
                 IsStandardSingleQuestionQuery &&
                 RecvBuffer[10] == 0x00 && RecvBuffer[11] == 0x00 &&
                 IsAInQuery;
+
             const bool IsEdns0PongGameQuery =
                 HasPongGameQueryName &&
                 IsStandardSingleQuestionQuery &&
                 RecvBuffer[10] == 0x00 && RecvBuffer[11] == 0x01 &&
                 IsAInQuery &&
                 IsEdns0OptQuery;
+
             const bool IsSupportedPongGameQuery = IsPlainPongGameQuery || IsEdns0PongGameQuery;
 
             ESP_LOGI("DNSServer", "Plain:%d EDNS0:%d PongName:%d", IsPlainPongGameQuery, IsEdns0PongGameQuery, HasPongGameQueryName);
@@ -158,7 +164,7 @@ void DNSServer::ServerLoop()
             }
         }
         else {
-            vTaskDelay(10);
+            vTaskDelay(5);
         }
     }
 }
