@@ -9,10 +9,11 @@ import time
 PONG_GAME_NAME = b"\x04pong\x04game\x00"
 OTHER_GAME_NAME = b"\x05other\x04game\x00"
 EDNS0_OPT_RECORD = b"\x00\x00\x29\x10\x00\x00\x00\x00\x00\x00\x00"
+DIG_EDNS0_OPT_RECORD = b"\x00\x00\x29\x04\xd0\x00\x00\x00\x00\x00\x0c\x00\x0a\x00\x0812345678"
 PONG_GAME_ANSWER_OFFSET = 12 + len(PONG_GAME_NAME) + 4
 
 
-def build_query(hostname: str, with_edns0: bool = False) -> bytes:
+def build_query(hostname: str, edns0_opt_record: bytes | None = None) -> bytes:
     transaction_id = 0x1337
     flags = 0x0100
     if hostname == "pong.game":
@@ -22,17 +23,17 @@ def build_query(hostname: str, with_edns0: bool = False) -> bytes:
     else:
         raise ValueError(f"unsupported hostname: {hostname}")
 
-    additional_count = 1 if with_edns0 else 0
+    additional_count = 1 if edns0_opt_record is not None else 0
     question = encoded_name + struct.pack("!HH", 1, 1)
     request = struct.pack("!HHHHHH", transaction_id, flags, 1, 0, 0, additional_count) + question
-    if with_edns0:
-        request += EDNS0_OPT_RECORD
+    if edns0_opt_record is not None:
+        request += edns0_opt_record
     return request
 
 
-def query_server(server_host: str, server_port: int, hostname: str, timeout: float, with_edns0: bool = False):
+def query_server(server_host: str, server_port: int, hostname: str, timeout: float, edns0_opt_record: bytes | None = None):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    request = build_query(hostname, with_edns0)
+    request = build_query(hostname, edns0_opt_record)
     try:
         sock.settimeout(timeout)
         sock.sendto(request, (server_host, server_port))
@@ -44,11 +45,12 @@ def query_server(server_host: str, server_port: int, hostname: str, timeout: flo
         sock.close()
 
 
-def expect_pong_game(server_host: str, server_port: int, expected_ip: str, with_edns0: bool = False) -> bool:
+def expect_pong_game(server_host: str, server_port: int, expected_ip: str, edns0_opt_record: bytes | None = None) -> bool:
     packed_ip = socket.inet_aton(expected_ip)
+    expected_additional_count = 1 if edns0_opt_record is not None else 0
 
     for _ in range(20):
-        request, response = query_server(server_host, server_port, "pong.game", 0.25, with_edns0)
+        request, response = query_server(server_host, server_port, "pong.game", 0.25, edns0_opt_record)
         if response is None:
             time.sleep(0.1)
             continue
@@ -68,7 +70,7 @@ def expect_pong_game(server_host: str, server_port: int, expected_ip: str, with_
             return False
 
         additional_count = struct.unpack("!H", response[10:12])[0]
-        if additional_count != (1 if with_edns0 else 0):
+        if additional_count != expected_additional_count:
             print("unexpected additional record count", file=sys.stderr)
             return False
 
@@ -81,7 +83,7 @@ def expect_pong_game(server_host: str, server_port: int, expected_ip: str, with_
             print("unexpected IPv4 answer", file=sys.stderr)
             return False
 
-        if with_edns0 and response[PONG_GAME_ANSWER_OFFSET + 16:PONG_GAME_ANSWER_OFFSET + 27] != EDNS0_OPT_RECORD:
+        if edns0_opt_record is not None and response[PONG_GAME_ANSWER_OFFSET + 16:PONG_GAME_ANSWER_OFFSET + 16 + len(edns0_opt_record)] != edns0_opt_record:
             print("missing EDNS0 OPT record", file=sys.stderr)
             return False
 
@@ -91,8 +93,8 @@ def expect_pong_game(server_host: str, server_port: int, expected_ip: str, with_
     return False
 
 
-def expect_nxdomain(server_host: str, server_port: int, with_edns0: bool = False) -> bool:
-    request, response = query_server(server_host, server_port, "other.game", 0.5, with_edns0)
+def expect_nxdomain(server_host: str, server_port: int, edns0_opt_record: bytes | None = None) -> bool:
+    request, response = query_server(server_host, server_port, "other.game", 0.5, edns0_opt_record)
     if response is None:
         print("missing NXDOMAIN response", file=sys.stderr)
         return False
@@ -111,13 +113,17 @@ def expect_nxdomain(server_host: str, server_port: int, with_edns0: bool = False
         return False
 
     additional_count = struct.unpack("!H", response[10:12])[0]
-    if additional_count != (1 if with_edns0 else 0):
+    if additional_count != (1 if edns0_opt_record is not None else 0):
         print("unexpected NXDOMAIN additional record count", file=sys.stderr)
         return False
 
     response_code = struct.unpack("!H", response[2:4])[0] & 0x000F
     if response_code != 3:
         print("expected NXDOMAIN response code", file=sys.stderr)
+        return False
+
+    if edns0_opt_record is not None and response[-len(edns0_opt_record):] != edns0_opt_record:
+        print("unexpected NXDOMAIN EDNS0 OPT record", file=sys.stderr)
         return False
 
     return True
@@ -135,13 +141,19 @@ def main() -> int:
     if not expect_pong_game(server_host, server_port, expected_ip):
         return 1
 
-    if not expect_pong_game(server_host, server_port, expected_ip, with_edns0=True):
+    if not expect_pong_game(server_host, server_port, expected_ip, EDNS0_OPT_RECORD):
+        return 1
+
+    if not expect_pong_game(server_host, server_port, expected_ip, DIG_EDNS0_OPT_RECORD):
         return 1
 
     if not expect_nxdomain(server_host, server_port):
         return 1
 
-    if not expect_nxdomain(server_host, server_port, with_edns0=True):
+    if not expect_nxdomain(server_host, server_port, EDNS0_OPT_RECORD):
+        return 1
+
+    if not expect_nxdomain(server_host, server_port, DIG_EDNS0_OPT_RECORD):
         return 1
 
     print("DNS resolver tests passed")

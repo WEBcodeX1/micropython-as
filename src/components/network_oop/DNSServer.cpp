@@ -78,18 +78,10 @@ void DNSServer::ServerLoop()
                 RecvBuffer[6] == 0x00 && RecvBuffer[7] == 0x00 &&
                 RecvBuffer[8] == 0x00 && RecvBuffer[9] == 0x00;
             const bool IsEdns0OptQuery =
-                ReceivedBytes == PongGameEdns0QueryLength &&
-                RecvBuffer[PongGameQueryLength] == Edns0OptRecord[0] &&
-                RecvBuffer[PongGameQueryLength+1] == Edns0OptRecord[1] &&
-                RecvBuffer[PongGameQueryLength+2] == Edns0OptRecord[2] &&
-                RecvBuffer[PongGameQueryLength+3] == Edns0OptRecord[3] &&
-                RecvBuffer[PongGameQueryLength+4] == Edns0OptRecord[4] &&
-                RecvBuffer[PongGameQueryLength+5] == Edns0OptRecord[5] &&
-                RecvBuffer[PongGameQueryLength+6] == Edns0OptRecord[6] &&
-                RecvBuffer[PongGameQueryLength+7] == Edns0OptRecord[7] &&
-                RecvBuffer[PongGameQueryLength+8] == Edns0OptRecord[8] &&
-                RecvBuffer[PongGameQueryLength+9] == Edns0OptRecord[9] &&
-                RecvBuffer[PongGameQueryLength+10] == Edns0OptRecord[10];
+                ReceivedBytes >= PongGameEdns0QueryLengthMinimum &&
+                RecvBuffer[Edns0OptRecordOffset] == 0x00 &&
+                RecvBuffer[Edns0OptTypeOffset] == 0x00 &&
+                RecvBuffer[Edns0OptTypeOffset+1] == 0x29;
             const bool IsPlainPongGameQuery =
                 HasPongGameQueryName &&
                 ReceivedBytes == PongGameQueryLength &&
@@ -110,6 +102,10 @@ void DNSServer::ServerLoop()
             if (IsSupportedPongGameQuery) {
                 const int AnswerOffset = PongGameQueryLength;
                 const int ResponseLength = ReceivedBytes + 16;
+
+                if (IsEdns0PongGameQuery) {
+                    memmove(&RecvBuffer[AnswerOffset+16], &RecvBuffer[AnswerOffset], ReceivedBytes - AnswerOffset);
+                }
 
                 //- construct answer packets
                 RecvBuffer[2] = 0x81;  //- response type byte1
@@ -143,10 +139,6 @@ void DNSServer::ServerLoop()
                 RecvBuffer[AnswerOffset+13] = stoi(IPAddressSplit[1]); //- IPv4 byte2
                 RecvBuffer[AnswerOffset+14] = stoi(IPAddressSplit[2]); //- IPv4 byte3
                 RecvBuffer[AnswerOffset+15] = stoi(IPAddressSplit[3]); //- IPv4 byte4
-
-                if (IsEdns0PongGameQuery) {
-                    memcpy(&RecvBuffer[AnswerOffset+16], Edns0OptRecord, Edns0OptRecordLength);
-                }
 
                 ESP_LOG_BUFFER_CHAR_LEVEL("DNSServer", &RecvBuffer[0], ResponseLength, ESP_LOG_INFO);
 
