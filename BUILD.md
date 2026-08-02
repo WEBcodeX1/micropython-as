@@ -147,10 +147,19 @@ cmake -B build
 cmake --build build
 ```
 
-The resulting binary is `build/server_linux`.  It listens on **port 8080** by default.  An optional IPv4 listen address can be passed as the first argument (default: `0.0.0.0`):
+This build produces `build/server_linux`, `build/dns_server_linux`, and the Linux test binaries together. `server_linux` listens on **port 8080** by default. An optional IPv4 listen address can be passed as the first argument (default: `0.0.0.0`):
 
 ```bash
 ./build/server_linux 127.0.0.1
+```
+
+To run the standalone DNS responder from a separate build directory:
+
+```bash
+cd ~/src/micropython-as/linux_server
+cmake -B build-dns
+cmake --build build-dns
+./build-dns/dns_server_linux 127.0.0.1 53535
 ```
 
 ### 10.3. Background Start / Stop Script

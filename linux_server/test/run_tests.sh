@@ -33,7 +33,6 @@ done
 # ---------------------------------------------------------------------------
 echo "=== Configuring ==="
 cmake -B "${BUILD_DIR}" -S "${SERVER_DIR}" \
-      -DBUILD_TESTS=ON \
       -DASAN="${ASAN_FLAG}" \
       -DTSAN="${TSAN_FLAG}"
 
