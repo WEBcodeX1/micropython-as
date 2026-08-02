@@ -12,10 +12,7 @@ SERVER_IP="127.0.0.1"
 SERVER_PORT="53535"
 
 echo "=== Configuring DNS test build ==="
-cmake -B "${BUILD_DIR}" -S "${SERVER_DIR}" \
-      -DBUILD_HTTP_SERVER=OFF \
-      -DBUILD_DNS_SERVER=ON \
-      -DBUILD_TESTS=OFF
+cmake -B "${BUILD_DIR}" -S "${SERVER_DIR}"
 
 echo "=== Building DNS server ==="
 cmake --build "${BUILD_DIR}" --parallel

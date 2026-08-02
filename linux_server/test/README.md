@@ -25,7 +25,7 @@ The script:
 4. Kills the server and exits with the test client's exit code.
 
 The DNS resolver script:
-1. Configures a DNS-only build under `linux_server/build-dns/`.
+1. Configures a full Linux server build under `linux_server/build-dns/`.
 2. Starts `dns_server_linux` on `127.0.0.1:53535`.
 3. Verifies that `pong.game` resolves to the configured IPv4 address.
 4. Verifies that a different hostname is ignored.
@@ -34,7 +34,7 @@ The DNS resolver script:
 
 ```bash
 cd ..
-cmake -B build -DBUILD_TESTS=ON
+cmake -B build
 cmake --build build --parallel
 
 # Terminal 1 – start the server
