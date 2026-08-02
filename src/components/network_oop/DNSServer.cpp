@@ -7,7 +7,8 @@
 using namespace std;
 
 
-DNSServer::DNSServer()
+DNSServer::DNSServer(uint16_t ListenPort)
+    : SocketListenPort(ListenPort)
 {
 }
 

@@ -153,6 +153,15 @@ The resulting binary is `build/server_linux`.  It listens on **port 8080** by de
 ./build/server_linux 127.0.0.1
 ```
 
+For the standalone DNS responder test binary, build only the DNS target without the HTTP server dependencies:
+
+```bash
+cd ~/src/micropython-as/linux_server
+cmake -B build-dns -DBUILD_HTTP_SERVER=OFF -DBUILD_DNS_SERVER=ON -DBUILD_TESTS=OFF
+cmake --build build-dns
+./build-dns/dns_server_linux 127.0.0.1 53535
+```
+
 ### 10.3. Background Start / Stop Script
 
 For repeated stability tests, `linux_server/run_server.sh` can start the server

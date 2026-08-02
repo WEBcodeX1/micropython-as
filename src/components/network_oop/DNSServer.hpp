@@ -17,7 +17,7 @@ class DNSServer {
 
 public:
 
-    DNSServer();
+    DNSServer(uint16_t ListenPort = 53);
     ~DNSServer();
 
     void start();
@@ -25,7 +25,7 @@ public:
 
 private:
 
-    uint16_t SocketListenPort = 53;
+    uint16_t SocketListenPort;
     static constexpr size_t DNSQuestionOffset = 12;
     static constexpr unsigned char PongGameQueryName[] = {
         0x04, 'p', 'o', 'n', 'g',

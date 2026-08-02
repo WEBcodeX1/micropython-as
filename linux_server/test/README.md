@@ -15,6 +15,7 @@ cd linux_server/test
 ./run_tests.sh              # normal build
 ./run_tests.sh --asan       # AddressSanitizer build
 ./run_tests.sh --tsan       # ThreadSanitizer build
+./run_dns_tests.sh          # DNS resolver test build
 ```
 
 The script:
@@ -22,6 +23,12 @@ The script:
 2. Starts `server_test` on `127.0.0.1:8080` in the background.
 3. Runs `test_client` which reports pass/fail per scenario.
 4. Kills the server and exits with the test client's exit code.
+
+The DNS resolver script:
+1. Configures a DNS-only build under `linux_server/build-dns/`.
+2. Starts `dns_server_linux` on `127.0.0.1:53535`.
+3. Verifies that `pong.game` resolves to the configured IPv4 address.
+4. Verifies that a different hostname is ignored.
 
 ## Manual build
 
@@ -35,6 +42,9 @@ cmake --build build --parallel
 
 # Terminal 2 – run the tests
 ./build/test/test_client 127.0.0.1 8080
+
+# DNS resolver test
+./test/run_dns_tests.sh
 ```
 
 ## Test file set

@@ -8,70 +8,92 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_definitions(LINUX_BUILD)
 
 # ---------------------------------------------------------------------------
-# Source files (server component only — no WiFi, MicroPython, display, LED)
+# Build options
 # ---------------------------------------------------------------------------
-set(SOURCES
-    main.cpp
-    ../src/components/network_oop/Server.cpp
-    ../src/components/network_oop/ClientHandler.cpp
-    ../src/components/network_oop/Client.cpp
-    ../src/components/network_oop/ASRequestHandler.cpp
-    ../src/components/filesystem/Filesystem.cpp
+option(BUILD_HTTP_SERVER "Build the Linux HTTP server" ON)
+option(BUILD_DNS_SERVER "Build the Linux DNS server" ON)
+
+# ---------------------------------------------------------------------------
+# Shared include directories
+# ---------------------------------------------------------------------------
+set(LINUX_COMMON_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/stubs
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/components/network_oop
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/main
 )
 
-# ---------------------------------------------------------------------------
-# HTTP libraries – use the system-installed Linux FalconAS headers and static
-# libraries under /usr/local as documented in BUILD.md §10.
-# ---------------------------------------------------------------------------
-set(HTTP_SYSTEM_PREFIX "/usr/local" CACHE PATH
-    "Base path containing the Linux FalconAS HTTP headers and static libraries")
-
-set(HTTP_INCLUDE_SEARCH_PATHS
-    ${HTTP_SYSTEM_PREFIX}/include/linux
-    ${HTTP_SYSTEM_PREFIX}/include
+set(LINUX_SERVER_INCLUDE_DIRS
+    ${LINUX_COMMON_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/filesystem
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/components/filesystem
 )
 
-set(HTTP_LIBRARY_SEARCH_PATHS
-    ${HTTP_SYSTEM_PREFIX}/lib/linux
-    ${HTTP_SYSTEM_PREFIX}/lib
-    ${HTTP_SYSTEM_PREFIX}/libs/linux
-    ${HTTP_SYSTEM_PREFIX}/libs
-)
-
-find_path(HTTP_INCLUDE_DIR
-    NAMES httpparser.hpp httpgenerator.hpp httpconstants.hpp
-    PATHS ${HTTP_INCLUDE_SEARCH_PATHS}
-    NO_DEFAULT_PATH
-    REQUIRED)
-
-find_library(HTTPPARSER_LIBRARY
-    NAMES httpparser
-    PATHS ${HTTP_LIBRARY_SEARCH_PATHS}
-    NO_DEFAULT_PATH
-    REQUIRED)
+set(SANITIZER_TARGETS)
 
 # ---------------------------------------------------------------------------
-# Include paths
-# Stubs directory comes first so it shadows ESP-IDF / FreeRTOS headers.
-# The FalconAS headers are provided by the system include directory above.
+# HTTP server executable
 # ---------------------------------------------------------------------------
-include_directories(
-    stubs
-    filesystem
-    ../src/components/network_oop
-    ../src/components/filesystem
-    ../src/main
-    ${HTTP_INCLUDE_DIR}
-)
+if(BUILD_HTTP_SERVER)
+    set(HTTP_SERVER_SOURCES
+        main.cpp
+        ../src/components/network_oop/Server.cpp
+        ../src/components/network_oop/ClientHandler.cpp
+        ../src/components/network_oop/Client.cpp
+        ../src/components/network_oop/ASRequestHandler.cpp
+        ../src/components/filesystem/Filesystem.cpp
+    )
+
+    # -----------------------------------------------------------------------
+    # HTTP libraries – use the system-installed Linux FalconAS headers and
+    # static libraries under /usr/local as documented in BUILD.md §10.
+    # -----------------------------------------------------------------------
+    set(HTTP_SYSTEM_PREFIX "/usr/local" CACHE PATH
+        "Base path containing the Linux FalconAS HTTP headers and static libraries")
+
+    set(HTTP_INCLUDE_SEARCH_PATHS
+        ${HTTP_SYSTEM_PREFIX}/include/linux
+        ${HTTP_SYSTEM_PREFIX}/include
+    )
+
+    set(HTTP_LIBRARY_SEARCH_PATHS
+        ${HTTP_SYSTEM_PREFIX}/lib/linux
+        ${HTTP_SYSTEM_PREFIX}/lib
+        ${HTTP_SYSTEM_PREFIX}/libs/linux
+        ${HTTP_SYSTEM_PREFIX}/libs
+    )
+
+    find_path(HTTP_INCLUDE_DIR
+        NAMES httpparser.hpp httpgenerator.hpp httpconstants.hpp
+        PATHS ${HTTP_INCLUDE_SEARCH_PATHS}
+        NO_DEFAULT_PATH
+        REQUIRED)
+
+    find_library(HTTPPARSER_LIBRARY
+        NAMES httpparser
+        PATHS ${HTTP_LIBRARY_SEARCH_PATHS}
+        NO_DEFAULT_PATH
+        REQUIRED)
+
+    add_executable(server_linux ${HTTP_SERVER_SOURCES})
+    target_include_directories(server_linux PRIVATE
+        ${LINUX_SERVER_INCLUDE_DIRS}
+        ${HTTP_INCLUDE_DIR}
+    )
+    target_link_libraries(server_linux PRIVATE ${HTTPPARSER_LIBRARY})
+    list(APPEND SANITIZER_TARGETS server_linux)
+endif()
 
 # ---------------------------------------------------------------------------
-# Executable
+# DNS server executable
 # ---------------------------------------------------------------------------
-add_executable(server_linux ${SOURCES})
-
-target_link_libraries(server_linux PRIVATE
-    ${HTTPPARSER_LIBRARY}
-)
+if(BUILD_DNS_SERVER)
+    add_executable(dns_server_linux
+        main_dns.cpp
+        ../src/components/network_oop/DNSServer.cpp
+    )
+    target_include_directories(dns_server_linux PRIVATE ${LINUX_COMMON_INCLUDE_DIRS})
+    list(APPEND SANITIZER_TARGETS dns_server_linux)
+endif()
 
 # ---------------------------------------------------------------------------
 # Optional: enable AddressSanitizer for runtime crash/memory analysis.
@@ -79,8 +101,10 @@ target_link_libraries(server_linux PRIVATE
 # ---------------------------------------------------------------------------
 option(ASAN "Build with AddressSanitizer" OFF)
 if(ASAN)
-    target_compile_options(server_linux PRIVATE -fsanitize=address -fno-omit-frame-pointer -g)
-    target_link_options(server_linux PRIVATE -fsanitize=address)
+    foreach(tgt ${SANITIZER_TARGETS})
+        target_compile_options(${tgt} PRIVATE -fsanitize=address -fno-omit-frame-pointer -g)
+        target_link_options(${tgt} PRIVATE -fsanitize=address)
+    endforeach()
 endif()
 
 # ---------------------------------------------------------------------------
@@ -89,8 +113,10 @@ endif()
 # ---------------------------------------------------------------------------
 option(TSAN "Build with ThreadSanitizer" OFF)
 if(TSAN)
-    target_compile_options(server_linux PRIVATE -fsanitize=thread -fno-omit-frame-pointer -g)
-    target_link_options(server_linux PRIVATE -fsanitize=thread)
+    foreach(tgt ${SANITIZER_TARGETS})
+        target_compile_options(${tgt} PRIVATE -fsanitize=thread -fno-omit-frame-pointer -g)
+        target_link_options(${tgt} PRIVATE -fsanitize=thread)
+    endforeach()
 endif()
 
 # ---------------------------------------------------------------------------
@@ -102,12 +128,18 @@ option(BUILD_TESTS "Build the stability test server and test client" ON)
 set(LINUX_FILESYSTEM_OVERRIDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/filesystem)
 set(LINUX_FILESYSTEM_OVERRIDE_HEADER ${LINUX_FILESYSTEM_OVERRIDE_DIR}/Filesystem.hpp)
 
+if(BUILD_TESTS AND NOT BUILD_HTTP_SERVER)
+    message(FATAL_ERROR "BUILD_TESTS requires BUILD_HTTP_SERVER=ON")
+endif()
+
 if(BUILD_TESTS)
     set(GENERATED_FS_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated_fs)
     set(TEST_FS_GENERATOR ${CMAKE_CURRENT_SOURCE_DIR}/generate_test_headers.py)
     set(SOURCE_FILESYSTEM_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/../src/components/filesystem/Filesystem.hpp)
 
-    include_directories(${GENERATED_FS_DIR})
+    if(TARGET server_linux)
+        target_include_directories(server_linux PRIVATE ${GENERATED_FS_DIR})
+    endif()
 
     find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
