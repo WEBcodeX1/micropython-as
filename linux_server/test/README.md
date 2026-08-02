@@ -27,8 +27,8 @@ The script:
 The DNS resolver script:
 1. Configures a full Linux server build under `linux_server/build-dns/`.
 2. Starts `dns_server_linux` on `127.0.0.1:53535`.
-3. Verifies that `pong.game` resolves to the configured IPv4 address.
-4. Verifies that a different hostname is ignored.
+3. Verifies that `pong.game` resolves to the configured IPv4 address for both plain DNS and a static EDNS0 query.
+4. Verifies that a different hostname receives `NXDOMAIN`.
 
 ## Manual build
 

@@ -33,6 +33,14 @@ private:
         0x00
     };
     static constexpr size_t PongGameQueryNameLength = sizeof(PongGameQueryName);
+    static constexpr size_t DNSQuestionTypeOffset = DNSQuestionOffset + PongGameQueryNameLength;
+    static constexpr size_t PongGameQueryLength = DNSQuestionTypeOffset + 4;
+    static constexpr unsigned char Edns0OptRecord[] = {
+        0x00, 0x00, 0x29, 0x10, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00
+    };
+    static constexpr size_t Edns0OptRecordLength = sizeof(Edns0OptRecord);
+    static constexpr size_t PongGameEdns0QueryLength = PongGameQueryLength + Edns0OptRecordLength;
 
     struct sockaddr_in ServerSocketAddr;
     struct sockaddr_in ClientSocketAddr;
