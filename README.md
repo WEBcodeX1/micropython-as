@@ -34,7 +34,7 @@ The following diagrams show a comparison between the native *MicroPython* design
 | Peripherals (SSD1306 Display, 3 Color LED)         | Stable, tested                 | :white_check_mark: |
 | Basic Networking / SoftAP                          | Stable, tested                 | :white_check_mark: |
 | Posix Threads to RTOS Tasks Wrapper                | Stable, tested                 | :white_check_mark: |
-| Basic DNS (UDP) Server / Single A Record           | Stable, tested                 | :white_check_mark: |
+| Basic DNS (UDP) Server / A Record / +EDNS0         | Stable, tested                 | :white_check_mark: |
 | BSD-Socket Porting / FalconAS                      | Stable, tested                 | :white_check_mark: |
 | Static Filesystem / FalconAS HTTP/1.1 GET          | Stable, tested                 | :white_check_mark: |
 | Modified, working x0 Browser Framework             | Stable, tested                 | :white_check_mark: |
