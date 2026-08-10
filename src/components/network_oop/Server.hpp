@@ -5,7 +5,11 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
+
+#ifdef LINUX_BUILD
 #include <poll.h>
+#include "freertos/task.h"
+#endif
 
 #include "ClientHandler.hpp"
 

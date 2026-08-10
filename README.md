@@ -1,16 +1,23 @@
 # Embedding MicroPython in a C++ HTTP/1.1 Application Server (ESP32-C3, ESP32-S3)
 
-This project embeds MicroPython in Arduino-based ESP32 microcontrollers using the **Falcon-AS** C++ HTTP/1.1 web server parser library and modified application server code adapted to the microcontroller architecture.
+This project embeds *MicroPython* in *ESP32* microcontrollers using the **Falcon-AS** C++ HTTP/1.1 parser library
+and modified application server code adapted to the microcontroller architecture.
 
 Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 
 I have added some videos showing the current project status / progress in [./video/](./video/) (gameplay and browser integration).
 
-> [!NOTE]
-> You might ask yourself: What exactly is this approach useful for, and how does it differ from the existing MicroPython ESP32 integration? We provide illustrative diagrams in the [10. Diagrams](#10-diagrams) section.
+# Architecture
 
-> [!WARNING]
-> The project currently runs exclusively on the ESP32-S3 architecture. The ESP32-C3 lacks a hardware FPU (floating-point unit), causing MicroPython to crash when processing `float` types. While the dual-core ESP32-S3 includes a hardware FPU and runs MicroPython smoothly, its architecture requires specific compiler flag adjustments (such as `-mlongcalls`) to compile correctly; refer to the instructions in the `./libs/` directory. The fix for the ESP32-C3 will be added as soon as possible.
+The following diagrams show a comparison between the native *MicroPython* design and architecture and our HTTP application server approach.
+
+## MicroPython Architecture
+
+![MicroPythonArchitecture](/diagram/micropython-architecture.png)
+
+## MicroPythonAS Architecture
+
+![MicroPythonASArchitecture](/diagram/micropython-as-architecture.png)
 
 ## Project Status
 
@@ -28,9 +35,8 @@ I have added some videos showing the current project status / progress in [./vid
 | BSD-Socket Porting / FalconAS                      | Stable, tested                 | :white_check_mark: |
 | Static Filesystem / FalconAS HTTP/1.1 GET          | Stable, tested                 | :white_check_mark: |
 | Modified, working x0 Browser Framework             | Stable, tested                 | :white_check_mark: |
-| x0 Browser Application                             | Finished, 90% functionality    | :white_check_mark: |
 | FalconAS HTTP/1.1 GET / POST MicroPython Interface | Stable, tested                 | :white_check_mark: |
-| Static HTTP/1.1 Server / OS DNS+HTTP Requests      | Unstable                       | :x:                |
+| Static HTTP/1.1 Server / OS DNS+HTTP Requests      | Stable, tested                 | :white_check_mark: |
 
 ## External Links
 
@@ -243,31 +249,16 @@ In contrast to the *arduino-esp32* C++ libraries, IDF only provides libraries wr
 
 # 9. System Engineering
 
-I am still learning the ESP32-C3 chip and memory layout, peripheral design, and RTOS internals. I am still not sure whether the **complete** RTOS code is integrated into the IDF and whether every firmware compilation also rebuilds the complete RTOS code.
+I am still learning the *ESP32-C3* chip and memory layout, peripheral design, and RTOS internals. I am still not sure whether the **complete** RTOS code is integrated into the IDF and whether every firmware compilation also rebuilds the complete RTOS code.
 
 The following projects provide a bit more insight into the microcontroller boot process and RISC-V assembler instruction set:
 
 - https://github.com/espressif/esp32c3-direct-boot-example
 - https://projectf.io/posts/riscv-cheat-sheet/
 
-# 10. Diagrams
+# 10. Documentation / Examples
 
-The following diagrams show a comparison between the native MicroPython design and architecture and our HTTP application server approach.
-
-> [!WARNING]
-> Note that the following diagrams *could* not reflect architectures 100% in detail!
-
-## 10.1. MicroPython Architecture
-
-![MicroPythonArchitecture](/diagram/micropython-architecture.png)
-
-## 10.2. MicroPython AS Architecture
-
-![MicroPythonASArchitecture](/diagram/micropython-as-architecture.png)
-
-# 11. Documentation / Examples
-
-The Espressif ESP32 (Sphinx-generated) documentation and the examples section under `/examples` provide extensive development information.
+The Espressif *ESP32* (Sphinx-generated) documentation and the examples section under `/examples` provide extensive development information.
 
 > [!WARNING]
 > Some higher-level networking examples (especially HTTP) are horrible and should be avoided, our web server implementation will use the lwIP Berkeley socket API and provide *clean code* (similar to the ESP-IDF's C++11 threading example, which is written at a high-quality programming level).

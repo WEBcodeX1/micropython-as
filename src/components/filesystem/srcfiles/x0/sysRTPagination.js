@@ -1,5 +1,5 @@
 //-------1---------2---------3---------4---------5---------6---------7--------//
-//- Copyright WEB/codeX, clickIT 2011 - 2025                                 -//
+//- Copyright WEB/codeX, clickIT 2011 - 2026                                 -//
 //-------1---------2---------3---------4---------5---------6---------7--------//
 //-                                                                          -//
 //-------1---------2---------3---------4---------5---------6---------7--------//
@@ -59,7 +59,7 @@ sysPagination.prototype.render = function()
     NavRightButton.setCallback(this, 'navRight');
 
     const ButtonLeftObjs = {
-        "id": "bt-left-ct",
+        "id": "_bt_left_ct",
         "SysObject": new sysObjDiv(),
         "JSONAttributes": {
             "DOMType": "li",
@@ -67,7 +67,7 @@ sysPagination.prototype.render = function()
         },
         "ObjectDefs": [
             {
-                "id": "bt-left",
+                "id": "_bt_lc_left",
                 "SysObject": NavLeftButton,
                 "JSONAttributes": {
                     "DOMType": "a",
@@ -80,7 +80,7 @@ sysPagination.prototype.render = function()
     };
 
     const ButtonRightObjs = {
-        "id": "bt-right-ct",
+        "id": "_bt_right_ct",
         "SysObject": new sysObjDiv(),
         "JSONAttributes": {
             "DOMType": "li",
@@ -88,7 +88,7 @@ sysPagination.prototype.render = function()
         },
         "ObjectDefs": [
             {
-                "id": "button-right",
+                "id": "_bt_rc_right",
                 "SysObject": NavRightButton,
                 "JSONAttributes": {
                     "DOMType": "a",
@@ -115,7 +115,7 @@ sysPagination.prototype.render = function()
         if (i == this.CurrentPage) { NavHilite = ' active'; }
 
         var PageItemTpl =  {
-            "id": "bt-page-item-" + NavIndex,
+            "id": "_bt_page_item_" + NavIndex,
             "SysObject": new sysObjDiv(),
             "JSONAttributes": {
                 "DOMType": "li",
@@ -123,7 +123,7 @@ sysPagination.prototype.render = function()
             },
             "ObjectDefs": [
                 {
-                    "id": "button-right",
+                    "id": "_bt_page_item_nr_" + NavIndex,
                     "SysObject": NavIndexButton,
                     "JSONAttributes": {
                         "DOMType": "a",
@@ -142,14 +142,14 @@ sysPagination.prototype.render = function()
 
     ObjDef = [
         {
-            "id": "pages-sum-col",
+            "id": "_pages_sum_col",
             "SysObject": new sysObjDiv(),
             "JSONAttributes": {
                 "Style": "col"
             },
             "ObjectDefs": [
                 {
-                    "id": "pages-sum-txt",
+                    "id": "_pages_sum_txt",
                     "SysObject": new sysObjDiv(),
                     "JSONAttributes": {
                         "DOMType": "p",
@@ -160,14 +160,14 @@ sysPagination.prototype.render = function()
             ]
         },
         {
-            "id": "col-nav-ct",
+            "id": "_col_nav_ct",
             "SysObject": new sysObjDiv(),
             "JSONAttributes": {
                 "Style": "col-auto"
             },
             "ObjectDefs": [
                 {
-                    "id": "col-nav-ct2",
+                    "id": "_col_nav_ct2",
                     "SysObject": new sysObjDiv(),
                     "JSONAttributes": {
                         "DOMType": "ul",

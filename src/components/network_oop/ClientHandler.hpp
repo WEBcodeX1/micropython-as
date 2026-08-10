@@ -3,6 +3,7 @@
 #include "Client.hpp"
 #include "Network.hpp"
 
+#include <set>
 #include <string>
 #include <memory>
 #include <vector>

@@ -42,7 +42,7 @@ void ClientHandler::addClient(const ClientFD_t ClientFD)
 uint8_t ClientHandler::processClients()
 {
     //- receive data from all client filedescriptors
-    vector<ClientFD_t> EraseFDs;
+    set<ClientFD_t> EraseFDs;
 
     //- sum existing messages
     uint8_t sumMessages = 0;
@@ -57,7 +57,7 @@ uint8_t ClientHandler::processClients()
 
         if (ClientObj->receiveData(&receiveBuffer[0]) == true) {
             //ESP_LOGI("HTTPServer", "Close conn received");
-            EraseFDs.push_back(ReadFD);
+            EraseFDs.insert(ReadFD);
         }
 
         RequestsMapPtr_t Requests = ClientObj->getRequestsPtr();
@@ -145,7 +145,7 @@ uint8_t ClientHandler::processClients()
                 if (BytesWritten < 0) {
                     const int WriteErrno = errno;
                     if (WriteErrno != EAGAIN && WriteErrno != EWOULDBLOCK && WriteErrno != EINTR) {
-                        EraseFDs.push_back(ReadFD);
+                        EraseFDs.insert(ReadFD);
                     }
                 }
                 else if (ClientObj->MsgUpdateSendMetadata(BytesWritten) == true) {
