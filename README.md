@@ -1,4 +1,4 @@
-# Embedding MicroPython in a C++ HTTP/1.1 Application Server (ESP32-C3, ESP32-S3)
+# Embedding MicroPython in a C++ HTTP/1.1 Application Server (ESP32-S3, ESP32-C3)
 
 This project embeds *MicroPython* in *ESP32* microcontrollers using the **Falcon-AS** C++ HTTP/1.1 parser library
 and modified application server code adapted to the microcontroller architecture.
@@ -6,6 +6,9 @@ and modified application server code adapted to the microcontroller architecture
 Refer to [./BUILD.md](./BUILD.md) to learn how to build the project.
 
 I have added some videos showing the current project status / progress in [./video/](./video/) (gameplay and browser integration).
+
+> [!WARNING]
+> Currently, only the **ESP32-S3** is supported. **ESP32-C3** *MicroPython* crashes during floating-point math processing.
 
 # Architecture
 
