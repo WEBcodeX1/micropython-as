@@ -30,7 +30,7 @@ The list below provides an overview of exactly what these libraries are used for
 1. A *patched* *MicroPython* **embed port** (MicroPython sources remain untouched) to execute *MicroPython* functions directly from C++ code (see [section 7](#7-cross-compiling-micropython))
 2. An HTTP/1.1 *parsing* and *message generation* library from the *NLAP/FalconAS* project to parse and generate HTTP/1.1 messages (see [section 8](#8-cross-compiling-http-libraries))
 
-## 4. ESP IoT Development Framework Features
+## 4. ESP-IDF Framework Features
 
 A short overview of the framework features before continuing with the installation process.
 
@@ -40,7 +40,7 @@ A short overview of the framework features before continuing with the installati
 - Automated ELF-to-firmware image conversion / linking
 - Command-line firmware flashing
 
-## 5. Install ESP-IDF
+## 5. ESP-IDF Installation
 
 The installation process is one of the easiest I have ever encountered. Programming, compiling, and external component integration
 are also very straightforward **without** losing any flexibility.
@@ -48,15 +48,16 @@ are also very straightforward **without** losing any flexibility.
 Clone and install *ESP-IDF* as a development user (non-root).
 
 ```bash
-# clone git repository
+# clone repository
+cd ~/src
 git clone https://github.com/espressif/esp-idf.git
 
 # install idf as non-root user
-cd ./esp-idf
+cd ~/src/esp-idf
 ./install.sh
 ```
 
-## 6. Activating the Build Environment
+## 6. ESP-IDF Build Environment
 
 After installation, the build environment must be activated (sourced) from the current installation path.
 
@@ -86,15 +87,26 @@ Detailed per-variant instructions are available at:
 - **ESP32-S3**: https://github.com/clauspruefer/micropython/blob/embedding/examples/embedding/esp32/s3/README.md
 - **ESP32-C3**: https://github.com/clauspruefer/micropython/blob/embedding/examples/embedding/esp32/c3/README.md
 
-### 7.1. ESP32-S3 (Xtensa LX7)
+### 7.1. Clone Repository
+
+It is required to clone the dedicated fork repository using the following commands:
+
+```
+cd ~/src
+git clone https://github.com/clauspruefer/micropython.git
+cd ./micropython
+git checkout embedding
+```
+
+### 7.2. ESP32-S3 (Xtensa LX7)
 
 ```bash
 # Activate ESP-IDF environment
-cd src/esp-idf
+cd ~/src/esp-idf
 . ./export.sh
 
 # Change to the ESP32-S3 embedding example
-cd src/micropython/examples/embedding/esp32/s3/
+cd ~/src/micropython/examples/embedding/esp32/s3/
 
 # Generate a CMake-compatible toolchain setup from the current user environment
 ./adjust-cross-build.sh
@@ -115,7 +127,7 @@ After installation the static library and header are placed at:
 - Library: `/usr/local/lib/esp32s3/libmicropython.a`
 - Header: `/usr/local/include/esp32s3/micropython_embed.h`
 
-### 7.2. ESP32-C3 (RISC-V)
+### 7.3. ESP32-C3 (RISC-V)
 
 ```bash
 # Activate ESP-IDF environment
@@ -158,11 +170,11 @@ Detailed instructions for each board type are available under the `ports/arduino
 
 ```bash
 # Activate ESP-IDF environment (if not already active)
-cd src/esp-idf
+cd ~/src/esp-idf
 . ./export.sh
 
 # Change to the ESP32-S3 Arduino port of http-1.2
-cd src/http-1.2/ports/arduino/esp32s3/
+cd ~/src/http-1.2/ports/arduino/esp32s3/
 
 # Generate a CMake-compatible toolchain setup from the current user environment
 ./adjust-cross-build.sh
