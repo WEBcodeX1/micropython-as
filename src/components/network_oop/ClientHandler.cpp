@@ -32,32 +32,32 @@ void ClientHandler::addClient(const ClientFD_t ClientFD)
 
     ESP_LOGI("HTTPServer", "Add client ClientFD:%d", ClientFD);
 
-    ClientRef_t ClientObj = new Client(ClientFD);
+    auto ClientObj = make_unique<Client>(ClientFD);
 
     Clients.emplace(
-        ClientFD, ClientObj
+        ClientFD, move(ClientObj)
     );
 }
 
 uint8_t ClientHandler::processClients()
 {
     //- receive data from all client filedescriptors
-    vector<ClientFD_t> EraseFDs;
+    set<ClientFD_t> EraseFDs;
 
     //- sum existing messages
     uint8_t sumMessages = 0;
 
     for (auto const &ClientItem : Clients)
     {
-        auto const ReadFD = ClientItem.first;
+        const auto ReadFD = ClientItem.first;
 
         //ESP_LOGI("HTTPServer", "Processing ReadFD:%d", ReadFD);
 
-        const ClientRef_t ClientObj = Clients[ReadFD];
+        const auto& ClientObj = Clients[ReadFD];
 
         if (ClientObj->receiveData(&receiveBuffer[0]) == true) {
             //ESP_LOGI("HTTPServer", "Close conn received");
-            EraseFDs.push_back(ReadFD);
+            EraseFDs.insert(ReadFD);
         }
 
         RequestsMapPtr_t Requests = ClientObj->getRequestsPtr();
@@ -145,7 +145,7 @@ uint8_t ClientHandler::processClients()
                 if (BytesWritten < 0) {
                     const int WriteErrno = errno;
                     if (WriteErrno != EAGAIN && WriteErrno != EWOULDBLOCK && WriteErrno != EINTR) {
-                        EraseFDs.push_back(ReadFD);
+                        EraseFDs.insert(ReadFD);
                     }
                 }
                 else if (ClientObj->MsgUpdateSendMetadata(BytesWritten) == true) {

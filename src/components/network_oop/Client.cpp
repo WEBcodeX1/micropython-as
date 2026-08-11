@@ -37,7 +37,7 @@ bool Client::receiveData(char* BufferRef)
         else if (RcvBytes < 0) {
             const int RecvErrno = errno;
             DataInKernelBuffer = false;
-            ESP_LOGI("HTTPServer", "Errno:%d", RecvErrno);
+            //ESP_LOGI("HTTPServer", "Errno:%d", RecvErrno);
             if (RecvErrno == EAGAIN || RecvErrno == EWOULDBLOCK || RecvErrno == EINTR) {
                 return false;
             }

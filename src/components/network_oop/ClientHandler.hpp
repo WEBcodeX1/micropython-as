@@ -3,6 +3,7 @@
 #include "Client.hpp"
 #include "Network.hpp"
 
+#include <set>
 #include <string>
 #include <memory>
 #include <vector>
@@ -11,7 +12,7 @@
 
 using namespace std;
 
-typedef Client* ClientRef_t;
+typedef unique_ptr<Client> ClientRef_t;
 typedef unordered_map<ClientFD_t, ClientRef_t> ClientMap_t;
 
 class ClientHandler
