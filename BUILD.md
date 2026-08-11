@@ -69,7 +69,7 @@ Done! You can now compile ESP-IDF projects.
 ## 7. Cross-Compiling MicroPython
 
 The standard *MicroPython* repository does not support out-of-the-box cross-compilation to a static library for embedding into external projects.
-A dedicated fork at https://github.com/clauspruefer/micropython/blob/embedding (branch `embedding`) provides CMake-based build examples that produce `libmicropython.a` for each *ESP32* target architecture using the *ESP-IDF* cross-compiler toolchain.
+A dedicated fork at https://github.com/clauspruefer/micropython/tree/embedding (branch `embedding`) provides CMake-based build examples that produce `libmicropython.a` for each *ESP32* target architecture using the *ESP-IDF* cross-compiler toolchain.
 
 This fork also adds the `mp_embed_exec_string_function(char* function_name, char* function_param_value)` function, which enables direct C/C++ calls to *MicroPython* functions with a single string (JSON) parameter. This is used internally to pass JSON messages from the C++ application server layer to the running *MicroPython* interpreter / PONG structures.
 
