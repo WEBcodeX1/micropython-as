@@ -32,10 +32,10 @@ void ClientHandler::addClient(const ClientFD_t ClientFD)
 
     ESP_LOGI("HTTPServer", "Add client ClientFD:%d", ClientFD);
 
-    ClientRef_t ClientObj = new Client(ClientFD);
+    auto ClientObj = make_unique<Client>(ClientFD);
 
     Clients.emplace(
-        ClientFD, ClientObj
+        ClientFD, move(ClientObj)
     );
 }
 
@@ -49,11 +49,11 @@ uint8_t ClientHandler::processClients()
 
     for (auto const &ClientItem : Clients)
     {
-        auto const ReadFD = ClientItem.first;
+        const auto ReadFD = ClientItem.first;
 
         //ESP_LOGI("HTTPServer", "Processing ReadFD:%d", ReadFD);
 
-        const ClientRef_t ClientObj = Clients[ReadFD];
+        const auto& ClientObj = Clients[ReadFD];
 
         if (ClientObj->receiveData(&receiveBuffer[0]) == true) {
             //ESP_LOGI("HTTPServer", "Close conn received");
