@@ -32,7 +32,7 @@ still looks very good.
 All vertices will be "connected" by drawing 12 lines in total (4 x-axis, 4 y-axis and 4 z-axis).
 The C++ line drawing routines have been validated using this Linux SDL mockup, if the line drawing
 routine included in `/src/components/peripherals/ssd1306.c` behaves like expected must be checked
-directly on the ESP32 device.
+directly on the *ESP32* device.
 
 > [!NOTE]
 > The ESP32-S3 implementation has been verified and runs smoothly.

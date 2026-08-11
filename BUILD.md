@@ -13,7 +13,7 @@ Make sure you also have a working USB-C or USB-C-to-USB cable and all peripheral
 
 ## 3. Requirements
 
-The *ESP-IDF* Development Framework (see [section 5](#5-install-esp-idf)), `Python 3`, `python3-venv`, `pip3`, and `CMake` must
+The *ESP-IDF* Development Framework (see [section 5](#5-esp-idf-installation)), `Python 3`, `python3-venv`, `pip3`, and `CMake` must
 be installed before proceeding.
 
 ```bash
