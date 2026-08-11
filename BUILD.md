@@ -24,7 +24,7 @@ The following external static libraries and C++ header files—including a *patc
 
 The list below provides an overview of exactly what these libraries are used for.
 
-1. A *patched* *MicroPython* **embed port** (MicroPython sources keep untouched) to execute *MicroPython* functions directly from C++ code (see [point 7](#7-cross-compiling-micropython))
+1. A *patched* *MicroPython* **embed port** (MicroPython sources remain untouched) to execute *MicroPython* functions directly from C++ code (see [point 7](#7-cross-compiling-micropython))
 2. A HTTP/1.1 *parsing* and *message generation* library from the *NLAP/FalconAS* project to parse and generate HTTP/1.1 messages (see [point 8](#8-cross-compiling-http-libraries))
 
 ## 4. ESP IoT Development Framework Features
