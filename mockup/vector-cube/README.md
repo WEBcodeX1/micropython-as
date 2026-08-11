@@ -21,11 +21,11 @@ Compile and run with:
 
 ## Vertices Format
 
-The cube animations vertices have been pre-calculated using OpenGL, each animation consists
-of 16 integer values (8 structs containing x and y coordinates). Initially a third value "visible"
+The cube animation vertices have been pre-calculated using OpenGL; each animation consists
+of 16 integer values (8 structs containing x and y coordinates). Initially, a third value "visible"
 (screen z-axis) was intended to hide vertices "behind" surfaces. The calculation of this value in
-the pre-rendering is broken, so i decided to drop this "feature", the current vector cube rendering
-despite it looks very good.
+the pre-rendering is broken, so I decided to drop this "feature"; the current vector cube rendering
+still looks very good.
 
 ## Line Drawing
 
