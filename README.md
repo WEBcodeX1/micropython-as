@@ -1,6 +1,6 @@
 # Embedding MicroPython in a C++ HTTP/1.1 Application Server (ESP32-S3, ESP32-C3)
 
-This project embeds *MicroPython* in *ESP32* microcontrollers using the **Falcon-AS**
+This project embeds *MicroPython* in *ESP32* microcontrollers using the **FalconAS**
 C++ HTTP/1.1 parser library and modified application server code adapted to the microcontroller
 architecture.
 
@@ -160,11 +160,11 @@ bloated (details follow below).
 
 # 8. MicroPython
 
-MicroPython is the choice for the least-experienced C / C++ developer. There is no need
+*MicroPython* is the choice for the least-experienced C / C++ developer. There is no need
 **at all** to write C/C++ code.
 
-But how exactly is MicroPython integrated into the microcontroller? It is *not* **only**
-a Python interpreter compiled for microcontrollers. MicroPython is *integrated* into the ESP32
+But how exactly is *MicroPython* integrated into the microcontroller? It is *not* **only**
+a Python interpreter compiled for microcontrollers. *MicroPython* is *integrated* into the ESP32
 RTOS subsystem, bootloader, and main loop. In practice, this means that when the microcontroller
 boots, the Python interpreter and *additional* **control code** are loaded into the upper memory
 regions, initialized, started, and then run continuously.
@@ -173,7 +173,7 @@ Depending on the microcontroller used, this enables uploading, running, flashing
 Python code to bytecode without reflashing the complete firmware. An interpreter console CLI is
 also accessible over serial to control the interpreter at runtime.
 
-Regarding performance and firmware size optimization, MicroPython allows additional Python
+Regarding performance and firmware size optimization, *MicroPython* allows additional Python
 modules to be integrated as *pre-compiled bytecode* (virtual filesystem partition) or even
 *frozen bytecode* (directly into the firmware blob). This makes runtime compilation obsolete and
 improves performance. As a practical example, controlling a common I2C SSD1306 OLED display using
@@ -188,9 +188,9 @@ addition, many protocols and libraries are bloated with features that increase c
 firmware size.
 
 > [!NOTE]
-> Our project modifies the MicroPython implementation by replacing MicroPython's control logic
+> Our project modifies the *MicroPython* implementation by replacing *MicroPython's* control logic
 > with a **very simplified** C++ HTTP/1.1 TLS-capable web server (with unnecessary HTTP features
-> removed). On an HTTP POST request with a JSON payload, it executes a MicroPython script with
+> removed). On an HTTP POST request with a JSON payload, it executes a *MicroPython* script with
 > that payload.
 
 # 9. ESP-IDF
@@ -245,7 +245,7 @@ approaches:
 4. Write your own C++ libraries using the IDF C libraries (best choice for keeping firmware images small)
 
 > [!NOTE]
-> Because our project embeds MicroPython, our HTTPS web server code already contains working
+> Because our project embeds *MicroPython*, our HTTPS web server code already contains working
 > C++ classes, and optional web server content must also be packed into firmware: option 4 seems
 > to be the right choice.
 

@@ -6,7 +6,7 @@ This document should give insights about the **WHY** we did **WHAT** and **WHEN*
 
 The *FalconAS* Linux port allows binding processes to CPU core IDs. The ESP32-C3 is a single core processor,
 and thus limited. A *bigger* variant ESP32-S3 integrates 2 CPU cores, it could be a good idea to seperate the
-web server processing and the micropython code execution.
+web server processing and the *MicroPython* code execution.
 
 To produce clean code we should abstract these two layers for both a) single core and b) dual core processing
 in a generic way. These two possibilities exist:
