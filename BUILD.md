@@ -73,12 +73,6 @@ A dedicated fork at [clauspruefer/micropython](https://github.com/clauspruefer/m
 
 This fork also adds the `mp_embed_exec_string_function(char* function_name, char* function_param_value)` function, which enables direct C/C++ calls to *MicroPython* functions with a single string (JSON) parameter. This is used internally to pass JSON messages from the C++ application server layer to the running *MicroPython* interpreter / PONG structures.
 
-> [!WARNING]
-> The *ESP-IDF* framework, including cross-compilers for **ESP32-C3** and **ESP32-S3** (installed in your `$HOME/.espressif` directory), must be installed and activated before cross-compiling.
-
-> [!NOTE]
-> Also clone the upstream *MicroPython* source tree (`https://github.com/micropython/micropython.git`), as it is required by the embed build step.
-
 The **ESP32-C3** (RISC-V RV32IMC) and **ESP32-S3** (Xtensa LX7) are completely different architectures and require separate build steps. Detailed per-variant instructions are available at:
 
 - **ESP32-S3**: https://github.com/clauspruefer/micropython/blob/embedding/examples/embedding/esp32/s3/README.md
