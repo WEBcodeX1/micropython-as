@@ -8,10 +8,7 @@ We recommend using a standard Debian-based Linux distribution. I have tested com
 
 ## 2. Cabling
 
-Make sure you also have a working USB-C or USB-C-to-USB cable / adapter with power and data lines that supports:
-
-- Serial communication for *firmware flashing*
-- Serial communication for *JTAG / serial debugging over USB*
+Make sure you also have a working USB-C or USB-C-to-USB cable and all peripherals connected correctly according to `PINOUT.md`.
 
 ## 3. Requirements
 
@@ -23,13 +20,12 @@ apt-get install python3 python3-venv python3-pip cmake
 
 ### 3.1. External Includes
 
-The following external static libraries and C++ header files—including a **patched** *MicroPython*—must be cross-compiled for the matching destination architecture. Proper instructions for the **ESP32-C3** and **ESP32-S3** boards are included.
+The following external static libraries and C++ header files—including a *patched* *MicroPython* **embed port**—must be cross-compiled for the matching destination architecture. Proper instructions for the **ESP32-C3** and **ESP32-S3** boards are included.
 
-The list below provides an overview of exactly what these libraries are used for. Detailed instructions can be found inside the `./lib/` folder and later in this document:
+The list below provides an overview of exactly what these libraries are used for.
 
-1. A **patched** *MicroPython* to execute *MicroPython* functions directly from C++ code (see [point 7](#7-micropython))
-2. A HTTP parsing library from the *NLAP/FalconAS* project to parse HTTP/1.1 messages (see [point 8](#8-http-libraries))
-3. A HTTP message generator from the *NLAP/FalconAS* project to generate HTTP/1.1 messages (see [point 8](#8-http-libraries))
+1. A *patched* *MicroPython* **embed port** (MicroPython sources keep untouched) to execute *MicroPython* functions directly from C++ code (see [point 7](#7-cross-compiling-micropython))
+2. A HTTP/1.1 *parsing* and *message generation* library from the *NLAP/FalconAS* project to parse and generate HTTP/1.1 messages (see [point 8](#8-cross-compiling-http-libraries))
 
 ## 4. ESP IoT Development Framework Features
 
@@ -70,9 +66,10 @@ If the installation process completed successfully, the following text should be
 Done! You can now compile ESP-IDF projects.
 ```
 
-## 7. Cross-Compiling MicroPython (Static Library)
+## 7. Cross-Compiling MicroPython
 
-The standard *MicroPython* repository does not support out-of-the-box cross-compilation to a static library for embedding into external projects. A dedicated fork at https://github.com/clauspruefer/micropython (branch `embedding`) provides CMake-based build examples that produce `libmicropython.a` for each *ESP32* target architecture using the *ESP-IDF* cross-compiler toolchain.
+The standard *MicroPython* repository does not support out-of-the-box cross-compilation to a static library for embedding into external projects.
+A dedicated fork at https://github.com/clauspruefer/micropython/blob/embedding (branch `embedding`) provides CMake-based build examples that produce `libmicropython.a` for each *ESP32* target architecture using the *ESP-IDF* cross-compiler toolchain.
 
 This fork also adds the `mp_embed_exec_string_function(char* function_name, char* function_param_value)` function, which enables direct C/C++ calls to *MicroPython* functions with a single string (JSON) parameter. This is used internally to pass JSON messages from the C++ application server layer to the running *MicroPython* interpreter / PONG structures.
 
@@ -87,7 +84,7 @@ The **ESP32-C3** (RISC-V RV32IMC) and **ESP32-S3** (Xtensa LX7) are completely d
 - **ESP32-S3**: https://github.com/clauspruefer/micropython/blob/embedding/examples/embedding/esp32/s3/README.md
 - **ESP32-C3**: https://github.com/clauspruefer/micropython/blob/embedding/examples/embedding/esp32/c3/README.md
 
-### 7.1. Cross-Compile for ESP32-S3 (Xtensa LX7)
+### 7.1. ESP32-S3 (Xtensa LX7)
 
 ```bash
 # Activate ESP-IDF environment
@@ -116,7 +113,7 @@ After installation the static library and header are placed at:
 - Library: `/usr/local/lib/esp32s3/libmicropython.a`
 - Header: `/usr/local/include/esp32s3/micropython_embed.h`
 
-### 7.2. Cross-Compile for ESP32-C3 (RISC-V)
+### 7.2. ESP32-C3 (RISC-V)
 
 ```bash
 # Activate ESP-IDF environment
@@ -145,7 +142,7 @@ After installation the static library and header are placed at:
 - Library: `/usr/local/lib/esp32c3/libmicropython.a`
 - Header: `/usr/local/include/esp32c3/micropython_embed.h`
 
-## 8. Cross-Compiling HTTP Libraries (Static Libraries)
+## 8. Cross-Compiling HTTP Libraries
 
 The HTTP/1.1 parser and message-generator libraries from the project https://github.com/WEBcodeX1/http-1.2 must also be cross-compiled for the target *ESP32* architecture before building `micropython-as`.
 
@@ -154,7 +151,7 @@ Detailed instructions for each board type are available under the `ports/arduino
 - **ESP32-S3**: https://github.com/WEBcodeX1/http-1.2/blob/main/ports/arduino/esp32s3/README.md
 - **ESP32-C3**: https://github.com/WEBcodeX1/http-1.2/blob/main/ports/arduino/esp32c3/README.md
 
-### 8.1. Cross-Compile for ESP32-S3 (Xtensa LX7)
+### 8.1. ESP32-S3 (Xtensa LX7)
 
 ```bash
 # Activate ESP-IDF environment (if not already active)
@@ -180,7 +177,7 @@ After installation the static library and headers are placed at:
 - Library: `/usr/local/lib/esp32s3/libhttpparser.a`
 - Headers: `/usr/local/include/esp32s3/` (`httpparser.hpp`, `httpgenerator.hpp`)
 
-### 8.2. Cross-Compile for ESP32-C3 (RISC-V)
+### 8.2. ESP32-C3 (RISC-V)
 
 ```bash
 # Activate ESP-IDF environment (if not already active)
