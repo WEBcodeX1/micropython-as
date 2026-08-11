@@ -313,11 +313,3 @@ cmake --build build
 ```bash
 valgrind --tool=memcheck --leak-check=full ./build/server_linux
 ```
-
-### 10.6. Load Testing
-
-Use `ab` (Apache Benchmark) or `wrk` against `http://localhost:8080/` to reproduce timeout-related crashes under load:
-
-```bash
-ab -n 10000 -c 50 http://localhost:8080/
-```
