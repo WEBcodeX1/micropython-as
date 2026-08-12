@@ -4,7 +4,8 @@ This document describes the build process and requirements.
 
 ## 1. Operating System
 
-We recommend using a standard Debian-based Linux distribution. Compilation has been tested on *Devuan* (Debian-based) and on an *Ubuntu Hardened 26.04 LTS* system.
+We recommend using a standard Debian-based Linux distribution. Compilation has been tested on *Devuan* (Debian-based) and on
+an *Ubuntu Hardened 26.04 LTS* system.
 
 ## 2. Cabling
 
@@ -12,7 +13,8 @@ Make sure you also have a working USB-C or USB-C-to-USB cable and all peripheral
 
 ## 3. Requirements
 
-The *ESP-IDF* Development Framework (see [section 5](#5-install-esp-idf)), `Python 3`, `python3-venv`, `pip3`, and `CMake` must be installed before proceeding.
+The *ESP-IDF* Development Framework (see [section 5](#5-esp-idf-installation)), `Python 3`, `python3-venv`, `pip3`, and `CMake` must
+be installed before proceeding.
 
 ```bash
 apt-get install python3 python3-venv python3-pip cmake
@@ -20,14 +22,15 @@ apt-get install python3 python3-venv python3-pip cmake
 
 ### 3.1. External Includes
 
-The following external static libraries and C++ header files—including a *patched* *MicroPython* **embed port**—must be cross-compiled for the matching target architecture. Instructions for the **ESP32-C3** and **ESP32-S3** boards are linked below.
+The following external static libraries and C++ header files—including a *patched* *MicroPython* **embed port**—must be cross-compiled
+for the matching target architecture. Instructions for the **ESP32-C3** and **ESP32-S3** boards are linked below.
 
 The list below provides an overview of exactly what these libraries are used for.
 
 1. A *patched* *MicroPython* **embed port** (MicroPython sources remain untouched) to execute *MicroPython* functions directly from C++ code (see [section 7](#7-cross-compiling-micropython))
 2. An HTTP/1.1 *parsing* and *message generation* library from the *NLAP/FalconAS* project to parse and generate HTTP/1.1 messages (see [section 8](#8-cross-compiling-http-libraries))
 
-## 4. ESP IoT Development Framework Features
+## 4. ESP-IDF Framework Features
 
 A short overview of the framework features before continuing with the installation process.
 
@@ -37,22 +40,24 @@ A short overview of the framework features before continuing with the installati
 - Automated ELF-to-firmware image conversion / linking
 - Command-line firmware flashing
 
-## 5. Install ESP-IDF
+## 5. ESP-IDF Installation
 
-The installation process is one of the easiest I have ever encountered. Programming, compiling, and external component integration are also very straightforward **without** losing any flexibility.
+The installation process is one of the easiest I have ever encountered. Programming, compiling, and external component integration
+are also very straightforward **without** losing any flexibility.
 
 Clone and install *ESP-IDF* as a development user (non-root).
 
 ```bash
-# clone git repository
+# clone repository
+cd ~/src
 git clone https://github.com/espressif/esp-idf.git
 
 # install idf as non-root user
-cd ./esp-idf
+cd ~/src/esp-idf
 ./install.sh
 ```
 
-## 6. Activating the Build Environment
+## 6. ESP-IDF Build Environment
 
 After installation, the build environment must be activated (sourced) from the current installation path.
 
@@ -69,30 +74,39 @@ Done! You can now compile ESP-IDF projects.
 ## 7. Cross-Compiling MicroPython
 
 The standard *MicroPython* repository does not support out-of-the-box cross-compilation to a static library for embedding into external projects.
-A dedicated fork at [clauspruefer/micropython](https://github.com/clauspruefer/micropython/tree/embedding) (branch `embedding`) provides CMake-based build examples that produce `libmicropython.a` for each *ESP32* target architecture using the *ESP-IDF* cross-compiler toolchain.
+A dedicated fork at [clauspruefer/micropython](https://github.com/clauspruefer/micropython/tree/embedding) (branch `embedding`) provides CMake-based
+build examples that produce `libmicropython.a` for each *ESP32* target architecture using the *ESP-IDF* cross-compiler toolchain.
 
-This fork also adds the `mp_embed_exec_string_function(char* function_name, char* function_param_value)` function, which enables direct C/C++ calls to *MicroPython* functions with a single string (JSON) parameter. This is used internally to pass JSON messages from the C++ application server layer to the running *MicroPython* interpreter / PONG structures.
+This fork also adds the `mp_embed_exec_string_function(char* function_name, char* function_param_value)` function, which enables direct C/C++ calls
+to *MicroPython* functions with a single string (JSON) parameter. This is used internally to pass JSON messages from the C++ application server layer
+to the running *MicroPython* interpreter / PONG structures.
 
-> [!WARNING]
-> The *ESP-IDF* framework, including cross-compilers for **ESP32-C3** and **ESP32-S3** (installed in your `$HOME/.espressif` directory), must be installed and activated before cross-compiling.
-
-> [!NOTE]
-> Also clone the upstream *MicroPython* source tree (`https://github.com/micropython/micropython.git`), as it is required by the embed build step.
-
-The **ESP32-C3** (RISC-V RV32IMC) and **ESP32-S3** (Xtensa LX7) are completely different architectures and require separate build steps. Detailed per-variant instructions are available at:
+The **ESP32-C3** (RISC-V RV32IMC) and **ESP32-S3** (Xtensa LX7) are completely different architectures and require separate build steps.
+Detailed per-variant instructions are available at:
 
 - **ESP32-S3**: https://github.com/clauspruefer/micropython/blob/embedding/examples/embedding/esp32/s3/README.md
 - **ESP32-C3**: https://github.com/clauspruefer/micropython/blob/embedding/examples/embedding/esp32/c3/README.md
 
-### 7.1. ESP32-S3 (Xtensa LX7)
+### 7.1. Clone Repository
+
+It is required to clone the dedicated fork repository using the following commands:
+
+```
+cd ~/src
+git clone https://github.com/clauspruefer/micropython.git
+cd ./micropython
+git checkout embedding
+```
+
+### 7.2. ESP32-S3 (Xtensa LX7)
 
 ```bash
 # Activate ESP-IDF environment
-cd src/esp-idf
+cd ~/src/esp-idf
 . ./export.sh
 
 # Change to the ESP32-S3 embedding example
-cd src/micropython/examples/embedding/esp32/s3/
+cd ~/src/micropython/examples/embedding/esp32/s3/
 
 # Generate a CMake-compatible toolchain setup from the current user environment
 ./adjust-cross-build.sh
@@ -113,7 +127,7 @@ After installation the static library and header are placed at:
 - Library: `/usr/local/lib/esp32s3/libmicropython.a`
 - Header: `/usr/local/include/esp32s3/micropython_embed.h`
 
-### 7.2. ESP32-C3 (RISC-V)
+### 7.3. ESP32-C3 (RISC-V)
 
 ```bash
 # Activate ESP-IDF environment
@@ -144,7 +158,8 @@ After installation the static library and header are placed at:
 
 ## 8. Cross-Compiling HTTP Libraries
 
-The HTTP/1.1 parser and message-generator libraries from the [WEBcodeX1/http-1.2](https://github.com/WEBcodeX1/http-1.2) project must also be cross-compiled for the target *ESP32* architecture before building `micropython-as`.
+The HTTP/1.1 parser and message-generator libraries from the [WEBcodeX1/http-1.2](https://github.com/WEBcodeX1/http-1.2) project
+must also be cross-compiled for the target *ESP32* architecture before building `micropython-as`.
 
 Detailed instructions for each board type are available under the `ports/arduino/` subdirectory of that repository:
 
@@ -155,11 +170,11 @@ Detailed instructions for each board type are available under the `ports/arduino
 
 ```bash
 # Activate ESP-IDF environment (if not already active)
-cd src/esp-idf
+cd ~/src/esp-idf
 . ./export.sh
 
 # Change to the ESP32-S3 Arduino port of http-1.2
-cd src/http-1.2/ports/arduino/esp32s3/
+cd ~/src/http-1.2/ports/arduino/esp32s3/
 
 # Generate a CMake-compatible toolchain setup from the current user environment
 ./adjust-cross-build.sh
@@ -208,7 +223,9 @@ After installation the static library and headers are placed at:
 Change to the `micropython-as` repository, select your board type, compile it, and then flash it to the microcontroller.
 
 > [!WARNING]
-> The current default board, including settings, is **ESP32-S3**, not **ESP32-C3**. There are also **hardcoded** *GPIO* settings inside the C++ header files that you currently must change manually. Also note that the **ESP32-C3** MicroPython interpreter currently crashes on floating-point arithmetic.
+> The current default board, including settings, is **ESP32-S3**, not **ESP32-C3**. There are also **hardcoded** *GPIO*
+> settings inside the C++ header files that you currently must change manually. Also note that the **ESP32-C3** *MicroPython*
+> interpreter currently crashes on floating-point arithmetic.
 
 ```bash
 cd ~/src/micropython-as/src
@@ -222,7 +239,9 @@ idf.py flash
 
 ## 10. Linux Server Build (Stability Testing)
 
-The HTTP server component can be compiled and run as a **native Linux binary** for stability and crash analysis — without any *ESP32* hardware, *ESP-IDF*, or *FreeRTOS*. This enables the use of tools such as `gdb`, Valgrind, and the Clang/GCC sanitizers (AddressSanitizer, ThreadSanitizer) to pinpoint crashes and timeout-related bugs.
+The HTTP server component can be compiled and run as a **native Linux binary** for stability and crash analysis — without any
+*ESP32* hardware, *ESP-IDF*, or *FreeRTOS*. This enables the use of tools such as `gdb`, Valgrind, and the Clang/GCC sanitizers
+(AddressSanitizer, ThreadSanitizer) to pinpoint crashes and timeout-related bugs.
 
 Only the following components are compiled:
 
@@ -234,9 +253,11 @@ WiFi, DNS, LED, display, and MicroPython execution are **not** included.
 
 ### 10.1. Prerequisites
 
-The same HTTP parser and generator libraries from the FalconAS project are required, but built for the **host Linux architecture** instead of a microcontroller cross-target.
+The same HTTP parser and generator libraries from the FalconAS project are required, but built for the **host Linux architecture**
+instead of a microcontroller cross-target.
 
-Follow the instructions in the [WEBcodeX1/http-1.2](https://github.com/WEBcodeX1/http-1.2) repository under `ports/linux/` and install the resulting static libraries and headers:
+Follow the instructions in the [WEBcodeX1/http-1.2](https://github.com/WEBcodeX1/http-1.2) repository under `ports/linux/` and install
+the resulting static libraries and headers:
 
 ```
 /usr/local/lib/linux/libhttpparser.a      or /usr/local/libs/libhttpparser.a
